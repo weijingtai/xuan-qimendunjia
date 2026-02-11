@@ -16,11 +16,18 @@ dependencies:
   qimendunjia:
     path: ../
   common:
-    path: ../../common
-  provider: ^6.1.5+1
+    path: ../../xuan-common
+  provider: ^6.1.1
+  ai_core:
+    path: ../../xuan-ai
+  flutter_ai_toolkit: ^0.9.1
+  logging: ^1.2.0
   timezone: ^0.11.0
 
   cupertino_icons: ^1.0.8
+
+dependency_overrides:
+  google_fonts: ^8.0.0
 
 dev_dependencies:
   flutter_test:

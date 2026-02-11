@@ -1,10 +1,17 @@
 import 'package:common/common_logger.dart';
+import 'package:common/services/ai_service.dart';
+import 'package:ai_core/services/llm/openai_compatible_client.dart';
+import 'package:ai_core/services/llm/llm_client.dart';
+import 'package:qimendunjia/ai/qimen_ai_integration.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:qimendunjia/navigator.dart';
 import 'package:qimendunjia/di/service_locator.dart';
+import 'package:provider/provider.dart';
+
+import 'ai/simple_ai_service.dart';
 
 Future<void> initServices() async {
   // 初始化时区数据
@@ -29,8 +36,28 @@ void main() async {
   // 初始化服务
   await initServices();
 
+  // 初始化 AI 服务
+  // TODO: 使用实际的 API Key
+  const apiKey = 'sk-a521798363654464b52e00e408544e73';
+  final llmConfig = LlmClientConfig(
+    baseUrl: 'https://api.deepseek.com',
+    apiKey: apiKey,
+  );
+
+  final llmClient = OpenAICompatibleClient(config: llmConfig);
+
+  final aiService = SimpleAiServiceImpl(llmClient);
+
+  // 注册奇门 AI 能力
+  QiMenAiIntegration.register(aiService);
+
   // 启动应用
-  runApp(const QiMenDunJiaApp());
+  runApp(
+    MultiProvider(
+      providers: [Provider<AiService>.value(value: aiService)],
+      child: const QiMenDunJiaApp(),
+    ),
+  );
 }
 
 class QiMenDunJiaApp extends StatelessWidget {
@@ -62,7 +89,19 @@ class SelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('奇门遁甲架构选择')),
+      appBar: AppBar(
+        title: const Text('奇门遁甲架构选择'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.psychology),
+            onPressed: () {
+              // 打开 AI 聊天界面
+              final aiService = context.read<AiService>();
+              aiService.openChat(context: context);
+            },
+          ),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
