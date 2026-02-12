@@ -1,5 +1,13 @@
+import 'package:common/domain/ai/ai_context.dart';
+import 'package:common/domain/ai/ai_entity.dart';
 import 'package:common/enums.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:logging/logging.dart';
+import 'package:qimendunjia/ai/pan_display_config.dart';
+import 'package:qimendunjia/ai/pan_serializer.dart';
+import 'package:qimendunjia/data/models/mappers/qimen_pan_mapper.dart';
+import 'package:qimendunjia/data/models/mappers/shi_jia_ju_mapper.dart';
+import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/enums/enum_most_popular_ge_ju.dart';
 import 'package:qimendunjia/ui_models/ui_each_gong_model.dart';
 
@@ -21,6 +29,8 @@ import '../ui_models/ui_ten_gan_key_ying_ge_ju.dart';
 import '../utils/read_data_utils.dart';
 
 class ShiJiaQiMenViewModel extends ChangeNotifier {
+  static final _log = Logger('ShiJiaQiMenViewModel');
+
   BuildContext context;
 
   // DateTime? _dateTime;
@@ -40,6 +50,75 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   }
 
   Map<HouTianGua, UIEachGongModel?> _gongUIMapper = {};
+
+  PanDisplayConfig _displayConfig = const PanDisplayConfig.defaultConfig();
+  PanDisplayConfig get displayConfig => _displayConfig;
+
+  void updateDisplayConfig(PanDisplayConfig config) {
+    _displayConfig = config;
+    notifyListeners();
+  }
+
+  /// 构建 AI 上下文
+  ///
+  /// 使用 [QiMenPanMapper] 将老 model 转为 domain entity 后序列化。
+  AiContext? buildAiContext() {
+    final model = _shiJiaQiMen;
+    if (model == null) return null;
+
+    final pan = QiMenPanMapper.fromModel(model);
+    final entity = AiEntity(
+      id: pan.id,
+      type: 'qimen_pan',
+      name: pan.brief,
+      description: PanSerializer.toDescription(pan, config: _displayConfig),
+      rawData: PanSerializer.toMap(pan, config: _displayConfig),
+    );
+
+    return AiContext(
+      moduleName: 'xuan-qimendunjia',
+      intention: '用户已排好一个奇门局，请根据盘局信息进行分析。如需排其他时间的盘，可使用 qimen_tools 工具。',
+      entities: [entity],
+    );
+  }
+
+  /// 外部拉起的盘（从 AI Tool 排盘结果）
+  QiMenPan? _externalPan;
+  QiMenPan? get externalPan => _externalPan;
+
+  /// 加载外部盘（从 AI Tool 排盘结果拉起）。
+  ///
+  /// 将 [QiMenPan] entity 转换回 model 层的 [ShiJiaQiMen]，
+  /// 调用 [createShiJiaQiMen] 以完整填充 UI 数据。
+  void loadExternalPan(QiMenPan pan) {
+    _log.info('[loadExternalPan] loading external pan: '
+        'id=${pan.id}, brief=${pan.brief}, '
+        'time=${pan.panDateTime}');
+    _externalPan = pan;
+
+    // Convert entity ShiJiaJu → model ShiJiaJu
+    final modelJu = ShiJiaJuMapper.toModel(pan.shiJiaJu);
+
+    // Use default PanArrangeSettings (matching PanSettings.defaultSettings())
+    final defaultSettings = PanArrangeSettings(
+      arrangeType: ArrangeType.CHAI_BU,
+      jiGong: CenterGongJiGongType.KUN_GEN_GONG,
+      starMonthTokenType: MonthTokenTypeEnum.ZHU_QI,
+      starFourWeiGongType: GongTypeEnum.GONG_GUA,
+      doorFourWeiGongType: GongTypeEnum.GONG_GUA,
+      godWithGongTypeEnum: GodWithGongTypeEnum.GONG_GUA_ONLY,
+      ganGongType: GanGongTypeEnum.WANG_MU,
+    );
+
+    // Re-derive ShiJiaQiMen from model data — this populates
+    // _shiJiaQiMen, _uiPanMetaModel, _gongUIMapper, etc.
+    createShiJiaQiMen(
+      pan.plateType,
+      pan.panDateTime,
+      modelJu,
+      defaultSettings,
+    );
+  }
 
   UIEachGongModel? _selectedGong;
   UIEachGongModel? get selectedGong => _selectedGong;

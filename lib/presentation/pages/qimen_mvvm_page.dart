@@ -1,5 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:common/domain/ai/ai_chat_event.dart';
+import 'package:common/services/ai_service.dart';
+import 'package:common/domain/ai/ai_persona.dart';
+import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:board_datetime_picker/board_datetime_picker.dart';
@@ -16,13 +23,83 @@ class QiMenMvvmPage extends StatefulWidget {
 }
 
 class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
+  static final _log = Logger('QiMenMvvmPage');
+
   DateTime? _selectedDateTime;
   ArrangeType _arrangeType = ArrangeType.CHAI_BU;
   PlateType _plateType = PlateType.ZHUAN_PAN;
+  AiPersona? _selectedPersona;
+  StreamSubscription<AiChatEvent>? _chatEventSub;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _chatEventSub ??= _trySubscribeChatEvents();
+  }
+
+  StreamSubscription<AiChatEvent>? _trySubscribeChatEvents() {
+    try {
+      final aiService = context.read<AiService>();
+      _log.info('[_trySubscribeChatEvents] subscribing to chatEvents stream');
+      debugPrint('📡 [QiMenMvvmPage] subscribing to chatEvents');
+      return aiService.chatEvents
+          .listen((event) {
+        debugPrint('📡 [QiMenMvvmPage] received event: ${event.runtimeType}');
+        if (event is! ToolResultEvent) return;
+        debugPrint('📡 [QiMenMvvmPage] ToolResultEvent: tool="${event.toolName}", hasError=${event.resultData.containsKey("error")}');
+        if (event.toolName != 'qimen_tools') return;
+        if (event.resultData.containsKey('error')) return;
+
+        _log.info('[chatEvents] received qimen_tools result, session=${event.sessionUuid}');
+        try {
+          final pan = PanSerializer.fromMap(event.resultData);
+          _log.info('[chatEvents] deserialized pan: ${pan.brief}, loading into ViewModel');
+          debugPrint('📡 [QiMenMvvmPage] loadExternalPan: ${pan.brief}');
+          context.read<QiMenViewModel>().loadExternalPan(pan);
+        } catch (e) {
+          _log.warning('[chatEvents] failed to deserialize pan: $e');
+          debugPrint('📡 [QiMenMvvmPage] deserialize FAILED: $e');
+        }
+      });
+    } catch (e) {
+      _log.fine('[_trySubscribeChatEvents] AiService not available: $e');
+      debugPrint('📡 [QiMenMvvmPage] AiService not available: $e');
+      return null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _chatEventSub?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    AiService? aiService;
+    try {
+      aiService = context.read<AiService>();
+    } catch (_) {}
+
     return Scaffold(
+      endDrawer: aiService != null
+          ? Builder(
+              builder: (ctx) {
+                final vm = ctx.read<QiMenViewModel>();
+                return Drawer(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: KeyedSubtree(
+                    key: ValueKey(vm.currentPan?.id ?? 'no-pan'),
+                    child: aiService!.buildChatView(
+                      ctx,
+                      initialContext: vm.buildAiContext(),
+                      persona: _selectedPersona,
+                    ),
+                  ),
+                );
+              },
+            )
+          : null,
       appBar: AppBar(
         title: const Text('奇门遁甲·MVVM架构'),
         centerTitle: true,
@@ -33,6 +110,36 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
               _showArchitectureInfo(context);
             },
           ),
+          if (aiService != null)
+            Consumer<QiMenViewModel>(
+              builder: (context, vm, _) {
+                if (!vm.hasData) return const SizedBox.shrink();
+                return IconButton(
+                  icon: const Icon(Icons.tune),
+                  tooltip: 'AI 上下文设置',
+                  onPressed: () => _showDisplayConfigSheet(context, vm),
+                );
+              },
+            ),
+          if (aiService != null)
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.psychology),
+                onPressed: () async {
+                  final persona = await aiService!.showPersonaSelector(
+                    context: context,
+                  );
+                  if (persona != null) {
+                    setState(() {
+                      _selectedPersona = persona;
+                    });
+                    if (context.mounted) {
+                      Scaffold.of(context).openEndDrawer();
+                    }
+                  }
+                },
+              ),
+            ),
         ],
       ),
       body: Consumer<QiMenViewModel>(
@@ -500,6 +607,92 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showDisplayConfigSheet(BuildContext context, QiMenViewModel viewModel) {
+    showModalBottomSheet(
+      context: context,
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            var config = viewModel.displayConfig;
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'AI 上下文可选字段',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '选择发送给 AI 的可选盘信息',
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                  ),
+                  const Divider(),
+                  CheckboxListTile(
+                    title: const Text('暗干'),
+                    subtitle: const Text('阴盘奇门中的天盘/人盘暗干'),
+                    value: config.showAnGan,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(config.copyWith(showAnGan: v));
+                      setSheetState(() { config = viewModel.displayConfig; });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('隐干'),
+                    subtitle: const Text('特殊流派使用的隐干信息'),
+                    value: config.showYinGan,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(config.copyWith(showYinGan: v));
+                      setSheetState(() { config = viewModel.displayConfig; });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('格局列表'),
+                    subtitle: const Text('盘级别的常见格局（如五不遇时等）'),
+                    value: config.showGeJuList,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(config.copyWith(showGeJuList: v));
+                      setSheetState(() { config = viewModel.displayConfig; });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('地盘八神'),
+                    subtitle: const Text('各宫地盘八神信息'),
+                    value: config.showDiGod,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(config.copyWith(showDiGod: v));
+                      setSheetState(() { config = viewModel.displayConfig; });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('六甲旬首'),
+                    subtitle: const Text('各宫的六甲旬首'),
+                    value: config.showSixJiaXunHeader,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(config.copyWith(showSixJiaXunHeader: v));
+                      setSheetState(() { config = viewModel.displayConfig; });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('寄干'),
+                    subtitle: const Text('中五宫天盘/地盘寄干'),
+                    value: config.showJiGan,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(config.copyWith(showJiGan: v));
+                      setSheetState(() { config = viewModel.displayConfig; });
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

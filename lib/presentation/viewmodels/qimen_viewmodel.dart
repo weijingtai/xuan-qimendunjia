@@ -1,4 +1,9 @@
+import 'package:common/domain/ai/ai_context.dart';
+import 'package:common/domain/ai/ai_entity.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
+import 'package:qimendunjia/ai/pan_display_config.dart';
+import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/domain/entities/each_gong.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart';
@@ -34,6 +39,8 @@ enum QiMenViewState {
 /// 负责管理奇门遁甲界面的状态和业务逻辑
 /// 遵循 MVVM 架构模式
 class QiMenViewModel extends ChangeNotifier {
+  static final _log = Logger('QiMenViewModel');
+
   // 用例
   final CalculateJuUseCase _calculateJuUseCase;
   final ArrangePanUseCase _arrangePanUseCase;
@@ -51,6 +58,7 @@ class QiMenViewModel extends ChangeNotifier {
 
   // 设置
   PanSettings _panSettings = PanSettings.defaultSettings();
+  PanDisplayConfig _displayConfig = const PanDisplayConfig.defaultConfig();
 
   QiMenViewModel(
     this._calculateJuUseCase,
@@ -66,6 +74,7 @@ class QiMenViewModel extends ChangeNotifier {
   EachGong? get selectedGong => _selectedGong;
   GongDetailInfo? get gongDetailInfo => _gongDetailInfo;
   PanSettings get panSettings => _panSettings;
+  PanDisplayConfig get displayConfig => _displayConfig;
 
   bool get isLoading =>
       _state == QiMenViewState.calculating ||
@@ -79,6 +88,35 @@ class QiMenViewModel extends ChangeNotifier {
   void updatePanSettings(PanSettings settings) {
     _panSettings = settings;
     notifyListeners();
+  }
+
+  /// 更新 AI 显示配置
+  void updateDisplayConfig(PanDisplayConfig config) {
+    _displayConfig = config;
+    notifyListeners();
+  }
+
+  /// 构建 AI 上下文
+  ///
+  /// 将当前盘信息转为 [AiContext] 供聊天窗口使用。
+  /// 如果尚未排盘则返回 null。
+  AiContext? buildAiContext() {
+    final pan = _currentPan;
+    if (pan == null) return null;
+
+    final entity = AiEntity(
+      id: pan.id,
+      type: 'qimen_pan',
+      name: pan.brief,
+      description: PanSerializer.toDescription(pan, config: _displayConfig),
+      rawData: PanSerializer.toMap(pan, config: _displayConfig),
+    );
+
+    return AiContext(
+      moduleName: 'xuan-qimendunjia',
+      intention: '用户已排好一个奇门局，请根据盘局信息进行分析。如需排其他时间的盘，可使用 qimen_tools 工具。',
+      entities: [entity],
+    );
   }
 
   /// 计算并排盘
@@ -165,6 +203,24 @@ class QiMenViewModel extends ChangeNotifier {
     _gongDetailInfo = null;
     _state = QiMenViewState.success;
     notifyListeners();
+  }
+
+  /// 加载外部盘（从 AI Tool 排盘结果拉起）。
+  ///
+  /// 将 AI 排盘结果直接加载到当前视图，不关闭 Drawer。
+  void loadExternalPan(QiMenPan pan) {
+    _log.info('[loadExternalPan] loading external pan: '
+        'id=${pan.id}, brief=${pan.brief}, '
+        'time=${pan.panDateTime}, '
+        'gongs=${pan.gongMapper.length}');
+    _currentPan = pan;
+    _currentJu = pan.shiJiaJu;
+    _selectedGong = null;
+    _gongDetailInfo = null;
+    _errorMessage = null;
+    _state = QiMenViewState.success;
+    notifyListeners();
+    _log.info('[loadExternalPan] state updated to success');
   }
 
   /// 重置状态

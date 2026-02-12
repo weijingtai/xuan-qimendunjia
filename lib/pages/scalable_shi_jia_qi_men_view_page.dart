@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
@@ -5,8 +6,11 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:animated_read_more_text/animated_read_more_text.dart';
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:common/const_resources_mapper.dart';
+import 'package:common/domain/ai/ai_chat_event.dart';
+import 'package:common/domain/ai/ai_persona.dart';
 import 'package:common/enums.dart';
 import 'package:common/module.dart';
+import 'package:common/services/ai_service.dart';
 import 'package:common/widgets/four_zhu_eight_char.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +21,10 @@ import 'package:flutter_sliding_toast/flutter_sliding_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:common/adapters/lunar_adapter.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:qimendunjia/ai/pan_display_config.dart';
+import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/nine_dun.dart';
 import 'package:qimendunjia/model/each_gong.dart';
@@ -55,6 +62,8 @@ class ScalableShiJiaQiMenViewPage extends StatefulWidget {
 
 class _ScalableShiJiaQiMenViewPageState
     extends State<ScalableShiJiaQiMenViewPage> with TickerProviderStateMixin {
+  static final _log = Logger('ScalableShiJiaQiMenViewPage');
+
   // double baseEachGongSize = 180;
   // Size panSize = Size(590, 590);
   double baseEachGongSize = 200; // default is 256
@@ -250,7 +259,7 @@ class _ScalableShiJiaQiMenViewPageState
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _chatEventSub?.cancel();
     super.dispose();
     dateTimeValueNotifier.dispose();
     selectedGongWidgetNotifier.dispose();
@@ -281,18 +290,217 @@ class _ScalableShiJiaQiMenViewPageState
     return RichText(text: TextSpan(text: "奇门遁甲·时家", style: panInfoTextStyle));
   }
 
+  void _showDisplayConfigSheet(
+      BuildContext context, ShiJiaQiMenViewModel viewModel) {
+    showModalBottomSheet(
+      context: context,
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            var config = viewModel.displayConfig;
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'AI 上下文可选字段',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '选择发送给 AI 的可选盘信息',
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                  ),
+                  const Divider(),
+                  CheckboxListTile(
+                    title: const Text('暗干'),
+                    subtitle: const Text('阴盘奇门中的天盘/人盘暗干'),
+                    value: config.showAnGan,
+                    onChanged: (v) {
+                      viewModel
+                          .updateDisplayConfig(config.copyWith(showAnGan: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('隐干'),
+                    subtitle: const Text('特殊流派使用的隐干信息'),
+                    value: config.showYinGan,
+                    onChanged: (v) {
+                      viewModel
+                          .updateDisplayConfig(config.copyWith(showYinGan: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('格局列表'),
+                    subtitle: const Text('盘级别的常见格局（如五不遇时等）'),
+                    value: config.showGeJuList,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(
+                          config.copyWith(showGeJuList: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('地盘八神'),
+                    subtitle: const Text('各宫地盘八神信息'),
+                    value: config.showDiGod,
+                    onChanged: (v) {
+                      viewModel
+                          .updateDisplayConfig(config.copyWith(showDiGod: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('六甲旬首'),
+                    subtitle: const Text('各宫的六甲旬首'),
+                    value: config.showSixJiaXunHeader,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(
+                          config.copyWith(showSixJiaXunHeader: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('寄干'),
+                    subtitle: const Text('中五宫天盘/地盘寄干'),
+                    value: config.showJiGan,
+                    onChanged: (v) {
+                      viewModel
+                          .updateDisplayConfig(config.copyWith(showJiGan: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  AiPersona? _selectedPersona;
+  StreamSubscription<AiChatEvent>? _chatEventSub;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _chatEventSub ??= _trySubscribeChatEvents();
+  }
+
+  StreamSubscription<AiChatEvent>? _trySubscribeChatEvents() {
+    try {
+      final aiService = context.read<AiService>();
+      _log.info('[_trySubscribeChatEvents] subscribing to chatEvents stream');
+      debugPrint('📡 [ScalablePage] subscribing to chatEvents');
+      return aiService.chatEvents
+          .listen((event) {
+        debugPrint('📡 [ScalablePage] received event: ${event.runtimeType}');
+        if (event is! ToolResultEvent) return;
+        debugPrint('📡 [ScalablePage] ToolResultEvent: tool="${event.toolName}", hasError=${event.resultData.containsKey("error")}');
+        if (event.toolName != 'qimen_tools') return;
+        if (event.resultData.containsKey('error')) return;
+
+        _log.info('[chatEvents] received qimen_tools result, session=${event.sessionUuid}');
+        try {
+          final pan = PanSerializer.fromMap(event.resultData);
+          _log.info('[chatEvents] deserialized pan: ${pan.brief}, loading into ViewModel');
+          debugPrint('📡 [ScalablePage] loadExternalPan: ${pan.brief}');
+          context.read<ShiJiaQiMenViewModel>().loadExternalPan(pan);
+        } catch (e) {
+          _log.warning('[chatEvents] failed to deserialize pan: $e');
+          debugPrint('📡 [ScalablePage] deserialize FAILED: $e');
+        }
+      });
+    } catch (e) {
+      _log.fine('[_trySubscribeChatEvents] AiService not available: $e');
+      debugPrint('📡 [ScalablePage] AiService not available: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
 
+    AiService? aiService;
+    try {
+      aiService = context.read<AiService>();
+    } catch (_) {}
+
     // return BeautifulPage();
     return Scaffold(
+      endDrawer: aiService != null
+          ? Builder(
+              builder: (ctx) {
+                final viewModel = ctx.read<ShiJiaQiMenViewModel>();
+                return Drawer(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: KeyedSubtree(
+                    key: ValueKey(viewModel.shiJiaQiMen?.hashCode ?? 'no-pan'),
+                    child: aiService!.buildChatView(
+                      ctx,
+                      initialContext: viewModel.buildAiContext(),
+                      persona: _selectedPersona,
+                    ),
+                  ),
+                );
+              },
+            )
+          : null,
       appBar: AppBar(
           key: appBarGlobalKey,
           // title: Text("奇门遁甲"),
           title: appBarTitle(),
           centerTitle: true,
           actions: [
+            if (aiService != null)
+              Builder(
+                builder: (context) {
+                  final vm = context.watch<ShiJiaQiMenViewModel>();
+                  if (vm.shiJiaQiMen == null) return const SizedBox.shrink();
+                  return IconButton(
+                    icon: const Icon(Icons.tune),
+                    tooltip: 'AI 上下文设置',
+                    onPressed: () => _showDisplayConfigSheet(context, vm),
+                  );
+                },
+              ),
+            if (aiService != null)
+              Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.psychology),
+                  onPressed: () async {
+                    final persona = await aiService!.showPersonaSelector(
+                      context: context,
+                    );
+                    if (persona != null) {
+                      setState(() {
+                        _selectedPersona = persona;
+                      });
+                      if (context.mounted) {
+                        Scaffold.of(context).openEndDrawer();
+                      }
+                    }
+                  },
+                ),
+              ),
             PopupMenuButton(
               onSelected: (String item) {
                 switch (item) {
@@ -942,7 +1150,8 @@ class _ScalableShiJiaQiMenViewPageState
                 offset: const Offset(1, 1), // changes position of shadow
               )
             ]),
-        child: Column(
+        child: SingleChildScrollView(
+            child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -1287,7 +1496,8 @@ class _ScalableShiJiaQiMenViewPageState
                           child: ValueListenableBuilder(
                               valueListenable: monthTokenTypeNotifier,
                               builder: (ctx, hint, _) {
-                                LunarAdapter lunar = LunarAdapter.fromDate(DateTime.now());
+                                LunarAdapter lunar =
+                                    LunarAdapter.fromDate(DateTime.now());
                                 String monthTokenStr = lunar.getMonthZhi();
                                 MonthToken monthToken =
                                     DiZhi.getFromValue(monthTokenStr)!
@@ -1397,7 +1607,8 @@ class _ScalableShiJiaQiMenViewPageState
                           child: ValueListenableBuilder(
                               valueListenable: godWithGongTypeNotifier,
                               builder: (ctx, hint, _) {
-                                LunarAdapter lunar = LunarAdapter.fromDate(DateTime.now());
+                                LunarAdapter lunar =
+                                    LunarAdapter.fromDate(DateTime.now());
                                 String monthTokenStr = lunar.getMonthZhi();
                                 MonthToken monthToken =
                                     DiZhi.getFromValue(monthTokenStr)!
@@ -1469,7 +1680,8 @@ class _ScalableShiJiaQiMenViewPageState
                           child: ValueListenableBuilder(
                               valueListenable: starGongTypeNotifier,
                               builder: (ctx, hint, _) {
-                                LunarAdapter lunar = LunarAdapter.fromDate(DateTime.now());
+                                LunarAdapter lunar =
+                                    LunarAdapter.fromDate(DateTime.now());
                                 String monthTokenStr = lunar.getMonthZhi();
                                 MonthToken monthToken =
                                     DiZhi.getFromValue(monthTokenStr)!
@@ -1541,7 +1753,8 @@ class _ScalableShiJiaQiMenViewPageState
                           child: ValueListenableBuilder(
                               valueListenable: doorGongTypeNotifier,
                               builder: (ctx, hint, _) {
-                                LunarAdapter lunar = LunarAdapter.fromDate(DateTime.now());
+                                LunarAdapter lunar =
+                                    LunarAdapter.fromDate(DateTime.now());
                                 String monthTokenStr = lunar.getMonthZhi();
                                 // MonthToken monthToken = DiZhi.getFromValue(monthTokenStr)!.toMonthToken;
                                 return RichText(
@@ -1611,7 +1824,8 @@ class _ScalableShiJiaQiMenViewPageState
                           child: ValueListenableBuilder(
                               valueListenable: ganGongTypeNotifier,
                               builder: (ctx, hint, _) {
-                                LunarAdapter lunar = LunarAdapter.fromDate(DateTime.now());
+                                LunarAdapter lunar =
+                                    LunarAdapter.fromDate(DateTime.now());
                                 String monthTokenStr = lunar.getMonthZhi();
                                 // MonthToken monthToken = DiZhi.getFromValue(monthTokenStr)!.toMonthToken;
                                 return RichText(
@@ -1644,7 +1858,7 @@ class _ScalableShiJiaQiMenViewPageState
                   );
                 })
           ],
-        ));
+        )));
   }
 
   Widget manuallyJu() {
