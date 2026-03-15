@@ -170,6 +170,21 @@ class SelectionPage extends StatelessWidget {
               ),
               child: const Text('新架构 (MVVM + UseCase)'),
             ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/redesign_ui/smart_grid_demo');
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                textStyle: const TextStyle(fontSize: 18),
+                backgroundColor: Colors.green,
+              ),
+              child: const Text('UI重设计 - 智能九宫格'),
+            ),
           ],
         ),
       ),

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇门遁甲现代UI宫位方案</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&display=swap');
+        .font-kai { font-family: "Kaiti", "楷体", serif; }
+        .font-num { font-family: 'Georgia', serif; }
+    </style>
+</head>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen">
+
+    <div class="relative w-80 h-80 bg-white rounded-2xl shadow-2xl border border-white/10 p-5 overflow-hidden group">
+        
+        <div class="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none select-none">
+            <span class="text-[12rem] font-black">兑</span>
+        </div>
+
+        <div class="flex justify-between items-start relative z-10">
+            <div class="flex flex-col gap-1">
+                <span class="px-1.5 py-0.5 bg-red-50 text-red-500 text-[10px] font-bold rounded border border-red-100">空亡</span>
+                <span class="text-[11px] text-slate-400 font-medium">月令：<span class="text-slate-600">旺</span></span>
+            </div>
+            <div class="text-right">
+                <div class="px-2 py-0.5 bg-amber-50 text-amber-600 text-[10px] font-bold rounded-full border border-amber-200">
+                    马星
+                </div>
+            </div>
+        </div>
+
+        <div class="flex h-44 mt-3 relative z-10">
+            
+            <div class="w-1/3 flex flex-col justify-between py-1">
+                <div class="text-xl font-bold text-purple-600 font-kai">太阴</div>
+                
+                <div class="flex flex-col">
+                    <span class="text-xs text-slate-400">天柱</span>
+                    <span class="text-[10px] font-bold text-slate-500 bg-slate-100 w-fit px-1 rounded">相</span>
+                </div>
+
+                <div class="text-3xl font-black text-slate-900 border-l-4 border-slate-900 pl-3 py-1">
+                    惊门
+                </div>
+            </div>
+
+            <div class="w-2/3 relative flex flex-col items-end justify-center">
+                <div class="relative">
+                    <span class="text-8xl font-black text-slate-800 leading-none tracking-tighter">庚</span>
+                    <span class="absolute -top-1 -right-4 text-[11px] text-white bg-slate-800 px-1 rounded-sm scale-90">长生</span>
+                </div>
+                <div class="mr-10 -mt-2 flex items-baseline gap-1">
+                    <span class="text-4xl font-bold text-slate-400">丙</span>
+                    <span class="text-[11px] text-slate-300 font-bold">死</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-5 left-5 right-5 z-10">
+            <div class="flex items-center gap-3">
+                <div class="flex-1 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg flex justify-between items-center group-hover:bg-emerald-500 transition-colors duration-300">
+                    <span class="text-xs font-bold text-emerald-700 group-hover:text-white">飞鸟跌穴</span>
+                    <span class="text-[10px] font-black text-emerald-400 group-hover:text-emerald-100">大吉</span>
+                </div>
+                <div class="flex gap-1">
+                    <span class="w-5 h-5 flex items-center justify-center bg-red-100 text-red-600 text-[10px] font-bold rounded-sm">刑</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute inset-0 border-[6px] border-slate-50 pointer-events-none"></div>
+    </div>
+
+</body>
+</html>

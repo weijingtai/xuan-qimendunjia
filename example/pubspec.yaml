@@ -24,6 +24,7 @@ dependencies:
   logging: ^1.2.0
   timezone: ^0.11.0
 
+  lottie: ^3.3.2
   cupertino_icons: ^1.0.8
 
 dependency_overrides:

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇门遁甲 - 现代排盘系统</title>
+    <style>
+        :root {
+            --bg-color: #f4f1e1; /* 宣纸色 */
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --ink-black: #2c3e50;
+            --cinnabar-red: #c0392b; /* 朱砂红 */
+            --gold: #b8860b; /* 琥珀金 */
+            --azure: #2980b9; /* 琉璃蓝 */
+            --border-color: #dcd7c9;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png'); /* 纸张纹理 */
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--ink-black);
+        }
+
+        /* 整体容器 */
+        .qimen-container {
+            width: 95%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        /* 九宫格布局 */
+        .qimen-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            aspect-ratio: 1 / 1;
+        }
+
+        /* 单个宫位卡片 */
+        .palace {
+            border: 1px solid var(--border-color);
+            position: relative;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .palace:hover {
+            box-shadow: inset 0 0 10px rgba(184, 134, 11, 0.1);
+            border-color: var(--gold);
+        }
+
+        /* 角部数据 (4538 等) */
+        .palace-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #888;
+            font-family: "Georgia", serif;
+        }
+
+        /* 核心三层：神、星、门 */
+        .core-info {
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .god { font-weight: bold; font-size: 1.1rem; color: var(--azure); }
+        .star { font-weight: bold; font-size: 1rem; color: var(--gold); }
+        .gate { font-weight: bold; font-size: 1rem; color: var(--cinnabar-red); border-top: 1px solid #eee; margin-top: 2px; padding-top: 2px; }
+
+        /* 干位布局 */
+        .stems-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 0.9rem;
+        }
+
+        .stem-left { color: var(--ink-black); }
+        .stem-right { text-align: right; }
+        .stem-main { font-weight: bold; display: block; }
+        .stem-status { font-size: 9px; color: var(--cinnabar-red); display: block; }
+
+        /* 中宫特殊处理 */
+        .palace.center {
+            background: none;
+            border: 2px dashed var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #bbb;
+        }
+
+        /* 状态标注 (旺、内、外) */
+        .meta-tag {
+            font-size: 9px;
+            padding: 1px 3px;
+            background: #eee;
+            border-radius: 2px;
+            margin-left: 2px;
+        }
+
+        .status-bottom {
+            font-size: 9px;
+            color: #999;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="qimen-container">
+    <div class="qimen-grid">
+        <div class="palace">
+            <div class="palace-header">
+                <span>4538 兑→巽→坤</span>
+                <span>旺 内</span>
+            </div>
+            <div class="core-info">
+                <div class="god">玄武</div>
+                <div class="star">天柱</div>
+                <div class="gate">惊门</div>
+            </div>
+            <div class="stems-container">
+                <div class="stem-left"><span class="stem-main">辛</span></div>
+                <div class="stem-right">
+                    <span class="stem-main" style="color:var(--azure)">壬</span>
+                    <span class="stem-status">刑墓绝</span>
+                    <span class="stem-main">己</span>
+                    <span class="stem-status">衰旺</span>
+                </div>
+            </div>
+            <div class="status-bottom">休`月休 | 迫`月囚</div>
+        </div>
+
+        <div class="palace">
+            <div class="palace-header">
+                <span>9327 乾→离→震</span>
+                <span>相 外</span>
+            </div>
+            <div class="core-info">
+                <div class="god" style="color:var(--gold)">九地</div>
+                <div class="star">天心</div>
+                <div class="gate">开门</div>
+            </div>
+            <div class="stems-container">
+                <div class="stem-left"><span class="stem-main">乙</span></div>
+                <div class="stem-right">
+                    <span class="stem-main" style="color:var(--gold)">辛</span>
+                    <span class="stem-status">刑病</span>
+                    <span class="stem-main" style="color:var(--cinnabar-red)">丁</span>
+                </div>
+            </div>
+            <div class="status-bottom">囚`月休 | 死`月囚</div>
+        </div>
+
+        <div class="palace">
+            <div class="palace-header">
+                <span>285`10 巽→坤→坎</span>
+                <span>死 外</span>
+            </div>
+            <div class="core-info">
+                <div class="god" style="color:var(--gold)">九天</div>
+                <div class="star" style="color:var(--azure)">天蓬</div>
+                <div class="gate" style="color:var(--azure)">休门</div>
+            </div>
+            <div class="stems-container">
+                <div class="stem-left">
+                    <span class="stem-main" style="color:var(--gold)">庚</span>
+                    <span class="stem-status">冠官</span>
+                </div>
+                <div class="stem-right">
+                    <span class="stem-main" style="color:var(--cinnabar-red)">丙</span>
+                    <span class="stem-status">衰病</span>
+                    <span class="stem-main" style="color:green">乙</span>
+                    <span class="stem-status">养胎</span>
+                </div>
+            </div>
+            <div class="status-bottom">囚`月旺 | 死`月休</div>
+        </div>
+
+        <div class="palace">
+            <div class="palace-header">
+                <span>3438 离→震→艮</span>
+                <span>旺 内</span>
+            </div>
+            <div class="core-info">
+                <div class="god" style="color:var(--gold)">白虎</div>
+                <div class="star">禽芮</div>
+                <div class="gate">死门</div>
+            </div>
+            <div class="stems-container">
+                <div class="stem-left">
+                    <span class="stem-main" style="color:var(--gold)">庚</span>
+                    <span class="stem-status">胎</span>
+                </div>
+                <div class="stem-right">
+                    <span class="stem-main" style="color:green">乙</span>
+                    <span class="stem-main" style="color:var(--gold)">戊</span>
+                    <span class="stem-status">刑沐</span>
+                </div>
+            </div>
+            <div class="status-bottom">因`月因 | 死`月死</div>
+        </div>
+
+        <div class="palace center">
+            <div style="position:absolute; left:10px; top:10px; font-size: 14px;">壬</div>
+            <div style="position:absolute; right:10px; bottom:10px; font-size: 14px; color:var(--gold)">庚</div>
+            ☯
+        </div>
+
+        <div class="palace">
+            <div class="palace-header">
+                <span>7249 坎→兑→巽</span>
+                <span>囚 外</span>
+            </div>
+            <div class="core-info">
+                <div class="god" style="color:var(--gold)">值符</div>
+                <div class="star">天任</div>
+                <div class="gate">生门</div>
+            </div>
+            <div class="stems-container">
+                <div class="stem-left"><span class="stem-main" style="color:#777">丁</span></div>
+                <div class="stem-right">
+                    <span class="stem-main" style="color:var(--azure)">癸</span>
+                    <span class="stem-status">病</span>
+                    <span class="stem-main" style="color:var(--azure)">壬</span>
+                    <span class="stem-status">沐</span>
+                </div>
+            </div>
+            <div class="status-bottom">旺`月囚 | 休`月死</div>
+        </div>
+
+        <div class="palace">
+            <div class="palace-header">
+                <span>875`10 震→艮→乾</span>
+                <span>死 内</span>
+            </div>
+            <div class="core-info">
+                <div class="god" style="color:green">六合</div>
+                <div class="star" style="color:var(--cinnabar-red)">天英</div>
+                <div class="gate" style="color:var(--cinnabar-red)">景门</div>
+            </div>
+            <div class="stems-container">
+                <div class="stem-left"><span class="stem-main">丙</span></div>
+                <div class="stem-right">
+                    <span class="stem-main">○</span>
+                    <span class="stem-main" style="color:var(--cinnabar-red)">丁</span>
+                    <span class="stem-status">墓死</span>
+                    <span class="stem-main" style="color:var(--azure)">癸</span>
+                    <span class="stem-status">冠沐</span>
+                </div>
+            </div>
+            <div class="status-bottom">旺`月废 | 休`月相</div>
+        </div>
+
+        <div class="palace">
+            <div class="palace-header">
+                <span>1616 坤→坎→兑</span>
+                <span>休 内</span>
+            </div>
+            <div class="core-info">
+                <div class="god" style="color:var(--gold)">太阴</div>
+                <div class="star" style="color:green">天辅</div>
+                <div class="gate" style="color:green">杜门</div>
+            </div>
+            <div class="stems-container">
+                <div class="stem-left"><span class="stem-main">戊</span></div>
+                <div class="stem-right">
+                    <span class="stem-main">○</span>
+                    <span class="stem-main">己</span>
+                    <span class="stem-status">绝</span>
+                    <span class="stem-main" style="color:var(--cinnabar-red)">丙</span>
+                    <span class="stem-status">胎</span>
+                </div>
+            </div>
+            <div class="status-bottom">废`月相 | 相`月旺</div>
+        </div>
+
+        <div class="palace">
+            <div class="palace-header">
+                <span>6149 艮→乾→离</span>
+                <span>囚 外</span>
+            </div>
+            <div class="core-info">
+                <div class="god" style="color:var(--cinnabar-red)">腾蛇</div>
+                <div class="star" style="color:green">天冲</div>
+                <div class="gate" style="color:green">伤门</div>
+            </div>
+            <div class="stems-container">
+                <div class="stem-left"><span class="stem-main" style="color:var(--azure)">癸</span></div>
+                <div class="stem-right">
+                    <span class="stem-main" style="color:var(--gold)">戊</span>
+                    <span class="stem-status">墓绝</span>
+                    <span class="stem-main" style="color:var(--gold)">辛</span>
+                    <span class="stem-status">冠沐</span>
+                </div>
+            </div>
+            <div class="status-bottom">囚`月相 | 死`月旺</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

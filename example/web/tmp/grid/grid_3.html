@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .qimen-font { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        .text-xs-tight { font-size: 0.65rem; line-height: 1rem; }
+    </style>
+</head>
+<body class="bg-gray-900 p-10 qimen-font">
+
+    <div class="relative w-96 bg-white border-2 border-slate-300 rounded-xl shadow-2xl overflow-hidden">
+        
+        <div class="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
+            <span class="text-6xl font-black">兑</span>
+        </div>
+
+        <div class="flex justify-between items-center px-4 py-2 bg-slate-50 border-b border-slate-200">
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-black text-slate-700">兑七宫</span>
+                <span class="text-[10px] px-1.5 py-0.5 bg-amber-500 text-white rounded font-bold uppercase tracking-tighter">三奇升殿</span>
+            </div>
+            <div class="flex gap-1">
+                <span class="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-black rounded-full border border-red-200">空亡</span>
+                <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-[10px] font-black rounded-full border border-blue-200">驿马</span>
+            </div>
+        </div>
+
+        <div class="relative grid grid-cols-4 h-56 p-4">
+            
+            <div class="col-span-1 flex flex-col justify-between py-1">
+                <div class="flex flex-col">
+                    <span class="text-purple-600 font-bold text-xl">太阴</span>
+                    <span class="text-[10px] text-slate-400 -mt-1 font-medium">地:九天</span>
+                </div>
+                
+                <div class="flex flex-col">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-slate-800 font-bold text-lg">天柱</span>
+                        <span class="text-xs text-emerald-500 font-black">旺</span>
+                    </div>
+                    <span class="text-xs-tight text-slate-400">宫生门(义)</span>
+                </div>
+
+                <div class="text-2xl font-black text-slate-900 border-l-4 border-slate-900 pl-2 leading-none">
+                    惊门
+                </div>
+            </div>
+
+            <div class="col-span-2 flex flex-col items-center justify-center">
+                <div class="relative group">
+                    <span class="text-8xl font-black text-slate-800 leading-none">庚</span>
+                    <div class="absolute -right-6 top-2 flex flex-col gap-0.5">
+                        <span class="text-[10px] font-bold text-white bg-red-500 px-1 rounded-sm shadow-sm">刑</span>
+                        <span class="text-[10px] font-bold text-white bg-slate-400 px-1 rounded-sm shadow-sm">墓</span>
+                    </div>
+                </div>
+                
+                <div class="w-16 h-0.5 bg-slate-100 my-2"></div>
+
+                <div class="relative">
+                    <span class="text-4xl font-bold text-slate-400 leading-none">丙</span>
+                    <span class="absolute -right-4 bottom-0 text-[10px] text-slate-300 font-bold">暗:丁</span>
+                </div>
+            </div>
+
+            <div class="col-span-1 flex flex-col justify-between items-end py-1">
+                <div class="text-right">
+                    <span class="text-xs text-slate-400 font-medium">隐干</span>
+                    <div class="text-lg font-bold text-slate-500">戊</div>
+                </div>
+
+                <div class="flex flex-col items-end gap-1">
+                    <div class="px-1 bg-red-50 text-red-500 text-[10px] font-bold border border-red-100 rounded leading-tight text-right">
+                        玉女<br/>刑杀
+                    </div>
+                    <div class="px-1 bg-slate-50 text-slate-500 text-[10px] font-bold border border-slate-200 rounded leading-tight text-right">
+                        天乙<br/>之神
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-4 py-2 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+            <div class="flex gap-2">
+                <span class="text-xs font-bold text-slate-400">地支:</span>
+                <span class="text-xs font-black text-slate-600">酉</span>
+            </div>
+            <div class="flex items-center gap-1">
+                <span class="text-xs text-slate-400 font-medium tracking-tighter">综合判定</span>
+                <span class="text-sm font-black text-emerald-600">中吉</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

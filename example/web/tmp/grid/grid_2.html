@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div class="w-80 bg-white border-2 border-slate-200 rounded-lg overflow-hidden shadow-sm">
+        
+        <div class="bg-slate-50 border-b border-slate-200 px-4 py-2 flex justify-between items-center text-sm font-bold text-slate-500">
+            <div class="flex gap-3">
+                <span class="text-red-500">空亡</span>
+                <span class="text-amber-600">马星</span>
+            </div>
+            <div class="text-slate-800 text-base">兑七宫 <span class="text-xs text-slate-400 font-normal">金</span></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-0 h-48 border-b border-slate-200">
+            
+            <div class="flex flex-col justify-around items-center border-r border-slate-100 bg-slate-50/30 py-4">
+                <div class="text-purple-600 font-bold text-lg">太阴</div>
+                <div class="text-center">
+                    <div class="text-slate-700 font-bold">天柱</div>
+                    <div class="text-[10px] text-white bg-slate-400 px-1 rounded">相</div>
+                </div>
+                <div class="text-slate-900 font-bold text-xl px-2 border-b-2 border-slate-900">惊门</div>
+            </div>
+
+            <div class="col-span-1 flex flex-col justify-center items-center py-2">
+                <div class="flex flex-col items-center">
+                    <span class="text-5xl font-black text-slate-800">庚</span>
+                    <span class="text-[11px] font-bold text-slate-400 -mt-1">长生</span>
+                </div>
+                <div class="w-8 h-[1px] bg-slate-200 my-2"></div>
+                <div class="flex flex-col items-center">
+                    <span class="text-3xl font-bold text-slate-400">丙</span>
+                    <span class="text-[10px] text-slate-300">死</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col justify-around items-center border-l border-slate-100 py-4">
+                <div class="flex flex-col items-center">
+                    <span class="text-xs text-slate-400">月令</span>
+                    <span class="text-sm font-bold text-slate-700">旺</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="w-6 h-6 flex items-center justify-center bg-red-100 text-red-600 text-xs font-bold rounded">刑</span>
+                    <span class="w-6 h-6 flex items-center justify-center bg-orange-100 text-orange-600 text-xs font-bold rounded">害</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 bg-white">
+            <div class="w-full bg-emerald-50 border border-emerald-100 px-3 py-2 rounded flex justify-between items-center">
+                <span class="text-sm font-bold text-emerald-800">飞鸟跌穴</span>
+                <span class="text-[10px] tracking-widest font-black text-white bg-emerald-500 px-2 py-0.5 rounded-full uppercase">大吉</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

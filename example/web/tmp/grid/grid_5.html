@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专业奇门遁甲排盘UI - 核心梯队优化版</title>
+    <style>
+        :root {
+            --bg-deep: #0f0f0f;      /* 深景底色 */
+            --card-bg: #1d1d1f;      /* 宫位底色 */
+            --border-line: #333;     /* 边框线 */
+            --text-primary: #e0e0e0; /* 主文字 */
+            --text-secondary: #888;  /* 辅助文字 */
+            
+            /* 五行/状态配色 */
+            --color-gold: #ffcc00;   /* 土/神/格局 */
+            --color-wood: #4caf50;   /* 木/吉门 */
+            --color-fire: #ff4d4d;   /* 火/空亡/凶格 */
+            --color-water: #00a2ff;  /* 水/驿马 */
+            --color-metal: #ffffff;  /* 金 */
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* 九宫格容器 */
+        .qimen-container {
+            display: grid;
+            grid-template-columns: repeat(3, 120px);
+            grid-template-rows: repeat(3, 145px);
+            gap: 4px;
+            background-color: var(--border-line);
+            padding: 4px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* 单个宫位样式 */
+        .palace {
+            background-color: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+            padding: 6px;
+            position: relative;
+            box-sizing: border-box;
+            transition: background 0.3s;
+        }
+
+        .palace:hover {
+            background-color: #252527;
+        }
+
+        /* 第一层：状态标记 (旬空、驿马) */
+        .status-layer {
+            display: flex;
+            justify-content: space-between;
+            height: 16px;
+        }
+        .badge {
+            font-size: 10px;
+            padding: 0px 3px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+        .empty { background: var(--color-fire); color: #fff; } /* 旬空 */
+        .horse { background: var(--color-water); color: #fff; } /* 驿马 */
+
+        /* 第二层：天时神助 (八神、九星) */
+        .heaven-layer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            font-size: 12px;
+        }
+        .god { color: var(--color-gold); } /* 八神 */
+        .star { color: var(--text-secondary); } /* 九星 */
+
+        /* 第三层：核心枢纽 (八门、十干克应) */
+        .core-layer {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+        }
+
+        /* 八门 - 重要度 2 */
+        .gate {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--color-wood);
+            writing-mode: vertical-rl; /* 竖排更有传统韵味 */
+            letter-spacing: 2px;
+        }
+
+        /* 十干克应 - 重要度 1 (视觉核心) */
+        .stems {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            line-height: 1.1;
+        }
+        .stem-heaven {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--text-primary);
+            text-shadow: 0 0 5px rgba(255,255,255,0.2);
+        }
+        .stem-earth {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* 第四层：推演辅助 (暗干、长生、格局) */
+        .detail-layer {
+            font-size: 10px;
+            color: #555;
+        }
+        .extra-info {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #2a2a2a;
+            padding-top: 2px;
+            margin-bottom: 2px;
+        }
+        
+        /* 十干克应衍生出的格局标签 */
+        .pattern-tag {
+            background: rgba(255, 204, 0, 0.1);
+            color: var(--color-gold);
+            text-align: center;
+            padding: 1px 0;
+            border-radius: 2px;
+            font-size: 9px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        /* 中间宫位特殊处理 (中五宫通常显示寄宫) */
+        .center-palace {
+            background-color: #151515;
+            justify-content: center;
+            align-items: center;
+            color: #444;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="qimen-container">
+    <div class="palace">
+        <div class="status-layer">
+            <span class="badge empty">空</span>
+            <span></span>
+        </div>
+        <div class="heaven-layer">
+            <span class="god">九地</span>
+            <span class="star">天辅</span>
+        </div>
+        <div class="core-layer">
+            <div class="gate">杜门</div>
+            <div class="stems">
+                <span class="stem-heaven">己</span>
+                <span class="stem-earth">辛</span>
+            </div>
+        </div>
+        <div class="detail-layer">
+            <div class="extra-info">
+                <span>暗丁</span>
+                <span>沐浴</span>
+            </div>
+            <div class="pattern-tag">游禄格</div>
+        </div>
+    </div>
+
+    <div class="palace">
+        <div class="status-layer">
+            <span></span>
+            <span></span>
+        </div>
+        <div class="heaven-layer">
+            <span class="god">九天</span>
+            <span class="star">天英</span>
+        </div>
+        <div class="core-layer">
+            <div class="gate">景门</div>
+            <div class="stems">
+                <span class="stem-heaven">癸</span>
+                <span class="stem-earth">乙</span>
+            </div>
+        </div>
+        <div class="detail-layer">
+            <div class="extra-info">
+                <span>暗乙</span>
+                <span>临官</span>
+            </div>
+            <div class="pattern-tag">华盖地户</div>
+        </div>
+    </div>
+
+    <div class="palace">
+        <div class="status-layer">
+            <span></span>
+            <span class="badge horse">马</span>
+        </div>
+        <div class="heaven-layer">
+            <span class="god">值符</span>
+            <span class="star">天芮</span>
+        </div>
+        <div class="core-layer">
+            <div class="gate" style="color:var(--color-fire)">死门</div>
+            <div class="stems">
+                <span class="stem-heaven">戊</span>
+                <span class="stem-earth">丙</span>
+            </div>
+        </div>
+        <div class="detail-layer">
+            <div class="extra-info">
+                <span>暗壬</span>
+                <span>病</span>
+            </div>
+            <div class="pattern-tag">青龙返首</div>
+        </div>
+    </div>
+
+    <div class="palace">
+        <div class="status-layer"><span></span><span></span></div>
+        <div class="heaven-layer"><span class="god">六合</span><span class="star">天冲</span></div>
+        <div class="core-layer">
+            <div class="gate">伤门</div>
+            <div class="stems">
+                <span class="stem-heaven">辛</span>
+                <span class="stem-earth">己</span>
+            </div>
+        </div>
+        <div class="detail-layer">
+            <div class="extra-info"><span>暗癸</span><span>帝旺</span></div>
+            <div class="pattern-tag">入狱</div>
+        </div>
+    </div>
+
+    <div class="palace center-palace">
+        <div>天心寄宫</div>
+        <div style="font-size: 24px; margin: 5px 0;">五</div>
+    </div>
+
+    <div class="palace">
+        <div class="status-layer"><span></span><span></span></div>
+        <div class="heaven-layer"><span class="god">太阴</span><span class="star">天柱</span></div>
+        <div class="core-layer">
+            <div class="gate">惊门</div>
+            <div class="stems">
+                <span class="stem-heaven">乙</span>
+                <span class="stem-earth">癸</span>
+            </div>
+        </div>
+        <div class="detail-layer">
+            <div class="extra-info"><span>暗戊</span><span>绝</span></div>
+            <div class="pattern-tag">日奇被刑</div>
+        </div>
+    </div>
+
+    <div class="palace">
+        <div class="status-layer"><span></span><span></span></div>
+        <div class="heaven-layer"><span class="god">螣蛇</span><span class="star">天任</span></div>
+        <div class="core-layer">
+            <div class="gate">生门</div>
+            <div class="stems">
+                <span class="stem-heaven">丙</span>
+                <span class="stem-earth">戊</span>
+            </div>
+        </div>
+        <div class="detail-layer">
+            <div class="extra-info"><span>暗己</span><span>长生</span></div>
+            <div class="pattern-tag">飞鸟跌穴</div>
+        </div>
+    </div>
+
+    <div class="palace">
+        <div class="status-layer"><span></span><span></span></div>
+        <div class="heaven-layer"><span class="god">白虎</span><span class="star">天蓬</span></div>
+        <div class="core-layer">
+            <div class="gate">休门</div>
+            <div class="stems">
+                <span class="stem-heaven">丁</span>
+                <span class="stem-earth">壬</span>
+            </div>
+        </div>
+        <div class="detail-layer">
+            <div class="extra-info"><span>暗辛</span><span>胎</span></div>
+            <div class="pattern-tag">星随月转</div>
+        </div>
+    </div>
+
+    <div class="palace">
+        <div class="status-layer"><span></span><span></span></div>
+        <div class="heaven-layer"><span class="god">玄武</span><span class="star">天心</span></div>
+        <div class="core-layer">
+            <div class="gate">开门</div>
+            <div class="stems">
+                <span class="stem-heaven">庚</span>
+                <span class="stem-earth">丁</span>
+            </div>
+        </div>
+        <div class="detail-layer">
+            <div class="extra-info"><span>暗丙</span><span>衰</span></div>
+            <div class="pattern-tag">亭亭之格</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
