@@ -397,3 +397,48 @@ class TraditionalColors {
     }
   }
 }
+
+/// 旺衰色彩系统
+/// 支持一般旺衰（旺相休囚死）和十二长生
+class WangShuaiColors {
+  WangShuaiColors._();
+
+  /// 一般旺衰颜色 - 强（旺/相）
+  static const Color normalStrong = Color(0xFF4A7C59);
+
+  /// 一般旺衰颜色 - 弱（休/囚/死/废）
+  static const Color normalWeak = Color(0xFF6B9B7A);
+
+  /// 十二长生颜色 - 强（长生到帝旺）
+  static const Color zhangShengStrong = Color(0xFF3B82F6);
+
+  /// 十二长生颜色 - 弱（衰到养）
+  static const Color zhangShengWeak = Color(0xFF6B7280);
+
+  /// 获取一般旺衰颜色
+  static Color getNormalWangShuaiColor(String wangShuai) {
+    switch (wangShuai) {
+      case '旺':
+      case '相':
+        return normalStrong;
+      case '休':
+      case '囚':
+      case '死':
+      case '废':
+        return normalWeak;
+      default:
+        return ColorSystem.textSecondary;
+    }
+  }
+
+  /// 十二长生强状态列表
+  static const List<String> _strongZhangSheng = ['长', '沐', '冠', '禄', '帝'];
+
+  /// 获取十二长生颜色
+  static Color getZhangShengColorByString(String zhangShengName) {
+    if (_strongZhangSheng.contains(zhangShengName)) {
+      return zhangShengStrong;
+    }
+    return zhangShengWeak;
+  }
+}

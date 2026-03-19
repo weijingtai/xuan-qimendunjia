@@ -243,6 +243,46 @@ class PalaceData {
   final String? diPanJiGan; // 地盘寄宫干（仅寄宫宫位）
   final String? jiStar; // 寄宫九星（仅寄宫宫位）
 
+  // === 星旺衰 ===
+  final String? starGongWangShuai; // 九星宫位旺衰
+  final String? starMonthWangShuai; // 九星月令旺衰
+
+  // === 门旺衰 ===
+  final String? doorGongWangShuai; // 八门宫位旺衰
+  final String? doorMonthWangShuai; // 八门月令旺衰
+
+  // === 神旺衰 ===
+  final String? godGongWangShuai; // 天盘神旺衰
+  final String? diGodGongWangShuai; // 地盘神旺衰
+
+  // === 天盘干十二长生 ===
+  final String? tianPanGongZhangSheng; // 天盘干宫位长生简称
+  final String? tianPanMonthZhangSheng; // 天盘干月令长生简称
+
+  // === 天盘寄宫干十二长生 ===
+  final String? tianPanJiGanGongZhangSheng; // 天盘寄宫干宫位长生简称
+  final String? tianPanJiGanMonthZhangSheng; // 天盘寄宫干月令长生简称
+
+  // === 地盘干十二长生 ===
+  final String? diPanGongZhangSheng; // 地盘干宫位长生简称
+  final String? diPanMonthZhangSheng; // 地盘干月令长生简称
+
+  // === 地盘寄宫干十二长生 ===
+  final String? diPanJiGanGongZhangSheng; // 地盘寄宫干宫位长生简称
+  final String? diPanJiGanMonthZhangSheng; // 地盘寄宫干月令长生简称
+
+  // === 隐干十二长生 ===
+  final String? yinGanGongZhangSheng; // 隐干宫位长生简称
+  final String? yinGanMonthZhangSheng; // 隐干月令长生简称
+
+  // === 天盘暗干十二长生 ===
+  final String? tianPanAnGanGongZhangSheng; // 天盘暗干宫位长生简称
+  final String? tianPanAnGanMonthZhangSheng; // 天盘暗干月令长生简称
+
+  // === 人盘暗干十二长生 ===
+  final String? renPanAnGanGongZhangSheng; // 人盘暗干宫位长生简称
+  final String? renPanAnGanMonthZhangSheng; // 人盘暗干月令长生简称
+
   const PalaceData({
     required this.name,
     required this.number,
@@ -264,6 +304,36 @@ class PalaceData {
     this.tianPanJiGan,
     this.diPanJiGan,
     this.jiStar,
+    // 星旺衰
+    this.starGongWangShuai,
+    this.starMonthWangShuai,
+    // 门旺衰
+    this.doorGongWangShuai,
+    this.doorMonthWangShuai,
+    // 神旺衰
+    this.godGongWangShuai,
+    this.diGodGongWangShuai,
+    // 天盘干十二长生
+    this.tianPanGongZhangSheng,
+    this.tianPanMonthZhangSheng,
+    // 天盘寄宫干十二长生
+    this.tianPanJiGanGongZhangSheng,
+    this.tianPanJiGanMonthZhangSheng,
+    // 地盘干十二长生
+    this.diPanGongZhangSheng,
+    this.diPanMonthZhangSheng,
+    // 地盘寄宫干十二长生
+    this.diPanJiGanGongZhangSheng,
+    this.diPanJiGanMonthZhangSheng,
+    // 隐干十二长生
+    this.yinGanGongZhangSheng,
+    this.yinGanMonthZhangSheng,
+    // 天盘暗干十二长生
+    this.tianPanAnGanGongZhangSheng,
+    this.tianPanAnGanMonthZhangSheng,
+    // 人盘暗干十二长生
+    this.renPanAnGanGongZhangSheng,
+    this.renPanAnGanMonthZhangSheng,
   });
 
   /// 创建示例数据
@@ -285,6 +355,24 @@ class PalaceData {
         marks: ['驿马'],
         isYangDun: true,
         yinGan: '庚',
+        tianPanAnGan: '丙',
+        renPanAnGan: '壬',
+        starGongWangShuai: '旺',
+        starMonthWangShuai: '相',
+        doorGongWangShuai: '旺',
+        doorMonthWangShuai: '休',
+        godGongWangShuai: '旺',
+        diGodGongWangShuai: '相',
+        tianPanGongZhangSheng: '冠',
+        tianPanMonthZhangSheng: '沐',
+        diPanGongZhangSheng: '死',
+        diPanMonthZhangSheng: '病',
+        yinGanGongZhangSheng: '帝',
+        yinGanMonthZhangSheng: '长',
+        tianPanAnGanGongZhangSheng: '沐',
+        tianPanAnGanMonthZhangSheng: '帝',
+        renPanAnGanGongZhangSheng: '病',
+        renPanAnGanMonthZhangSheng: '养',
       ),
       PalaceData(
         name: '离宫',
@@ -301,7 +389,25 @@ class PalaceData {
         geJu: '飞鸟跌穴',
         marks: ['值符'],
         isYangDun: true,
+        yinGan: '戊',
         tianPanAnGan: '戊',
+        renPanAnGan: '癸',
+        starGongWangShuai: '囚',
+        starMonthWangShuai: '旺',
+        doorGongWangShuai: '旺',
+        doorMonthWangShuai: '相',
+        godGongWangShuai: '旺',
+        diGodGongWangShuai: '旺',
+        tianPanGongZhangSheng: '帝',
+        tianPanMonthZhangSheng: '沐',
+        diPanGongZhangSheng: '病',
+        diPanMonthZhangSheng: '衰',
+        yinGanGongZhangSheng: '死',
+        yinGanMonthZhangSheng: '长',
+        tianPanAnGanGongZhangSheng: '帝',
+        tianPanAnGanMonthZhangSheng: '沐',
+        renPanAnGanGongZhangSheng: '绝',
+        renPanAnGanMonthZhangSheng: '养',
       ),
       PalaceData(
         name: '坤宫',
@@ -318,10 +424,32 @@ class PalaceData {
         geJu: '玉女守门',
         marks: [],
         isYangDun: true,
-        // 中五寄坤（阳遁）
         jiStar: '天禽',
         tianPanJiGan: '己',
         diPanJiGan: '丁',
+        yinGan: '癸',
+        tianPanAnGan: '辛',
+        renPanAnGan: '庚',
+        starGongWangShuai: '死',
+        starMonthWangShuai: '囚',
+        doorGongWangShuai: '死',
+        doorMonthWangShuai: '休',
+        godGongWangShuai: '相',
+        diGodGongWangShuai: '死',
+        tianPanGongZhangSheng: '沐',
+        tianPanMonthZhangSheng: '绝',
+        tianPanJiGanGongZhangSheng: '冠',
+        tianPanJiGanMonthZhangSheng: '沐',
+        diPanGongZhangSheng: '衰',
+        diPanMonthZhangSheng: '死',
+        diPanJiGanGongZhangSheng: '沐',
+        diPanJiGanMonthZhangSheng: '绝',
+        yinGanGongZhangSheng: '养',
+        yinGanMonthZhangSheng: '死',
+        tianPanAnGanGongZhangSheng: '病',
+        tianPanAnGanMonthZhangSheng: '绝',
+        renPanAnGanGongZhangSheng: '病',
+        renPanAnGanMonthZhangSheng: '旺',
       ),
       PalaceData(
         name: '震宫',
@@ -339,6 +467,24 @@ class PalaceData {
         marks: ['空亡'],
         isYangDun: true,
         yinGan: '壬',
+        tianPanAnGan: '乙',
+        renPanAnGan: '丙',
+        starGongWangShuai: '旺',
+        starMonthWangShuai: '旺',
+        doorGongWangShuai: '休',
+        doorMonthWangShuai: '旺',
+        godGongWangShuai: '死',
+        diGodGongWangShuai: '相',
+        tianPanGongZhangSheng: '死',
+        tianPanMonthZhangSheng: '旺',
+        diPanGongZhangSheng: '绝',
+        diPanMonthZhangSheng: '囚',
+        yinGanGongZhangSheng: '长',
+        yinGanMonthZhangSheng: '旺',
+        tianPanAnGanGongZhangSheng: '沐',
+        tianPanAnGanMonthZhangSheng: '旺',
+        renPanAnGanGongZhangSheng: '沐',
+        renPanAnGanMonthZhangSheng: '旺',
       ),
       PalaceData(
         name: '中宫',
@@ -355,6 +501,25 @@ class PalaceData {
         geJu: '三奇得使',
         marks: ['值符', '旬首'],
         isYangDun: true,
+        yinGan: '丁',
+        tianPanAnGan: '己',
+        renPanAnGan: '乙',
+        starGongWangShuai: '旺',
+        starMonthWangShuai: '囚',
+        doorGongWangShuai: '死',
+        doorMonthWangShuai: '休',
+        godGongWangShuai: '旺',
+        diGodGongWangShuai: '旺',
+        tianPanGongZhangSheng: '冠',
+        tianPanMonthZhangSheng: '沐',
+        diPanGongZhangSheng: '沐',
+        diPanMonthZhangSheng: '绝',
+        yinGanGongZhangSheng: '沐',
+        yinGanMonthZhangSheng: '绝',
+        tianPanAnGanGongZhangSheng: '冠',
+        tianPanAnGanMonthZhangSheng: '沐',
+        renPanAnGanGongZhangSheng: '沐',
+        renPanAnGanMonthZhangSheng: '旺',
       ),
       PalaceData(
         name: '兑宫',
@@ -371,6 +536,25 @@ class PalaceData {
         geJu: '飞鸟跌穴',
         marks: [],
         isYangDun: true,
+        yinGan: '乙',
+        tianPanAnGan: '丁',
+        renPanAnGan: '癸',
+        starGongWangShuai: '旺',
+        starMonthWangShuai: '相',
+        doorGongWangShuai: '死',
+        doorMonthWangShuai: '相',
+        godGongWangShuai: '相',
+        diGodGongWangShuai: '死',
+        tianPanGongZhangSheng: '帝',
+        tianPanMonthZhangSheng: '旺',
+        diPanGongZhangSheng: '沐',
+        diPanMonthZhangSheng: '旺',
+        yinGanGongZhangSheng: '沐',
+        yinGanMonthZhangSheng: '旺',
+        tianPanAnGanGongZhangSheng: '沐',
+        tianPanAnGanMonthZhangSheng: '旺',
+        renPanAnGanGongZhangSheng: '养',
+        renPanAnGanMonthZhangSheng: '旺',
       ),
       PalaceData(
         name: '艮宫',
@@ -387,7 +571,25 @@ class PalaceData {
         geJu: '青龙合会',
         marks: ['驿马'],
         isYangDun: true,
+        yinGan: '辛',
         tianPanAnGan: '癸',
+        renPanAnGan: '壬',
+        starGongWangShuai: '旺',
+        starMonthWangShuai: '旺',
+        doorGongWangShuai: '旺',
+        doorMonthWangShuai: '旺',
+        godGongWangShuai: '旺',
+        diGodGongWangShuai: '相',
+        tianPanGongZhangSheng: '帝',
+        tianPanMonthZhangSheng: '旺',
+        diPanGongZhangSheng: '病',
+        diPanMonthZhangSheng: '旺',
+        yinGanGongZhangSheng: '帝',
+        yinGanMonthZhangSheng: '旺',
+        tianPanAnGanGongZhangSheng: '绝',
+        tianPanAnGanMonthZhangSheng: '旺',
+        renPanAnGanGongZhangSheng: '长',
+        renPanAnGanMonthZhangSheng: '旺',
       ),
       PalaceData(
         name: '坎宫',
@@ -405,6 +607,24 @@ class PalaceData {
         marks: ['空亡'],
         isYangDun: true,
         yinGan: '甲',
+        tianPanAnGan: '壬',
+        renPanAnGan: '丁',
+        starGongWangShuai: '囚',
+        starMonthWangShuai: '旺',
+        doorGongWangShuai: '旺',
+        doorMonthWangShuai: '旺',
+        godGongWangShuai: '死',
+        diGodGongWangShuai: '旺',
+        tianPanGongZhangSheng: '长',
+        tianPanMonthZhangSheng: '旺',
+        diPanGongZhangSheng: '冠',
+        diPanMonthZhangSheng: '旺',
+        yinGanGongZhangSheng: '长',
+        yinGanMonthZhangSheng: '旺',
+        tianPanAnGanGongZhangSheng: '长',
+        tianPanAnGanMonthZhangSheng: '旺',
+        renPanAnGanGongZhangSheng: '沐',
+        renPanAnGanMonthZhangSheng: '旺',
       ),
       PalaceData(
         name: '乾宫',
@@ -421,6 +641,25 @@ class PalaceData {
         geJu: '白虎猖狂',
         marks: [],
         isYangDun: true,
+        yinGan: '己',
+        tianPanAnGan: '庚',
+        renPanAnGan: '丙',
+        starGongWangShuai: '旺',
+        starMonthWangShuai: '相',
+        doorGongWangShuai: '旺',
+        doorMonthWangShuai: '旺',
+        godGongWangShuai: '死',
+        diGodGongWangShuai: '死',
+        tianPanGongZhangSheng: '养',
+        tianPanMonthZhangSheng: '旺',
+        diPanGongZhangSheng: '病',
+        diPanMonthZhangSheng: '旺',
+        yinGanGongZhangSheng: '冠',
+        yinGanMonthZhangSheng: '旺',
+        tianPanAnGanGongZhangSheng: '帝',
+        tianPanAnGanMonthZhangSheng: '旺',
+        renPanAnGanGongZhangSheng: '沐',
+        renPanAnGanMonthZhangSheng: '旺',
       ),
     ];
   }

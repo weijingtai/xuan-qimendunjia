@@ -16,6 +16,11 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
   bool _showDiGod = false;
   bool _showYinGan = false;
   bool _showAnGan = false;
+  bool _showWangShuai = false;
+  bool _showGongWangShuai = true;
+  bool _showYueLingWangShuai = true;
+  bool _showZhangSheng = true;
+  bool _showDiGodWangShuai = true;
 
   final List<_SizePreset> _sizePresets = const [
     _SizePreset('小 (72px)', 240),
@@ -29,6 +34,11 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
     showYinGan: _showYinGan,
     showAnGan: _showAnGan,
     showGeJu: false,
+    showWangShuai: _showWangShuai,
+    showGongWangShuai: _showGongWangShuai,
+    showYueLingWangShuai: _showYueLingWangShuai,
+    showZhangSheng: _showZhangSheng,
+    showDiGodWangShuai: _showDiGodWangShuai,
   );
 
   @override
@@ -150,9 +160,68 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
                 ),
               ),
               const SizedBox(width: 12),
+              Expanded(child: Container()),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1),
+          const SizedBox(height: 16),
+          Row(
+            children: [
               Expanded(
-                child: Container(), // Placeholder for alignment
+                child: _buildToggle(
+                  label: '显示旺衰',
+                  subtitle: 'showWangShuai',
+                  value: _showWangShuai,
+                  onChanged: (v) => setState(() => _showWangShuai = v),
+                ),
               ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildToggle(
+                  label: '显示地神旺衰',
+                  subtitle: 'showDiGodWangShuai',
+                  value: _showDiGodWangShuai,
+                  onChanged: (v) => setState(() => _showDiGodWangShuai = v),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _buildToggle(
+                  label: '宫位旺衰',
+                  subtitle: 'showGongWangShuai',
+                  value: _showGongWangShuai,
+                  onChanged: (v) => setState(() => _showGongWangShuai = v),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildToggle(
+                  label: '月令旺衰',
+                  subtitle: 'showYueLingWangShuai',
+                  value: _showYueLingWangShuai,
+                  onChanged: (v) => setState(() => _showYueLingWangShuai = v),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _buildToggle(
+                  label: '十二长生',
+                  subtitle: 'showZhangSheng',
+                  value: _showZhangSheng,
+                  onChanged: (v) => setState(() => _showZhangSheng = v),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Container()),
             ],
           ),
         ],
@@ -360,6 +429,68 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
               ),
             ),
           ],
+          const SizedBox(height: 12),
+          Text(
+            '旺衰信息',
+            style: QiMenTypography.labelMedium.copyWith(
+              color: ColorSystem.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 16,
+            runSpacing: 4,
+            children: [
+              _infoChip(
+                '神旺',
+                data.godGongWangShuai ?? '-',
+                WangShuaiColors.normalStrong,
+              ),
+              _infoChip(
+                '星宫',
+                data.starGongWangShuai ?? '-',
+                WangShuaiColors.normalStrong,
+              ),
+              _infoChip(
+                '星月',
+                data.starMonthWangShuai ?? '-',
+                WangShuaiColors.normalStrong,
+              ),
+              _infoChip(
+                '门宫',
+                data.doorGongWangShuai ?? '-',
+                WangShuaiColors.normalStrong,
+              ),
+              _infoChip(
+                '门月',
+                data.doorMonthWangShuai ?? '-',
+                WangShuaiColors.normalStrong,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 16,
+            runSpacing: 4,
+            children: [
+              _infoChip(
+                '天盘长',
+                '${data.tianPanGongZhangSheng ?? '-'}/${data.tianPanMonthZhangSheng ?? '-'}',
+                WangShuaiColors.zhangShengStrong,
+              ),
+              _infoChip(
+                '地盘长',
+                '${data.diPanGongZhangSheng ?? '-'}/${data.diPanMonthZhangSheng ?? '-'}',
+                WangShuaiColors.zhangShengStrong,
+              ),
+              _infoChip(
+                '隐干长',
+                '${data.yinGanGongZhangSheng ?? '-'}/${data.yinGanMonthZhangSheng ?? '-'}',
+                WangShuaiColors.zhangShengStrong,
+              ),
+            ],
+          ),
         ],
       ),
     );

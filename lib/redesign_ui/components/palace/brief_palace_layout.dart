@@ -2,22 +2,10 @@ part of '../../layouts/smart_grid.dart';
 
 // ─── Font-size helper ─────────────────────────────────────────────────────────
 
-/// 宫格内通用字号
 double _palaceFontSize(double size) => (size * 0.155).clamp(9.0, 15.0);
 
 // ─── BriefPalaceLayout ────────────────────────────────────────────────────────
 
-/// 宫位布局，支持默认（左右）和激活（左中右）两种状态，并包含平滑动画。
-///
-/// **默认状态 (左右布局):**
-/// - 左: 神, 星, 门, 地神
-/// - 右: 天盘干, 地盘干
-///
-/// **激活状态 (左中右布局):**
-/// - 左: 隐干, 暗干
-/// - 中: 神, 星, 门, 地神 (所有元素居中对齐)
-/// - 右: 天盘干, 地盘干
-///
 class BriefPalaceLayout extends StatelessWidget {
   final PalaceData data;
   final BriefPalaceConfig config;
@@ -32,127 +20,93 @@ class BriefPalaceLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double pad = 8;
-    final double fs = 16;
-    final fsJi = fs * 0.85;
+    final double pad = 6;
+    final double fs = 14;
+    final double wsFs = fs * 0.65;
     const textColor = Color(0xFF2C2C2C);
     const jiColor = Color(0xFF6B7280);
 
     final style = TextStyle(
-        fontSize: fs, color: textColor, fontWeight: FontWeight.w500, height: 1);
+      fontSize: fs,
+      color: textColor,
+      fontWeight: FontWeight.w500,
+      height: 1.1,
+    );
     final jiStyle = TextStyle(
-        fontSize: fsJi, color: jiColor, fontWeight: FontWeight.w400, height: 1);
+      fontSize: fs * 0.85,
+      color: jiColor,
+      fontWeight: FontWeight.w400,
+      height: 1.1,
+    );
 
-    final bool showLeftPart = (config.showYinGan && data.yinGan != null) ||
+    final bool showLeftPart =
+        (config.showYinGan && data.yinGan != null) ||
         (config.showAnGan && data.tianPanAnGan != null);
     final bool shouldTruncate = data.jiStar != null;
-    final double totalWidth = size - (pad * 2);
-    // final double totalWidth = size - 8;
+    final bool showWangShuai = config.showWangShuai;
 
-    // --- PX 计算 ---
-    // 根据状态动态计算左、中、右三列的宽度
-    // 当前宫位是否有寄宫的现象
     final bool withJi = data.tianPanJiGan != null || data.diPanJiGan != null;
-    // 右侧 天地盘干 列宽度，根据是否有寄宫而变化
-    final double rightColWidth =
-        withJi ? style.fontSize! * 2 + 2 : style.fontSize! + 2;
-    final double starDoorGodTextBoxWidth = style.fontSize! * 2 + 2;
-
-    // 左侧有右侧宽度保持一致，此时可以确保 middle 为中心对齐时，神星门等保持中心对齐
+    final double rightColWidth = withJi ? fs * 2.5 + 4 : fs * 2 + 4;
     final double leftColWidth = showLeftPart ? rightColWidth : 0;
-    // final double middleColWidth =
-    //    size + (pad * 2) - leftColWidth - rightColWidth;
-    final double middleColWidth = size - leftColWidth - rightColWidth;
-    // 格局高度
-    final double geJuHeight = 32;
+    final double middleColWidth = size - leftColWidth - rightColWidth - pad * 2;
+    final double geJuHeight = 28;
     final double geJuContentHeight = config.showGeJu ? geJuHeight : 0;
-    final double mainContentHeight =
-        config.showGeJu ? totalWidth - geJuHeight : totalWidth;
 
-    // 主内容始终居中对齐
-    // final CrossAxisAlignment middleCrossAxisAlignment =
-    // showLeftPart ? CrossAxisAlignment.center : CrossAxisAlignment.start;
     return Container(
       width: size,
       height: size,
       padding: EdgeInsets.all(pad),
-      // color: Colors.black87,
       child: Column(
         children: [
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            width: totalWidth,
+            width: size - pad * 2,
             height: geJuContentHeight,
-            color: Colors.blueGrey.withAlpha(50),
-          ),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            width: size,
-            height: 18,
-            color: Colors.blueGrey.withAlpha(50),
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text("马", style: jiStyle),
-                SizedBox(
-                  width: 4,
-                ),
-                Text("⭕️", style: jiStyle),
-              ],
-            ),
+            color: Colors.blueGrey.withAlpha(30),
+            alignment: Alignment.center,
+            child: config.showGeJu
+                ? Text(
+                    data.geJu,
+                    style: TextStyle(
+                      fontSize: fs * 0.8,
+                      color: textColor,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  )
+                : null,
           ),
           Expanded(
-            child: Container(
-              alignment: Alignment.center,
-              color: Colors.red.withAlpha(40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // 左列：隐干/暗干
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (leftColWidth > 0)
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     width: leftColWidth,
-                    color: Colors.blue.withAlpha(50),
-                    child: _buildLeftColumn(style),
+                    child: _buildLeftColumn(style, wsFs, showWangShuai),
                   ),
-
-                  // 中列：神/星/门/地神
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    alignment:
-                        showLeftPart ? Alignment.center : Alignment.centerLeft,
-                    width: middleColWidth,
-                    color: Colors.green.withAlpha(50),
-                    child: SizedBox(
-                      // color: Colors.blue.withAlpha(50),
-                      width: starDoorGodTextBoxWidth,
-                      child: _buildMainContent(
-                        // middleCrossAxisAlignment,
-                        shouldTruncate,
-                        style,
-                        jiStyle,
-                        fs,
-                        starDoorGodTextBoxWidth,
-                      ),
-                    ),
+                SizedBox(width: 4),
+                Expanded(
+                  child: _buildMainContent(
+                    shouldTruncate,
+                    style,
+                    jiStyle,
+                    wsFs,
+                    showWangShuai,
                   ),
-
-                  // 右列：天地盘干
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    width: rightColWidth,
-                    child: _buildRightGans(style, jiStyle, rightColWidth,
-                        withJi: withJi),
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(width: 4),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  width: rightColWidth,
+                  child: _buildRightGans(style, wsFs, withJi, showWangShuai),
+                ),
+              ],
             ),
           ),
         ],
@@ -161,113 +115,139 @@ class BriefPalaceLayout extends StatelessWidget {
   }
 
   /// 构建左侧的隐干/暗干列
-  Widget _buildLeftColumn(TextStyle style) {
+  Widget _buildLeftColumn(TextStyle style, double wsFs, bool showWangShuai) {
+    final hasYinGan = config.showYinGan && data.yinGan != null;
+    final hasAnGan = config.showAnGan && data.tianPanAnGan != null;
+
+    if (!hasYinGan && !hasAnGan) {
+      return const SizedBox();
+    }
+
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          (config.showYinGan && data.yinGan != null) ? data.yinGan! : '',
-          style: style,
+        if (hasYinGan) ...[
+          _buildZhangShengRow(
+            data.yinGan!,
+            data.yinGanGongZhangSheng,
+            data.yinGanMonthZhangSheng,
+            style,
+            wsFs,
+            showWangShuai,
+          ),
+        ],
+        if (hasAnGan) ...[
+          _buildZhangShengRow(
+            data.tianPanAnGan!,
+            data.tianPanAnGanGongZhangSheng,
+            data.tianPanAnGanMonthZhangSheng,
+            style,
+            wsFs,
+            showWangShuai,
+          ),
+        ],
+        if (config.showAnGan && data.renPanAnGan != null) ...[
+          _buildZhangShengRow(
+            data.renPanAnGan!,
+            data.renPanAnGanGongZhangSheng,
+            data.renPanAnGanMonthZhangSheng,
+            style,
+            wsFs,
+            showWangShuai,
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// 构建右侧的天地盘干列（水平排布）
+  Widget _buildRightGans(
+    TextStyle style,
+    double wsFs,
+    bool withJi,
+    bool showWangShuai,
+  ) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _buildTianPanGanRow(
+          data.tianPanGan,
+          data.tianPanJiGan,
+          data.tianPanGongZhangSheng,
+          data.tianPanMonthZhangSheng,
+          data.tianPanJiGanGongZhangSheng,
+          data.tianPanJiGanMonthZhangSheng,
+          style,
+          wsFs,
+          withJi,
+          showWangShuai,
         ),
-        SizedBox(height: 16),
-        Text(
-          (config.showAnGan && data.tianPanAnGan != null)
-              ? data.tianPanAnGan!
-              : '',
-          style: style,
+        _buildTianPanGanRow(
+          data.diPanGan,
+          data.diPanJiGan,
+          data.diPanGongZhangSheng,
+          data.diPanMonthZhangSheng,
+          data.diPanJiGanGongZhangSheng,
+          data.diPanJiGanMonthZhangSheng,
+          style,
+          wsFs,
+          withJi,
+          showWangShuai,
         ),
       ],
     );
   }
 
-  /// 构建右侧固定的天地盘干（用 FittedBox 解决溢出）
-  Widget _buildRightGans(TextStyle style, TextStyle jiStyle, double columnWidth,
-      {required bool withJi}) {
-    return Container(
-      width: columnWidth,
-      color: Colors.grey.withAlpha(50),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // 八神
-          SizedBox(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: columnWidth,
-                color: Colors.yellow.withAlpha(50),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(data.tianPanGan, style: style),
-                    if (data.tianPanJiGan != null) ...[
-                      const SizedBox(width: 2),
-                      Text(data.tianPanJiGan!, style: jiStyle),
-                    ],
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              Container(
-                width: columnWidth,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(data.diPanGan, style: style),
-                    if (data.diPanJiGan != null) ...[
-                      const SizedBox(width: 2),
-                      Text(data.diPanJiGan!, style: jiStyle),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-    return Container(
-        width: columnWidth,
-        color: Colors.grey.withAlpha(50),
-        child: Column(
+  /// 构建天盘干行（水平排布：干 + 寄宫干）
+  Widget _buildTianPanGanRow(
+    String gan,
+    String? jiGan,
+    String? gongZhangSheng,
+    String? monthZhangSheng,
+    String? jiGanGongZhangSheng,
+    String? jiGanMonthZhangSheng,
+    TextStyle style,
+    double wsFs,
+    bool withJi,
+    bool showWangShuai,
+  ) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: columnWidth,
-              color: Colors.yellow.withAlpha(50),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(data.tianPanGan, style: style),
-                  if (data.tianPanJiGan != null) ...[
-                    const SizedBox(width: 2),
-                    Text(data.tianPanJiGan!, style: jiStyle),
-                  ],
-                ],
+            Text(gan, style: style),
+            if (jiGan != null && withJi) ...[
+              const SizedBox(width: 2),
+              Text(
+                jiGan,
+                style: style.copyWith(
+                  color: const Color(0xFF6B7280),
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-            ),
-            Container(
-              width: columnWidth,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(data.diPanGan, style: style),
-                  if (data.diPanJiGan != null) ...[
-                    const SizedBox(width: 2),
-                    Text(data.diPanJiGan!, style: jiStyle),
-                  ],
-                ],
-              ),
+            ],
+          ],
+        ),
+        if (showWangShuai) ...[
+          const SizedBox(height: 2),
+          _buildZhangShengText(gongZhangSheng, monthZhangSheng, wsFs),
+          if (withJi && jiGanGongZhangSheng != null) ...[
+            const SizedBox(height: 1),
+            _buildZhangShengText(
+              jiGanGongZhangSheng,
+              jiGanMonthZhangSheng,
+              wsFs,
             ),
           ],
-        ));
+        ],
+      ],
+    );
   }
 
   /// 构建核心内容（神、星、门、地神）
@@ -275,8 +255,8 @@ class BriefPalaceLayout extends StatelessWidget {
     bool shouldTruncate,
     TextStyle style,
     TextStyle jiStyle,
-    double fs,
-    double width,
+    double wsFs,
+    bool showWangShuai,
   ) {
     String processStarText(String text) {
       if (shouldTruncate && text.startsWith('天')) {
@@ -291,57 +271,175 @@ class BriefPalaceLayout extends StatelessWidget {
       children: [
         // 八神
         Text(data.god, style: style),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        if (showWangShuai && data.godGongWangShuai != null)
+          _buildWangShuaiText(data.godGongWangShuai!, wsFs),
+        // 九星
+        Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // 九星
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(processStarText(data.star), style: style),
-                if (data.jiStar != null) ...[
-                  const SizedBox(width: 2),
-                  Text(processStarText(data.jiStar!), style: jiStyle),
-                ],
-              ],
-            ),
-            SizedBox(
-              height: 8,
-            ),
-
-            // 八门 & 地神
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(data.door, style: style),
-                SizedBox(height: 2),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
-                    return SizeTransition(
-                      sizeFactor: animation,
-                      axis: Axis.vertical,
-                      child: child,
-                    );
-                  },
-                  child: (config.showDiGod && data.diGod.isNotEmpty)
-                      ? Container(
-                          width: width,
-                          alignment: Alignment.center,
-                          child: Text(data.diGod,
-                              style: jiStyle.copyWith(
-                                  color: const Color(0xFF6B7280)
-                                      .withOpacity(0.8))),
-                        )
-                      : const SizedBox.shrink(key: ValueKey('diGodHidden')),
-                ),
-              ],
-            ),
+            Text(processStarText(data.star), style: style),
+            if (data.jiStar != null) ...[
+              const SizedBox(width: 2),
+              Text(
+                processStarText(data.jiStar!),
+                style: jiStyle.copyWith(fontWeight: FontWeight.w400),
+              ),
+            ],
           ],
-        )
+        ),
+        if (showWangShuai)
+          _buildWangShuaiDoubleText(
+            data.starGongWangShuai,
+            data.starMonthWangShuai,
+            wsFs,
+          ),
+        // 八门
+        Text(data.door, style: style),
+        if (showWangShuai)
+          _buildWangShuaiDoubleText(
+            data.doorGongWangShuai,
+            data.doorMonthWangShuai,
+            wsFs,
+          ),
+        // 地八神
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return SizeTransition(
+              sizeFactor: animation,
+              axis: Axis.vertical,
+              child: child,
+            );
+          },
+          child: (config.showDiGod && data.diGod.isNotEmpty)
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      data.diGod,
+                      style: jiStyle.copyWith(
+                        color: const Color(0xFF6B7280).withOpacity(0.8),
+                      ),
+                    ),
+                    if (showWangShuai &&
+                        config.showDiGodWangShuai &&
+                        data.diGodGongWangShuai != null) ...[
+                      const SizedBox(width: 2),
+                      _buildWangShuaiText(data.diGodGongWangShuai!, wsFs),
+                    ],
+                  ],
+                )
+              : const SizedBox.shrink(key: ValueKey('diGodHidden')),
+        ),
+      ],
+    );
+  }
+
+  /// 构建单个旺衰文字（如：旺）
+  Widget _buildWangShuaiText(String wangShuai, double wsFs) {
+    final color = WangShuaiColors.getNormalWangShuaiColor(wangShuai);
+    return Text(
+      wangShuai,
+      style: TextStyle(
+        fontSize: wsFs,
+        color: color,
+        fontWeight: FontWeight.w500,
+        height: 1,
+      ),
+    );
+  }
+
+  /// 构建双旺衰文字（如：宫旺·月休）
+  Widget _buildWangShuaiDoubleText(
+    String? gongWangShuai,
+    String? monthWangShuai,
+    double wsFs,
+  ) {
+    if (gongWangShuai == null && monthWangShuai == null) {
+      return const SizedBox();
+    }
+
+    return Text(
+      '${gongWangShuai ?? '·'}·${monthWangShuai ?? '·'}',
+      style: TextStyle(
+        fontSize: wsFs,
+        color: WangShuaiColors.normalStrong,
+        fontWeight: FontWeight.w500,
+        height: 1,
+      ),
+    );
+  }
+
+  /// 构建十二长生文字（如：帝·月衰）
+  Widget _buildZhangShengText(
+    String? gongZhangSheng,
+    String? monthZhangSheng,
+    double wsFs,
+  ) {
+    if (gongZhangSheng == null && monthZhangSheng == null) {
+      return const SizedBox();
+    }
+
+    final gongColor = gongZhangSheng != null
+        ? WangShuaiColors.getZhangShengColorByString(gongZhangSheng)
+        : WangShuaiColors.zhangShengWeak;
+    final monthColor = monthZhangSheng != null
+        ? WangShuaiColors.getZhangShengColorByString(monthZhangSheng)
+        : WangShuaiColors.zhangShengWeak;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          gongZhangSheng ?? '·',
+          style: TextStyle(
+            fontSize: wsFs,
+            color: gongColor,
+            fontWeight: FontWeight.w500,
+            height: 1,
+          ),
+        ),
+        Text(
+          '·',
+          style: TextStyle(
+            fontSize: wsFs,
+            color: const Color(0xFF6B7280),
+            fontWeight: FontWeight.w400,
+            height: 1,
+          ),
+        ),
+        Text(
+          monthZhangSheng ?? '·',
+          style: TextStyle(
+            fontSize: wsFs,
+            color: monthColor,
+            fontWeight: FontWeight.w500,
+            height: 1,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 构建干+长生行（用于隐干/暗干）
+  Widget _buildZhangShengRow(
+    String gan,
+    String? gongZhangSheng,
+    String? monthZhangSheng,
+    TextStyle style,
+    double wsFs,
+    bool showWangShuai,
+  ) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(gan, style: style),
+        if (showWangShuai) ...[
+          const SizedBox(height: 1),
+          _buildZhangShengText(gongZhangSheng, monthZhangSheng, wsFs),
+        ],
       ],
     );
   }
