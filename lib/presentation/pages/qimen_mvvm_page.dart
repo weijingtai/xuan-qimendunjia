@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:common/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,11 @@ import 'package:common/domain/ai/ai_persona.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/ai/pan_display_config.dart';
+import 'package:qimendunjia/domain/entities/qimen_pan.dart';
+import 'package:qimendunjia/redesign_ui/layouts/smart_grid.dart';
+import 'package:qimendunjia/redesign_ui/components/palace/brief_palace_config.dart';
+import 'package:qimendunjia/redesign_ui/core/design_system.dart';
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -42,18 +48,20 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
       final aiService = context.read<AiService>();
       _log.info('[_trySubscribeChatEvents] subscribing to chatEvents stream');
       debugPrint('📡 [QiMenMvvmPage] subscribing to chatEvents');
-      return aiService.chatEvents
-          .listen((event) {
+      return aiService.chatEvents.listen((event) {
         debugPrint('📡 [QiMenMvvmPage] received event: ${event.runtimeType}');
         if (event is! ToolResultEvent) return;
-        debugPrint('📡 [QiMenMvvmPage] ToolResultEvent: tool="${event.toolName}", hasError=${event.resultData.containsKey("error")}');
+        debugPrint(
+            '📡 [QiMenMvvmPage] ToolResultEvent: tool="${event.toolName}", hasError=${event.resultData.containsKey("error")}');
         if (event.toolName != 'qimen_tools') return;
         if (event.resultData.containsKey('error')) return;
 
-        _log.info('[chatEvents] received qimen_tools result, session=${event.sessionUuid}');
+        _log.info(
+            '[chatEvents] received qimen_tools result, session=${event.sessionUuid}');
         try {
           final pan = PanSerializer.fromMap(event.resultData);
-          _log.info('[chatEvents] deserialized pan: ${pan.brief}, loading into ViewModel');
+          _log.info(
+              '[chatEvents] deserialized pan: ${pan.brief}, loading into ViewModel');
           debugPrint('📡 [QiMenMvvmPage] loadExternalPan: ${pan.brief}');
           context.read<QiMenViewModel>().loadExternalPan(pan);
         } catch (e) {
@@ -449,6 +457,71 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
   Widget _buildPanInfo(QiMenViewModel viewModel) {
     final pan = viewModel.currentPan!;
     final ju = viewModel.currentJu!;
+    final config = viewModel.displayConfig;
+
+    // 将 QiMenPan 数据转换为 SmartQiMenGrid 所需的 PalaceData 列表
+    final palaceDataList = _buildPalaceDataList(pan, config);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // ── 盘头信息 ──────────────────────────────────────────────────
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Wrap(
+              spacing: 24,
+              runSpacing: 4,
+              children: [
+                _buildInfoRow('盘类型', pan.plateType.name),
+                _buildInfoRow('局数', ju.juDescription),
+                _buildInfoRow('旬首', ju.fuTouJiaZi.name),
+                _buildInfoRow('节气', ju.jieQiAt.name),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // ── 九宫格（简介模式） ──────────────────────────────────────
+        Center(
+          child: Container(
+            decoration: BoxDecoration(
+              color: ColorSystem.surface,
+              borderRadius: QiMenRadius.lg,
+              boxShadow: [Shadows.md],
+            ),
+            padding: const EdgeInsets.all(12),
+            child: SmartQiMenGrid(
+              palaces: palaceDataList,
+              selectedIndex: viewModel.selectedGong == null
+                  ? null
+                  : _gridOrderedGuas.indexOf(viewModel.selectedGong!.gongGua),
+              briefConfig: BriefPalaceConfig(
+                showDiGod: config.showDiGod,
+                showYinGan: config.showYinGan,
+                showAnGan: config.showAnGan,
+              ),
+              onPalaceTap: (index) {
+                final gua = _gridOrderedGuas[index];
+                final gong = pan.gongMapper[gua];
+                if (gong != null) viewModel.selectGong(gong);
+              },
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // ── 选中宫位详情 ──────────────────────────────────────────────
+        if (viewModel.selectedGong != null) _buildSelectedGongCard(viewModel),
+      ],
+    );
+  }
+
+  /// 选中宫位详情卡片
+  Widget _buildSelectedGongCard(QiMenViewModel viewModel) {
+    final gong = viewModel.selectedGong!;
+    final detail = viewModel.gongDetailInfo;
 
     return Card(
       child: Padding(
@@ -456,35 +529,141 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '盘信息',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Text(
+                  '${gong.gongGua.name}宫',
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '${gong.star.name} · ${gong.door.name} · ${gong.god.name}',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 18),
+                  onPressed: viewModel.unselectGong,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              ],
             ),
-            const Divider(),
             const SizedBox(height: 8),
-            _buildInfoRow('盘类型', pan.plateType.name),
-            // _buildInfoRow('起盘方式', pan.arrangeType.name),
-            _buildInfoRow('局数', '${ju.yinYangDun.name}${ju.juNumber}局'),
-            _buildInfoRow('旬首', ju.fuTouJiaZi.name),
-            _buildInfoRow('节气', ju.jieQiAt.name),
-            const SizedBox(height: 16),
-            const Text(
-              '九宫信息',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Wrap(
+              spacing: 16,
+              runSpacing: 4,
+              children: [
+                _buildInfoRow('天盘干', gong.tianPan.name),
+                _buildInfoRow('地盘干', gong.diPan.name),
+                _buildInfoRow('地盘八神', gong.diGod.name),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text('已加载 ${pan.gongMapper.length} 个宫位'),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () {
-                _showGongList(context, viewModel);
-              },
-              child: const Text('查看九宫详情'),
-            ),
+            if (viewModel.isLoading) ...[
+              const SizedBox(height: 8),
+              const LinearProgressIndicator(),
+            ],
+            if (detail != null) ...[
+              const Divider(height: 20),
+              if (detail.tenGanKeYing != null)
+                Text(detail.tenGanKeYing!.tianDiKeYing.shortExplain,
+                    style: const TextStyle(fontSize: 12)),
+              if (detail.doorStarKeYing != null)
+                Text(detail.doorStarKeYing!.description,
+                    style: const TextStyle(fontSize: 12)),
+            ],
           ],
         ),
       ),
     );
+  }
+
+  // ── 排盘数据转换 ────────────────────────────────────────────────────────────
+
+  /// 九宫格显示顺序（左上到右下，行优先）
+  static const List<HouTianGua> _gridOrderedGuas = [
+    HouTianGua.Xun, // 0: 巽4
+    HouTianGua.Li, // 1: 离9
+    HouTianGua.Kun, // 2: 坤2
+    HouTianGua.Zhen, // 3: 震3
+    HouTianGua.Center, // 4: 中5
+    HouTianGua.Dui, // 5: 兑7
+    HouTianGua.Gen, // 6: 艮8
+    HouTianGua.Kan, // 7: 坎1
+    HouTianGua.Qian, // 8: 乾6
+  ];
+
+  /// 将 [QiMenPan] 转换为 [PalaceData] 列表（按网格顺序）
+  List<PalaceData> _buildPalaceDataList(QiMenPan pan, PanDisplayConfig config) {
+    final kongWang = pan.shiJiaJu.fuTouJiaZi.getKongWang();
+    final kongWangSet = {kongWang.item1, kongWang.item2};
+
+    return _gridOrderedGuas.map((gua) {
+      final gong = pan.gongMapper[gua];
+      if (gong == null) {
+        // 防御性兜底（正常不会发生）
+        return PalaceData(
+          name: '${gua.name}宫',
+          number: gua.houTianOrder.toString(),
+          star: '',
+          door: '',
+          god: '',
+          tianPanGan: '',
+          diPanGan: '',
+          diZhi: '',
+          wangShuai: '',
+          jiXiong: '',
+          geJu: '',
+          isYangDun: true,
+        );
+      }
+
+      // 判断驿马：宫位的 DiZhi 是否匹配驿马位
+      final isYiMa = gong.gongGua.diZhi1 == pan.horseLocation ||
+          gong.gongGua.diZhi2 == pan.horseLocation;
+
+      // 判断空亡：宫位 DiZhi 是否在旬空两支中
+      final isKongWang = kongWangSet.contains(gong.gongGua.diZhi1) ||
+          (gong.gongGua.diZhi2 != null &&
+              kongWangSet.contains(gong.gongGua.diZhi2));
+
+      // 特殊标记
+      final marks = <String>[
+        if (isYiMa) '驿马',
+        if (isKongWang) '空亡',
+        if (gong.sixJiaXunHeader != null) '旬首',
+        if (pan.zhiFuStarAtGong == gua) '值符',
+      ];
+
+      // 隐干/暗干（KONG_WANG 表示空值）
+      final yinGan = gong.yinGan != TianGan.KONG_WANG ? gong.yinGan.name : null;
+      final tianPanAnGan = gong.tianPanAnGan != TianGan.KONG_WANG
+          ? gong.tianPanAnGan.name
+          : null;
+      final renPanAnGan =
+          gong.renPanAnGan != TianGan.KONG_WANG ? gong.renPanAnGan.name : null;
+
+      return PalaceData(
+        name: '${gong.gongGua.name}宫',
+        number: gong.gongNumber.toString(),
+        star: gong.star.name,
+        door: gong.door.name,
+        god: gong.god.name,
+        diGod: gong.diGod.name,
+        tianPanGan: gong.tianPan.name,
+        diPanGan: gong.diPan.name,
+        diZhi: gong.gongGua.diZhi1.name,
+        wangShuai: '',
+        jiXiong: '',
+        geJu: '',
+        marks: marks,
+        isYangDun: pan.shiJiaJu.isYangDun,
+        yinGan: config.showYinGan ? yinGan : null,
+        tianPanAnGan: config.showAnGan ? tianPanAnGan : null,
+        renPanAnGan: config.showAnGan ? renPanAnGan : null,
+      );
+    }).toList();
   }
 
   Widget _buildInfoRow(String label, String value) {
@@ -504,106 +683,6 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
               value,
               style: TextStyle(color: Colors.grey.shade700),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showGongList(BuildContext context, QiMenViewModel viewModel) {
-    final pan = viewModel.currentPan!;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('九宫信息'),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: pan.gongMapper.length,
-            itemBuilder: (context, index) {
-              final entry = pan.gongMapper.entries.elementAt(index);
-              final gua = entry.key;
-              final gong = entry.value;
-              return ListTile(
-                title: Text('${gua.name}宫'),
-                subtitle: Text(
-                  '天盘: ${gong.tianPan.name} / 地盘: ${gong.diPan.name}\n'
-                  '门: ${gong.door.name} / 星: ${gong.star.name} / 神: ${gong.god.name}',
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.info_outline),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    await viewModel.selectGong(gong);
-                    if (mounted) {
-                      _showGongDetail(context, viewModel);
-                    }
-                  },
-                ),
-              );
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('关闭'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showGongDetail(BuildContext context, QiMenViewModel viewModel) {
-    final gong = viewModel.selectedGong;
-    final detail = viewModel.gongDetailInfo;
-
-    if (gong == null || detail == null) return;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('${gong.gongGua.name}宫详情'),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('天盘天干: ${gong.tianPan.name}'),
-              Text('地盘天干: ${gong.diPan.name}'),
-              Text('八门: ${gong.door.name}'),
-              Text('九星: ${gong.star.name}'),
-              Text('八神: ${gong.god.name}'),
-              const Divider(),
-              if (detail.tenGanKeYing != null) ...[
-                const SizedBox(height: 8),
-                const Text('十干克应:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(detail.tenGanKeYing!.tianDiKeYing.shortExplain),
-              ],
-              if (detail.doorStarKeYing != null) ...[
-                const SizedBox(height: 8),
-                const Text('门星克应:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(detail.doorStarKeYing!.description),
-              ],
-              if (detail.qiYiRuGong != null) ...[
-                const SizedBox(height: 8),
-                const Text('奇仪入宫:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(detail.qiYiRuGong!.description),
-              ],
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              viewModel.unselectGong();
-              Navigator.of(context).pop();
-            },
-            child: const Text('关闭'),
           ),
         ],
       ),
@@ -638,8 +717,11 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                     subtitle: const Text('阴盘奇门中的天盘/人盘暗干'),
                     value: config.showAnGan,
                     onChanged: (v) {
-                      viewModel.updateDisplayConfig(config.copyWith(showAnGan: v));
-                      setSheetState(() { config = viewModel.displayConfig; });
+                      viewModel
+                          .updateDisplayConfig(config.copyWith(showAnGan: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
                     },
                   ),
                   CheckboxListTile(
@@ -647,8 +729,11 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                     subtitle: const Text('特殊流派使用的隐干信息'),
                     value: config.showYinGan,
                     onChanged: (v) {
-                      viewModel.updateDisplayConfig(config.copyWith(showYinGan: v));
-                      setSheetState(() { config = viewModel.displayConfig; });
+                      viewModel
+                          .updateDisplayConfig(config.copyWith(showYinGan: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
                     },
                   ),
                   CheckboxListTile(
@@ -656,8 +741,11 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                     subtitle: const Text('盘级别的常见格局（如五不遇时等）'),
                     value: config.showGeJuList,
                     onChanged: (v) {
-                      viewModel.updateDisplayConfig(config.copyWith(showGeJuList: v));
-                      setSheetState(() { config = viewModel.displayConfig; });
+                      viewModel.updateDisplayConfig(
+                          config.copyWith(showGeJuList: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
                     },
                   ),
                   CheckboxListTile(
@@ -665,8 +753,11 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                     subtitle: const Text('各宫地盘八神信息'),
                     value: config.showDiGod,
                     onChanged: (v) {
-                      viewModel.updateDisplayConfig(config.copyWith(showDiGod: v));
-                      setSheetState(() { config = viewModel.displayConfig; });
+                      viewModel
+                          .updateDisplayConfig(config.copyWith(showDiGod: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
                     },
                   ),
                   CheckboxListTile(
@@ -674,8 +765,11 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                     subtitle: const Text('各宫的六甲旬首'),
                     value: config.showSixJiaXunHeader,
                     onChanged: (v) {
-                      viewModel.updateDisplayConfig(config.copyWith(showSixJiaXunHeader: v));
-                      setSheetState(() { config = viewModel.displayConfig; });
+                      viewModel.updateDisplayConfig(
+                          config.copyWith(showSixJiaXunHeader: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
                     },
                   ),
                   CheckboxListTile(
@@ -683,8 +777,11 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                     subtitle: const Text('中五宫天盘/地盘寄干'),
                     value: config.showJiGan,
                     onChanged: (v) {
-                      viewModel.updateDisplayConfig(config.copyWith(showJiGan: v));
-                      setSheetState(() { config = viewModel.displayConfig; });
+                      viewModel
+                          .updateDisplayConfig(config.copyWith(showJiGan: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
                     },
                   ),
                 ],

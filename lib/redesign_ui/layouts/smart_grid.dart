@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qimendunjia/redesign_ui/components/palace/brief_palace_config.dart';
 import '../core/design_system.dart';
+import '../components/palace/brief_palace_config.dart';
 
 part '../components/palace/brief_palace_layout.dart';
 
@@ -41,7 +41,7 @@ class SmartQiMenGrid extends StatelessWidget {
             borderRadius: QiMenRadius.lg,
             boxShadow: [Shadows.md],
           ),
-          child: _buildGridView(palaceSize),
+          child: _buildGridView(palaceSize - padding.horizontal),
         );
       },
     );
@@ -53,9 +53,8 @@ class SmartQiMenGrid extends StatelessWidget {
     final availableHeight = constraints.maxHeight;
 
     // 取可用空间的最小值，确保正方形
-    final maxAvailable = availableWidth < availableHeight
-        ? availableWidth
-        : availableHeight;
+    final maxAvailable =
+        availableWidth < availableHeight ? availableWidth : availableHeight;
 
     // 根据可用空间选择预设尺寸
     if (maxAvailable >= Dimensions.gridLarge) {
@@ -74,8 +73,8 @@ class SmartQiMenGrid extends StatelessWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 1.0,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
+        crossAxisSpacing: 0,
+        mainAxisSpacing: 0,
       ),
       itemCount: 9,
       itemBuilder: (context, index) {
@@ -284,7 +283,8 @@ class PalaceData {
         geJu: '青龙合会',
         marks: ['驿马'],
         isYangDun: true,
-        yinGan: '庚',
+        yinGan: '庚', // 补全
+        tianPanAnGan: '丙', // 补全
       ),
       PalaceData(
         name: '离宫',
@@ -301,6 +301,7 @@ class PalaceData {
         geJu: '飞鸟跌穴',
         marks: ['值符'],
         isYangDun: true,
+        yinGan: '戊', // 补全
         tianPanAnGan: '戊',
       ),
       PalaceData(
@@ -322,6 +323,8 @@ class PalaceData {
         jiStar: '天禽',
         tianPanJiGan: '己',
         diPanJiGan: '丁',
+        yinGan: '癸', // 补全
+        tianPanAnGan: '辛', // 补全
       ),
       PalaceData(
         name: '震宫',
@@ -339,6 +342,7 @@ class PalaceData {
         marks: ['空亡'],
         isYangDun: true,
         yinGan: '壬',
+        tianPanAnGan: '乙', // 补全
       ),
       PalaceData(
         name: '中宫',
@@ -355,6 +359,8 @@ class PalaceData {
         geJu: '三奇得使',
         marks: ['值符', '旬首'],
         isYangDun: true,
+        yinGan: '丁', // 补全
+        tianPanAnGan: '己', // 补全
       ),
       PalaceData(
         name: '兑宫',
@@ -371,6 +377,8 @@ class PalaceData {
         geJu: '飞鸟跌穴',
         marks: [],
         isYangDun: true,
+        yinGan: '乙', // 补全
+        tianPanAnGan: '丁', // 补全
       ),
       PalaceData(
         name: '艮宫',
@@ -387,6 +395,7 @@ class PalaceData {
         geJu: '青龙合会',
         marks: ['驿马'],
         isYangDun: true,
+        yinGan: '辛', // 补全
         tianPanAnGan: '癸',
       ),
       PalaceData(
@@ -405,6 +414,7 @@ class PalaceData {
         marks: ['空亡'],
         isYangDun: true,
         yinGan: '甲',
+        tianPanAnGan: '壬', // 补全
       ),
       PalaceData(
         name: '乾宫',
@@ -421,6 +431,8 @@ class PalaceData {
         geJu: '白虎猖狂',
         marks: [],
         isYangDun: true,
+        yinGan: '己', // 补全
+        tianPanAnGan: '庚', // 补全
       ),
     ];
   }

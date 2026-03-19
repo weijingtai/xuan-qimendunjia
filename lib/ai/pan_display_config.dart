@@ -22,6 +22,9 @@ class PanDisplayConfig {
   /// 寄干（中五宫寄干）
   final bool showJiGan;
 
+  /// 格局（盘级别的常见格局）
+  final bool showGeJu;
+
   const PanDisplayConfig({
     this.showAnGan = false,
     this.showYinGan = false,
@@ -29,6 +32,7 @@ class PanDisplayConfig {
     this.showDiGod = false,
     this.showSixJiaXunHeader = false,
     this.showJiGan = false,
+    this.showGeJu = false,
   });
 
   const PanDisplayConfig.defaultConfig()
@@ -37,7 +41,8 @@ class PanDisplayConfig {
         showGeJuList = true,
         showDiGod = false,
         showSixJiaXunHeader = false,
-        showJiGan = false;
+        showJiGan = false,
+        showGeJu = false;
 
   PanDisplayConfig copyWith({
     bool? showAnGan,

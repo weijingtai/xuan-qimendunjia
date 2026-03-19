@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:qimendunjia/redesign_ui/components/palace/brief_palace_config.dart';
 import '../layouts/smart_grid.dart';
 import '../core/design_system.dart';
+import '../components/palace/brief_palace_config.dart';
 
 /// 智能九宫格演示页面 — 简介模式布局
 class SmartGridDemo extends StatefulWidget {
@@ -16,6 +16,7 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
   bool _showDiGod = false;
   bool _showYinGan = false;
   bool _showAnGan = false;
+  bool _showGeJu = false;
 
   final List<_SizePreset> _sizePresets = const [
     _SizePreset('小 (72px)', 240),
@@ -25,11 +26,11 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
   int _selectedSizeIndex = 1;
 
   BriefPalaceConfig get _config => BriefPalaceConfig(
-    showDiGod: _showDiGod,
-    showYinGan: _showYinGan,
-    showAnGan: _showAnGan,
-    showGeJu: false,
-  );
+        showDiGod: _showDiGod,
+        showYinGan: _showYinGan,
+        showAnGan: _showAnGan,
+        showGeJu: _showGeJu,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +70,8 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
                       palaces: PalaceData.generateSampleData(),
                       selectedIndex: _selectedPalaceIndex,
                       briefConfig: _config,
-                      maxGridSize: _sizePresets[_selectedSizeIndex].gridSize
-                          .toDouble(),
+                      maxGridSize:
+                          _sizePresets[_selectedSizeIndex].gridSize.toDouble(),
                       onPalaceTap: (index) {
                         setState(() => _selectedPalaceIndex = index);
                       },
@@ -106,57 +107,63 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
           color: ColorSystem.textTertiary.withValues(alpha: 0.3),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'BriefPalaceConfig 配置开关',
-            style: QiMenTypography.labelLarge.copyWith(
-              color: ColorSystem.textPrimary,
-              fontWeight: FontWeight.w600,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          'BriefPalaceConfig 配置开关',
+          style: QiMenTypography.labelLarge.copyWith(
+            color: ColorSystem.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildToggle(
+                label: '显示地八神',
+                subtitle: 'showDiGod',
+                value: _showDiGod,
+                onChanged: (v) => setState(() => _showDiGod = v),
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _buildToggle(
-                  label: '显示地八神',
-                  subtitle: 'showDiGod',
-                  value: _showDiGod,
-                  onChanged: (v) => setState(() => _showDiGod = v),
-                ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildToggle(
+                label: '显示隐干',
+                subtitle: 'showYinGan',
+                value: _showYinGan,
+                onChanged: (v) => setState(() => _showYinGan = v),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildToggle(
-                  label: '显示隐干',
-                  subtitle: 'showYinGan',
-                  value: _showYinGan,
-                  onChanged: (v) => setState(() => _showYinGan = v),
-                ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildToggle(
+                label: '显示暗干',
+                subtitle: 'showAnGan',
+                value: _showAnGan,
+                onChanged: (v) => setState(() => _showAnGan = v),
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _buildToggle(
-                  label: '显示暗干',
-                  subtitle: 'showAnGan',
-                  value: _showAnGan,
-                  onChanged: (v) => setState(() => _showAnGan = v),
-                ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildToggle(
+                label: '显示格局',
+                subtitle: 'showGeJu',
+                value: _showGeJu,
+                onChanged: (v) => setState(() => _showGeJu = v),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Container(), // Placeholder for alignment
-              ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(child: SizedBox()),
+            const SizedBox(width: 12),
+            const Expanded(child: SizedBox()),
+          ],
+        ),
+      ]),
     );
   }
 
@@ -263,18 +270,17 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
       decoration: BoxDecoration(
         color: ColorSystem.surfaceVariant,
         borderRadius: QiMenRadius.md,
-        border: Border.all(color: ColorSystem.primary.withValues(alpha: 0.25)),
+        border: Border.all(
+          color: ColorSystem.primary.withValues(alpha: 0.25),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.location_on,
-                color: ColorSystem.primary,
-                size: 18,
-              ),
+              const Icon(Icons.location_on,
+                  color: ColorSystem.primary, size: 18),
               const SizedBox(width: 6),
               Text(
                 '${data.name}（${data.number}宫）',
@@ -299,28 +305,16 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
             spacing: 16,
             runSpacing: 4,
             children: [
+              _infoChip('九星', data.star,
+                  TraditionalColors.getJiuXingColor(data.star)),
               _infoChip(
-                '九星',
-                data.star,
-                TraditionalColors.getJiuXingColor(data.star),
-              ),
-              _infoChip(
-                '八门',
-                data.door,
-                TraditionalColors.getBaMenColor(data.door),
-              ),
+                  '八门', data.door, TraditionalColors.getBaMenColor(data.door)),
               _infoChip('天盘八神', data.god, ColorSystem.accent),
               _infoChip('地盘八神', data.diGod, ColorSystem.textSecondary),
-              _infoChip(
-                '天盘干',
-                data.tianPanGan,
-                TraditionalColors.getGanColor(data.tianPanGan),
-              ),
-              _infoChip(
-                '地盘干',
-                data.diPanGan,
-                TraditionalColors.getGanColor(data.diPanGan),
-              ),
+              _infoChip('天盘干', data.tianPanGan,
+                  TraditionalColors.getGanColor(data.tianPanGan)),
+              _infoChip('地盘干', data.diPanGan,
+                  TraditionalColors.getGanColor(data.diPanGan)),
             ],
           ),
           if (data.marks.isNotEmpty) ...[
@@ -331,9 +325,7 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
                   .map(
                     (m) => Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: ColorSystem.accent.withValues(alpha: 0.1),
                         borderRadius: QiMenRadius.sm,
@@ -353,7 +345,10 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
           if (data.yinGan != null || data.tianPanAnGan != null) ...[
             const SizedBox(height: 8),
             Text(
-              '隐/暗干: ${[if (data.yinGan != null) '隐干 ${data.yinGan}', if (data.tianPanAnGan != null) '天盘暗干 ${data.tianPanAnGan}'].join(' · ')}',
+              '隐/暗干: ${[
+                if (data.yinGan != null) '隐干 ${data.yinGan}',
+                if (data.tianPanAnGan != null) '天盘暗干 ${data.tianPanAnGan}',
+              ].join(' · ')}',
               style: QiMenTypography.labelMedium.copyWith(
                 color: ColorSystem.textTertiary,
                 fontSize: 10,

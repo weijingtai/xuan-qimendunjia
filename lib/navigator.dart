@@ -6,6 +6,7 @@ import 'package:qimendunjia/pages/scalable_shi_jia_qi_men_view_page.dart';
 import 'package:qimendunjia/pages/shi_jia_qi_men_view_model.dart';
 import 'package:qimendunjia/presentation/pages/qimen_mvvm_page.dart';
 import 'package:qimendunjia/di/service_locator.dart';
+import 'package:qimendunjia/redesign_ui/demo/smart_grid_demo.dart';
 
 class NavigatorGenerator {
   static final RouteObserver<PageRoute> routeObserver =
@@ -29,6 +30,10 @@ class NavigatorGenerator {
           create: (_) => serviceLocator.createQiMenViewModel(),
           child: const QiMenMvvmPage(),
         ),
+
+    // UI重设计 - 智能九宫格演示
+    "/redesign_ui/smart_grid_demo": (context, {arguments}) =>
+        const SmartGridDemo(),
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
