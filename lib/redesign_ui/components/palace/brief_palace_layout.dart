@@ -23,43 +23,49 @@ class BriefPalaceLayout extends StatelessWidget {
   final BriefPalaceConfig config;
   final double size;
 
-  const BriefPalaceLayout({
+  BriefPalaceLayout({
     super.key,
     required this.data,
     required this.config,
     required this.size,
   });
 
+  final double pad = 8;
+  final double fs = 18;
+  final double fsJi = 15;
+  final textColor = Color(0xFF2C2C2C);
+  final jiColor = Color(0xFF6B7280);
+  TextStyle get primaryStyle => TextStyle(
+      fontSize: fs, color: textColor, fontWeight: FontWeight.w500, height: 1);
+  TextStyle get secondaryStyle => TextStyle(
+      fontSize: fsJi, color: jiColor, fontWeight: FontWeight.w400, height: 1);
+  TextStyle get subtitleStyle => TextStyle(
+      fontSize: 9, color: jiColor, fontWeight: FontWeight.w100, height: 1);
   @override
   Widget build(BuildContext context) {
-    final double pad = 8;
-    final double fs = 16;
-    final fsJi = fs * 0.85;
-    const textColor = Color(0xFF2C2C2C);
-    const jiColor = Color(0xFF6B7280);
-
-    final style = TextStyle(
-        fontSize: fs, color: textColor, fontWeight: FontWeight.w500, height: 1);
-    final jiStyle = TextStyle(
-        fontSize: fsJi, color: jiColor, fontWeight: FontWeight.w400, height: 1);
-
     final bool showLeftPart = (config.showYinGan && data.yinGan != null) ||
         (config.showAnGan && data.tianPanAnGan != null);
     final bool shouldTruncate = data.jiStar != null;
     final double totalWidth = size - (pad * 2);
     // final double totalWidth = size - 8;
+    final double wangShuaiFontSize = 9;
+    final double wangShuaiWidgetWidth = wangShuaiFontSize * 3.6;
 
     // --- PX 计算 ---
     // 根据状态动态计算左、中、右三列的宽度
     // 当前宫位是否有寄宫的现象
     final bool withJi = data.tianPanJiGan != null || data.diPanJiGan != null;
     // 右侧 天地盘干 列宽度，根据是否有寄宫而变化
-    final double rightColWidth =
-        withJi ? style.fontSize! * 2 + 2 : style.fontSize! + 2;
-    final double starDoorGodTextBoxWidth = style.fontSize! * 2 + 2;
+    double rightColWidth = withJi
+        ? wangShuaiWidgetWidth + (wangShuaiFontSize * 2.6) + 2
+        : wangShuaiWidgetWidth;
+    // rightColWidth += 6;
+    final double starDoorGodTextBoxWidth = primaryStyle.fontSize! * 2 + 2;
 
     // 左侧有右侧宽度保持一致，此时可以确保 middle 为中心对齐时，神星门等保持中心对齐
-    final double leftColWidth = showLeftPart ? rightColWidth : 0;
+    // final double leftColWidth = showLeftPart ? rightColWidth : 0;
+    final double expandedLeftColWidth = primaryStyle.fontSize! * 1.6;
+    final double leftColWidth = showLeftPart ? expandedLeftColWidth : 0;
     // final double middleColWidth =
     //    size + (pad * 2) - leftColWidth - rightColWidth;
     final double middleColWidth = size - leftColWidth - rightColWidth;
@@ -96,11 +102,11 @@ class BriefPalaceLayout extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text("马", style: jiStyle),
+                Text("马", style: secondaryStyle),
                 SizedBox(
                   width: 4,
                 ),
-                Text("⭕️", style: jiStyle),
+                Text("⭕️", style: secondaryStyle),
               ],
             ),
           ),
@@ -118,25 +124,33 @@ class BriefPalaceLayout extends StatelessWidget {
                     curve: Curves.easeInOut,
                     width: leftColWidth,
                     color: Colors.blue.withAlpha(50),
-                    child: _buildLeftColumn(style),
+                    clipBehavior: Clip.antiAlias,
+                    child: OverflowBox(
+                      alignment: Alignment.centerRight,
+                      minWidth: expandedLeftColWidth,
+                      maxWidth: expandedLeftColWidth,
+                      child: _buildLeftColumn(
+                          primaryStyle, expandedLeftColWidth, 12),
+                    ),
                   ),
 
                   // 中列：神/星/门/地神
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
-                    alignment:
-                        showLeftPart ? Alignment.center : Alignment.centerLeft,
+                    // alignment:
+                    // showLeftPart ? Alignment.center : Alignment.centerLeft,
+                    alignment: Alignment.centerLeft,
                     width: middleColWidth,
                     color: Colors.green.withAlpha(50),
                     child: SizedBox(
                       // color: Colors.blue.withAlpha(50),
-                      width: starDoorGodTextBoxWidth,
+                      width: starDoorGodTextBoxWidth + 20,
                       child: _buildMainContent(
                         // middleCrossAxisAlignment,
                         shouldTruncate,
-                        style,
-                        jiStyle,
+                        primaryStyle,
+                        secondaryStyle,
                         fs,
                         starDoorGodTextBoxWidth,
                       ),
@@ -148,7 +162,8 @@ class BriefPalaceLayout extends StatelessWidget {
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     width: rightColWidth,
-                    child: _buildRightGans(style, jiStyle, rightColWidth,
+                    child: _buildRightGans(primaryStyle, secondaryStyle,
+                        rightColWidth, wangShuaiWidgetWidth,
                         withJi: withJi),
                   ),
                 ],
@@ -161,21 +176,33 @@ class BriefPalaceLayout extends StatelessWidget {
   }
 
   /// 构建左侧的隐干/暗干列
-  Widget _buildLeftColumn(TextStyle style) {
+  Widget _buildLeftColumn(
+      TextStyle style, double columnWidth, double heightSize) {
+    bool showYinGan = config.showYinGan && data.yinGan != null;
+    bool showAnGan = config.showAnGan && data.tianPanAnGan != null;
+    Size size = Size(style.fontSize! + 4, heightSize + style.fontSize! + 2);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          (config.showYinGan && data.yinGan != null) ? data.yinGan! : '',
-          style: style,
+        SizedBox.fromSize(
+          size: size,
+          child: AnimatedOpacity(
+            opacity: showYinGan ? 1 : 0,
+            duration: Animations.durationNormal,
+            child: _yinAnGanWangShuaiWidget(
+                data.yinGan!, null, style, columnWidth, heightSize),
+          ),
         ),
         SizedBox(height: 16),
-        Text(
-          (config.showAnGan && data.tianPanAnGan != null)
-              ? data.tianPanAnGan!
-              : '',
-          style: style,
+        SizedBox.fromSize(
+          size: size,
+          child: AnimatedOpacity(
+            opacity: showAnGan ? 1 : 0,
+            duration: Animations.durationNormal,
+            child: _yinAnGanWangShuaiWidget(
+                data.tianPanAnGan!, null, style, columnWidth, heightSize),
+          ),
         ),
       ],
     );
@@ -183,7 +210,9 @@ class BriefPalaceLayout extends StatelessWidget {
 
   /// 构建右侧固定的天地盘干（用 FittedBox 解决溢出）
   Widget _buildRightGans(TextStyle style, TextStyle jiStyle, double columnWidth,
+      double wangShuaiWidgetWidth,
       {required bool withJi}) {
+    double heightSize = 12;
     return Container(
       width: columnWidth,
       color: Colors.grey.withAlpha(50),
@@ -192,43 +221,28 @@ class BriefPalaceLayout extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // 八神
-          SizedBox(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: columnWidth,
-                color: Colors.yellow.withAlpha(50),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(data.tianPanGan, style: style),
-                    if (data.tianPanJiGan != null) ...[
-                      const SizedBox(width: 2),
-                      Text(data.tianPanJiGan!, style: jiStyle),
-                    ],
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              Container(
-                width: columnWidth,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(data.diPanGan, style: style),
-                    if (data.diPanJiGan != null) ...[
-                      const SizedBox(width: 2),
-                      Text(data.diPanJiGan!, style: jiStyle),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          )
+          // SizedBox(),
+          _panGanWangShuaiWidget(
+            data.tianPanGan,
+            data.tianPanJiGan,
+            style,
+            columnWidth,
+            heightSize,
+            wangShuaiWidgetWidth,
+            withJi: withJi,
+          ),
+          // SizedBox(
+          //   height: 12,
+          // ),
+          _panGanWangShuaiWidget(
+            data.diPanGan,
+            data.diPanJiGan,
+            style,
+            columnWidth,
+            heightSize,
+            wangShuaiWidgetWidth,
+            withJi: withJi,
+          ),
         ],
       ),
     );
@@ -270,6 +284,134 @@ class BriefPalaceLayout extends StatelessWidget {
         ));
   }
 
+  Widget _yinAnGanWangShuaiWidget(String gan, String? jiGan, TextStyle style,
+      double columnWidth, double heightSize) {
+    return Container(
+        width: columnWidth,
+        color: Colors.yellow.withAlpha(50),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Text(gan, style: style),
+                    Container(
+                        height: heightSize,
+                        color: Colors.blue,
+                        child: Text("帝'休", style: subtitleStyle))
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
+
+  // Widget _panGanWangShuaiWidget(
+  //     String ganStr,
+  //     String? jiGanStr,
+  //     TextStyle style,
+  //     double columnWidth,
+  //     double heightSize,
+  //     double wangShuaiWidgetWidth,
+  //     {required bool withJi}) {
+  //   return Container(
+  //       width: columnWidth,
+  //       child: Column(
+  //         children: [
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               Column(
+  //                 children: [
+  //                   Container(
+  //                     color: Colors.blue,
+  //                     height: heightSize,
+  //                     width: 8,
+  //                   ),
+  //                   Text(ganStr, style: style),
+  //                   Container(
+  //                       height: heightSize,
+  //                       color: Colors.blue,
+  //                       width: wangShuaiWidgetWidth,
+  //                       child: Text("帝'月休", style: subtitleStyle))
+  //                 ],
+  //               ),
+  //               if (jiGanStr != null) ...[
+  //                 const SizedBox(width: 2),
+  //                 Column(children: [
+  //                   Container(
+  //                     color: Colors.amber,
+  //                     height: heightSize,
+  //                     width: subtitleStyle.fontSize! * 2.6,
+  //                     child: Text("帝'休", style: subtitleStyle),
+  //                   ),
+  //                   Text(jiGanStr,
+  //                       style: style.copyWith(color: Colors.black54)),
+  //                   Container(
+  //                     width: style.fontSize!,
+  //                     height: heightSize,
+  //                     color: Colors.blue,
+  //                   )
+  //                 ]),
+  //               ],
+  //             ],
+  //           ),
+  //         ],
+  //       ));
+  // }
+
+  Widget _panGanWangShuaiWidget(
+      String ganStr,
+      String? jiGanStr,
+      TextStyle style,
+      double columnWidth,
+      double heightSize,
+      double wangShuaiWidgetWidth,
+      {required bool withJi}) {
+    return Container(
+        width: columnWidth,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Container(
+                  color: Colors.blue,
+                  height: heightSize,
+                  width: 8,
+                ),
+                Text(ganStr, style: style),
+                Container(
+                    height: heightSize,
+                    color: Colors.blue,
+                    width: wangShuaiWidgetWidth,
+                    child: Text("帝'月休", style: subtitleStyle))
+              ],
+            ),
+            if (jiGanStr != null) ...[
+              const SizedBox(width: 2),
+              Column(children: [
+                Container(
+                  color: Colors.amber,
+                  height: heightSize,
+                  width: subtitleStyle.fontSize! * 2.6,
+                  child: Text("帝'月休", style: subtitleStyle),
+                ),
+                Text(jiGanStr, style: style.copyWith(color: Colors.black54)),
+                Container(
+                  width: style.fontSize!,
+                  height: heightSize,
+                  color: Colors.blue,
+                )
+              ]),
+            ],
+          ],
+        ));
+  }
+
   /// 构建核心内容（神、星、门、地神）
   Widget _buildMainContent(
     bool shouldTruncate,
@@ -290,22 +432,44 @@ class BriefPalaceLayout extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // 八神
-        Text(data.god, style: style),
+        Container(
+          color: Colors.amber,
+          child: Column(children: [
+            Text(data.god, style: style),
+            Container(
+                margin: EdgeInsets.only(top: 2),
+                height: subtitleStyle.fontSize!,
+                color: Colors.blue,
+                child: Text("旺", style: subtitleStyle))
+          ]),
+        ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 九星
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(processStarText(data.star), style: style),
-                if (data.jiStar != null) ...[
-                  const SizedBox(width: 2),
-                  Text(processStarText(data.jiStar!), style: jiStyle),
-                ],
-              ],
-            ),
+            data.jiStar == null
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(processStarText(data.star), style: style),
+                      Container(
+                          margin: EdgeInsets.only(top: 2),
+                          height: subtitleStyle.fontSize!,
+                          color: Colors.blue,
+                          child: Text("休`月旺", style: subtitleStyle))
+                    ],
+                  )
+                : _panGanWangShuaiWidget(
+                    data.star.substring(1),
+                    data.jiStar!.substring(1),
+                    style,
+                    subtitleStyle.fontSize! * 3.6 +
+                        subtitleStyle.fontSize! * 2.6 +
+                        20,
+                    subtitleStyle.fontSize!,
+                    subtitleStyle.fontSize! * 3.6,
+                    withJi: true),
             SizedBox(
               height: 8,
             ),
@@ -315,7 +479,20 @@ class BriefPalaceLayout extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(data.door, style: style),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(data.door, style: style),
+                    Container(
+                        margin: EdgeInsets.only(top: 2),
+                        height: subtitleStyle.fontSize!,
+                        color: Colors.blue,
+                        width: subtitleStyle.fontSize! * 3.6,
+                        alignment: Alignment.bottomCenter,
+                        child: Text("休`月旺", style: subtitleStyle))
+                  ],
+                ),
                 SizedBox(height: 2),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
@@ -331,10 +508,22 @@ class BriefPalaceLayout extends StatelessWidget {
                       ? Container(
                           width: width,
                           alignment: Alignment.center,
-                          child: Text(data.diGod,
-                              style: jiStyle.copyWith(
-                                  color: const Color(0xFF6B7280)
-                                      .withOpacity(0.8))),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(data.diGod,
+                                  style: jiStyle.copyWith(
+                                      color: const Color(0xFF6B7280)
+                                          .withOpacity(0.8))),
+                              Container(
+                                  margin: EdgeInsets.only(top: 2),
+                                  height: subtitleStyle.fontSize!,
+                                  color: Colors.blue,
+                                  // width: subtitleStyle.fontSize! * 3.6,
+                                  child: Text("相", style: subtitleStyle))
+                            ],
+                          ),
                         )
                       : const SizedBox.shrink(key: ValueKey('diGodHidden')),
                 ),
