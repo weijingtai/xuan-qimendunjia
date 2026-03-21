@@ -11,10 +11,13 @@ class BriefPalaceConfig {
 
   final bool showGeJu;
 
+  final bool showWangShuai;
+
   const BriefPalaceConfig({
     this.showDiGod = false,
     this.showYinGan = false,
     this.showAnGan = false,
     this.showGeJu = false,
+    this.showWangShuai = false,
   });
 }

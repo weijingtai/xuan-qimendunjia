@@ -614,7 +614,7 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
           diZhi: '',
           wangShuai: '',
           jiXiong: '',
-          geJu: '',
+          geJu: const [],
           isYangDun: true,
         );
       }
@@ -656,7 +656,7 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
         diZhi: gong.gongGua.diZhi1.name,
         wangShuai: '',
         jiXiong: '',
-        geJu: '',
+        geJu: const [],
         marks: marks,
         isYangDun: pan.shiJiaJu.isYangDun,
         yinGan: config.showYinGan ? yinGan : null,

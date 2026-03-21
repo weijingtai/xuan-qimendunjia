@@ -17,6 +17,7 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
   bool _showYinGan = false;
   bool _showAnGan = false;
   bool _showGeJu = false;
+  bool _showWangShuai = false;
 
   final List<_SizePreset> _sizePresets = const [
     _SizePreset('小 (72px)', 240),
@@ -30,6 +31,7 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
         showYinGan: _showYinGan,
         showAnGan: _showAnGan,
         showGeJu: _showGeJu,
+        showWangShuai: _showWangShuai,
       );
 
   @override
@@ -158,7 +160,14 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
               ),
             ),
             const SizedBox(width: 12),
-            const Expanded(child: SizedBox()),
+            Expanded(
+              child: _buildToggle(
+                label: '显示旺衰',
+                subtitle: 'showWangShuai',
+                value: _showWangShuai,
+                onChanged: (v) => setState(() => _showWangShuai = v),
+              ),
+            ),
             const SizedBox(width: 12),
             const Expanded(child: SizedBox()),
           ],

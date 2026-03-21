@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇门遁甲排盘</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+            margin: 0;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            width: 600px;
+            height: 600px;
+            border: 1px solid #e0e0e0;
+            background-color: white;
+        }
+        .grid-item {
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .header {
+            font-size: 10px;
+            color: #999;
+            text-align: center;
+        }
+        .content {
+            display: grid;
+            grid-template-columns: auto auto 1fr auto;
+            grid-template-rows: 1fr 1fr 1fr;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+        .left-char {
+            grid-column: 1;
+            grid-row: 1;
+            font-size: 20px;
+        }
+        .jigan-tian { grid-column: 2; grid-row: 2; font-size: 20px; }
+        .jigan-di { grid-column: 2; grid-row: 3; font-size: 20px; }
+
+        .celestial-item { grid-column: 3; grid-row: 1; }
+        .earthly-item { grid-column: 3; grid-row: 2; }
+        .door-item { grid-column: 3; grid-row: 3; }
+
+        .tian-pan-gan {
+            grid-column: 4;
+            grid-row: 2; /* Aligns with earthly-item */
+            font-size: 20px;
+        }
+        .di-pan-gan {
+            grid-column: 4;
+            grid-row: 3; /* Aligns with door-item */
+            font-size: 20px;
+        }
+
+        .top-right-corner {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 4px;
+            font-size: 16px;
+        }
+
+        .angan-char { color: #888; }
+        .celestial { color: #4a90e2; font-size: 20px; }
+        .earthly { color: #f5a623; font-size: 20px; }
+        .door { color: #d0021b; font-size: 20px; }
+        .sub-text { font-size: 10px; color: #999; }
+        .center-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .middle-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <!-- 巽 -->
+        <div class="grid-item">
+            <div class="header">4538 兑→巽→坤 旺 内</div>
+            <div class="top-right-corner"><span>⭕️</span><span>马</span></div>
+            <div class="content">
+                <div class="left-char center-item"><span class="angan-char">辛</span><span class="sub-text">胎</span></div>
+                <div class="center-item celestial-item"><span class="celestial">玄武</span><span class="sub-text">太阴</span></div>
+                <div class="center-item earthly-item"><span class="earthly">天柱</span><span class="sub-text">休`月休</span></div>
+                <div class="center-item door-item"><span class="door">惊门</span><span class="sub-text">迫`月囚</span></div>
+                <div class="tian-pan-gan center-item"><span>王</span><span class="sub-text">刑墓绝</span></div>
+                <div class="di-pan-gan center-item"><span>己</span><span class="sub-text">衰旺</span></div>
+            </div>
+        </div>
+        <!-- 离 -->
+        <div class="grid-item">
+            <div class="header">9327 乾→离→震 相 外</div>
+            <div class="top-right-corner"><span>⭕️</span></div>
+            <div class="content">
+                <div class="left-char center-item"><span class="angan-char">乙</span><span class="sub-text">官</span></div>
+                <div class="center-item celestial-item"><span class="celestial">九地</span><span class="sub-text">六合</span></div>
+                <div class="center-item earthly-item"><span class="earthly">天心</span><span class="sub-text">囚`月休</span></div>
+                <div class="center-item door-item"><span class="door">开门</span><span class="sub-text">死`月囚</span></div>
+                <div class="tian-pan-gan center-item"><span>辛</span><span class="sub-text">刑病</span></div>
+                <div class="di-pan-gan center-item"><span>丁</span><span class="sub-text">官</span></div>
+            </div>
+        </div>
+        <!-- 坤 -->
+        <div class="grid-item">
+            <div class="header">285`10 巽→坤→坎 死 外</div>
+            <div class="top-right-corner"><span>⭕️</span><span>马</span></div>
+            <div class="content">
+                <div class="left-char center-item"><span class="angan-char">己</span><span class="sub-text">冠</span></div>
+                <div class="jigan-di center-item"><span>庚</span><span class="sub-text">冠官</span></div>
+                <div class="center-item celestial-item"><span class="celestial">九天</span><span class="sub-text">白虎</span></div>
+                <div class="center-item earthly-item"><span class="earthly">天蓬</span><span class="sub-text">囚`月旺</span></div>
+                <div class="center-item door-item"><span class="door">休门</span><span class="sub-text">死`月休</span></div>
+                <div class="tian-pan-gan center-item"><span>丙</span><span class="sub-text">衰病</span></div>
+                <div class="di-pan-gan center-item"><span>乙</span><span class="sub-text">养胎</span></div>
+            </div>
+        </div>
+        <!-- 震 -->
+        <div class="grid-item">
+            <div class="header">3438 离→震→艮 旺 内</div>
+            <div class="top-right-corner"><span>⭕️</span></div>
+            <div class="content">
+                <div class="left-char center-item"><span class="angan-char">庚</span><span class="sub-text">胎</span></div>
+                <div class="jigan-tian center-item"><span>庚</span><span class="sub-text">胎</span></div>
+                <div class="center-item celestial-item"><span class="celestial">白虎</span><span class="sub-text">腾蛇</span></div>
+                <div class="center-item earthly-item"><span class="earthly">禽芮</span><span class="sub-text">囚`月囚</span></div>
+                <div class="center-item door-item"><span class="door">死门</span><span class="sub-text">死`月死</span></div>
+                <div class="tian-pan-gan center-item"><span>乙</span><span class="sub-text">官</span></div>
+                <div class="di-pan-gan center-item"><span>戊</span><span class="sub-text">刑沐</span></div>
+            </div>
+        </div>
+        <!-- 中 -->
+        <div class="grid-item">
+            <div class="content">
+                <div class="left-char center-item"><span class="angan-char">壬</span><span class="sub-text"></span></div>
+                <div class="di-pan-gan center-item"><span>庚</span><span class="sub-text"></span></div>
+            </div>
+        </div>
+        <!-- 兑 -->
+        <div class="grid-item">
+            <div class="header">7249 坎→兑→巽 囚 外</div>
+            <div class="top-right-corner"><span>⭕️</span></div>
+            <div class="content">
+                <div class="left-char center-item"><span class="angan-char">丁</span><span class="sub-text">胎</span></div>
+                <div class="center-item celestial-item"><span class="celestial">值符</span><span class="sub-text">玄武</span></div>
+                <div class="center-item earthly-item"><span class="earthly">天任</span><span class="sub-text">旺`月囚</span></div>
+                <div class="center-item door-item"><span class="door">生门</span><span class="sub-text">休`月死</span></div>
+                <div class="tian-pan-gan center-item"><span>癸</span><span class="sub-text">病</span></div>
+                <div class="di-pan-gan center-item"><span>壬</span><span class="sub-text">沐</span></div>
+            </div>
+        </div>
+        <!-- 艮 -->
+        <div class="grid-item">
+            <div class="header">875`10 震→艮→乾 死 内</div>
+            <div class="top-right-corner"><span>⭕️</span><span>马</span></div>
+            <div class="content">
+                <div class="left-char center-item"><span class="angan-char">丙</span><span class="sub-text">胎</span></div>
+                <div class="center-item celestial-item"><span class="celestial">六合</span><span class="sub-text">值符</span></div>
+                <div class="center-item earthly-item"><span class="earthly">天英</span><span class="sub-text">旺`月废</span></div>
+                <div class="center-item door-item"><span class="door">景门</span><span class="sub-text">休`月相</span></div>
+                <div class="tian-pan-gan center-item"><span>丁</span><span class="sub-text">墓死</span></div>
+                <div class="di-pan-gan center-item"><span>癸</span><span class="sub-text">冠沐</span></div>
+            </div>
+        </div>
+        <!-- 坎 -->
+        <div class="grid-item">
+            <div class="header">1616 坤→坎→兑 休 内</div>
+            <div class="top-right-corner"><span>⭕️</span></div>
+            <div class="content">
+                <div class="left-char center-item"><span class="angan-char">戊</span><span class="sub-text">胎</span></div>
+                <div class="center-item celestial-item"><span class="celestial">太阴</span><span class="sub-text">九天</span></div>
+                <div class="center-item earthly-item"><span class="earthly">天辅</span><span class="sub-text">废`月相</span></div>
+                <div class="center-item door-item"><span class="door">杜门</span><span class="sub-text">相`月旺</span></div>
+                <div class="tian-pan-gan center-item"><span>己</span><span class="sub-text">绝</span></div>
+                <div class="di-pan-gan center-item"><span>丙</span><span class="sub-text">胎</span></div>
+            </div>
+        </div>
+        <!-- 乾 -->
+        <div class="grid-item">
+            <div class="header">6149 艮→乾→离 囚 外</div>
+            <div class="top-right-corner"><span>⭕️</span><span>马</span></div>
+            <div class="content">
+                <div class="left-char center-item"><span class="angan-char">癸</span><span class="sub-text">胎</span></div>
+                <div class="center-item celestial-item"><span class="celestial">螣蛇</span><span class="sub-text">九地</span></div>
+                <div class="center-item earthly-item"><span class="earthly">天冲</span><span class="sub-text">囚`月相</span></div>
+                <div class="center-item door-item"><span class="door">伤门</span><span class="sub-text">死`月旺</span></div>
+                <div class="tian-pan-gan center-item"><span>戊</span><span class="sub-text">墓绝</span></div>
+                <div class="di-pan-gan center-item"><span>辛</span><span class="sub-text">冠沐</span></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

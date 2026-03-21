@@ -1,4 +1,7 @@
+import 'package:common/enums/enum_tian_gan.dart';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../core/design_system.dart';
 import '../components/palace/brief_palace_config.dart';
 
@@ -232,7 +235,7 @@ class PalaceData {
   final String diZhi; // 地支
   final String wangShuai; // 旺衰
   final String jiXiong; // 吉凶
-  final String geJu; // 格局
+  final List<String> geJu; // 格局
   final List<String> marks; // 特殊标记（含「驿马」「空亡」等）
   final bool isYangDun; // 是否阳遁
   final String? yinGan; // 隐干（可选流派）
@@ -265,6 +268,31 @@ class PalaceData {
     this.jiStar,
   });
 
+  static final _mockGeJus = [
+    '青龙合会',
+    '飞鸟跌穴',
+    '玉女守门',
+    '青龙折足',
+    '三奇得使',
+    '青龙逃走',
+    '白虎猖狂',
+    '腾蛇夭矫',
+    '大格',
+    '小格',
+    '刑格',
+    '悖格'
+  ];
+
+  static List<String> _getRandomGeJus() {
+    final rand = math.Random();
+    final count = rand.nextInt(4) + 1; // 1 to 4
+    final available = List<String>.from(_mockGeJus);
+    return List.generate(count, (_) {
+      final index = rand.nextInt(available.length);
+      return available.removeAt(index);
+    });
+  }
+
   /// 创建示例数据
   static List<PalaceData> generateSampleData() {
     return [
@@ -280,7 +308,7 @@ class PalaceData {
         diZhi: '巳',
         wangShuai: '旺',
         jiXiong: '吉',
-        geJu: '青龙合会',
+        geJu: _getRandomGeJus(),
         marks: ['驿马'],
         isYangDun: true,
         yinGan: '庚', // 补全
@@ -298,7 +326,7 @@ class PalaceData {
         diZhi: '午',
         wangShuai: '相',
         jiXiong: '大吉',
-        geJu: '飞鸟跌穴',
+        geJu: _getRandomGeJus(),
         marks: ['值符'],
         isYangDun: true,
         yinGan: '戊', // 补全
@@ -316,7 +344,7 @@ class PalaceData {
         diZhi: '未',
         wangShuai: '休',
         jiXiong: '平',
-        geJu: '玉女守门',
+        geJu: _getRandomGeJus(),
         marks: [],
         isYangDun: true,
         // 中五寄坤（阳遁）
@@ -338,7 +366,7 @@ class PalaceData {
         diZhi: '卯',
         wangShuai: '囚',
         jiXiong: '凶',
-        geJu: '青龙折足',
+        geJu: _getRandomGeJus(),
         marks: ['空亡'],
         isYangDun: true,
         yinGan: '壬',
@@ -356,7 +384,7 @@ class PalaceData {
         diZhi: '辰',
         wangShuai: '旺',
         jiXiong: '大吉',
-        geJu: '三奇得使',
+        geJu: _getRandomGeJus(),
         marks: ['值符', '旬首'],
         isYangDun: true,
         yinGan: '丁', // 补全
@@ -374,7 +402,7 @@ class PalaceData {
         diZhi: '酉',
         wangShuai: '相',
         jiXiong: '吉',
-        geJu: '飞鸟跌穴',
+        geJu: _getRandomGeJus(),
         marks: [],
         isYangDun: true,
         yinGan: '乙', // 补全
@@ -392,7 +420,7 @@ class PalaceData {
         diZhi: '寅',
         wangShuai: '休',
         jiXiong: '吉',
-        geJu: '青龙合会',
+        geJu: _getRandomGeJus(),
         marks: ['驿马'],
         isYangDun: true,
         yinGan: '辛', // 补全
@@ -410,7 +438,7 @@ class PalaceData {
         diZhi: '子',
         wangShuai: '囚',
         jiXiong: '凶',
-        geJu: '青龙逃走',
+        geJu: _getRandomGeJus(),
         marks: ['空亡'],
         isYangDun: true,
         yinGan: '甲',
@@ -428,7 +456,7 @@ class PalaceData {
         diZhi: '戌',
         wangShuai: '死',
         jiXiong: '大凶',
-        geJu: '白虎猖狂',
+        geJu: _getRandomGeJus(),
         marks: [],
         isYangDun: true,
         yinGan: '己', // 补全

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单一宫位布局设计（新版）</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #333;
+            margin: 0;
+        }
+        .cell-container {
+            width: 250px;
+            height: 250px;
+            border: 1px solid #4a4a4a;
+            padding: 12px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #282c34;
+            color: #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .cell-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .top-status-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #aaa;
+        }
+        .status-group span {
+            margin-left: 8px;
+        }
+        .deity-area,
+        .bottom-deity-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 500;
+            color: #e0e0e0;
+            gap: 2px; /* Beautify */
+        }
+        .deity-area {
+            margin: 8px 0; /* Beautify */
+        }
+        .core-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Beautify */
+            flex-grow: 1;
+            justify-content: center;
+        }
+        .core-row {
+            display: grid;
+            grid-template-columns: 0.9fr 1.2fr 1fr;
+            align-items: center;
+            font-size: 18px;
+        }
+        .pan-info {
+            display: flex;
+            align-items: baseline;
+            gap: 8px; /* Adjusted gap */
+            justify-content: flex-end;
+        }
+        .gan-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .char-container {
+            position: relative;
+            display: inline-block;
+        }
+        .pan-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translate(-40%, -40%);
+            font-size: 10px;
+            color: #ccc;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1px 4px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .gan {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .wangshuai {
+            font-size: 13px; /* Beautify */
+            color: #a0a0a0; /* Beautify */
+        }
+        .star-door-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .star-door-sub-info {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .star-door-sub-info .separator {
+            margin: 0 2px;
+        }
+        .star-door-name {
+            font-size: 20px;
+            font-weight: 500;
+        }
+        .gan-grid-content {
+            display: grid;
+            grid-template-columns: auto auto;
+            justify-items: center;
+            gap: 4px 8px; /* row-gap column-gap */
+        }
+        .jigan {
+            font-size: 16px;
+            color: #999;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="cell-container">
+        <div class="cell-content">
+            <div class="top-status-area">
+                <span>[4538 兑→巽]</span>
+                <div class="status-group">
+                    <span>[马]</span>
+                    <span>[印章:空]</span>
+                </div>
+            </div>
+
+            <div class="deity-area">
+                <span>玄武</span>
+                <span class="wangshuai">休</span>
+            </div>
+
+            <div class="core-area">
+                <!-- 星位 -->
+                <div class="core-row">
+                    <div class="gan-wrapper">
+                        <div class="char-container">
+                            <span class="pan-label">隐</span>
+                            <span class="gan">丁</span>
+                        </div>
+                        <span class="wangshuai">旺</span>
+                    </div>
+                    <div class="star-door-info">
+                        <div>
+                            <span class="star-door-name">天柱</span>
+                        </div>
+                        <div class="star-door-sub-info">
+                            <span>休</span><span class="separator">·</span><span>月休</span>
+                        </div>
+                    </div>
+                    <div class="gan-wrapper">
+                        <div class="gan-grid-content">
+                            <span class="gan">壬</span>
+                            <span class="jigan">(戊)</span>
+                            <span class="wangshuai">墓</span>
+                            <span class="wangshuai">绝</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 门位 -->
+                <div class="core-row">
+                    <div class="gan-wrapper">
+                        <div class="char-container">
+                            <span class="pan-label">暗</span>
+                            <span class="gan">乙</span>
+                        </div>
+                        <span class="wangshuai">衰</span>
+                    </div>
+                    <div class="star-door-info">
+                        <div>
+                            <span class="star-door-name">惊门</span>
+                        </div>
+                        <div class="star-door-sub-info">
+                            <span>迫</span><span class="separator">·</span><span>月囚</span>
+                        </div>
+                    </div>
+                    <div class="gan-wrapper">
+                        <div class="gan-grid-content">
+                            <span class="gan">己</span>
+                            <span class="jigan">(庚)</span>
+                            <span class="wangshuai">绝</span>
+                            <span class="wangshuai">死</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-deity-area">
+                <span>值符</span>
+                <span class="wangshuai">囚</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
