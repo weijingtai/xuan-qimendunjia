@@ -10,6 +10,9 @@ import 'package:common/domain/ai/ai_persona.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_nine_stars.dart';
+import 'package:qimendunjia/enums/enum_eight_door.dart';
+import 'package:qimendunjia/enums/enum_eight_gods.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/redesign_ui/layouts/smart_grid.dart';
@@ -602,33 +605,28 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
     return _gridOrderedGuas.map((gua) {
       final gong = pan.gongMapper[gua];
       if (gong == null) {
-        // 防御性兜底（正常不会发生）
         return PalaceData(
-          name: '${gua.name}宫',
+          gongEnum: gua,
           number: gua.houTianOrder.toString(),
-          star: '',
-          door: '',
-          god: '',
-          tianPanGan: '',
-          diPanGan: '',
+          starEnum: NineStarsEnum.PENG,
+          doorEnum: EightDoorEnum.XIU,
+          godEnum: EightGodsEnum.ZHI_FU,
+          tianPanGanEnum: TianGan.WU,
+          diPanGanEnum: TianGan.JI,
           diZhi: '',
           wangShuai: '',
-          jiXiong: '',
+          jiXiong: 'N/A',
           geJu: const [],
           isYangDun: true,
         );
       }
 
-      // 判断驿马：宫位的 DiZhi 是否匹配驿马位
       final isYiMa = gong.gongGua.diZhi1 == pan.horseLocation ||
           gong.gongGua.diZhi2 == pan.horseLocation;
-
-      // 判断空亡：宫位 DiZhi 是否在旬空两支中
       final isKongWang = kongWangSet.contains(gong.gongGua.diZhi1) ||
           (gong.gongGua.diZhi2 != null &&
               kongWangSet.contains(gong.gongGua.diZhi2));
 
-      // 特殊标记
       final marks = <String>[
         if (isYiMa) '驿马',
         if (isKongWang) '空亡',
@@ -636,32 +634,11 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
         if (pan.zhiFuStarAtGong == gua) '值符',
       ];
 
-      // 隐干/暗干（KONG_WANG 表示空值）
-      final yinGan = gong.yinGan != TianGan.KONG_WANG ? gong.yinGan.name : null;
-      final tianPanAnGan = gong.tianPanAnGan != TianGan.KONG_WANG
-          ? gong.tianPanAnGan.name
-          : null;
-      final renPanAnGan =
-          gong.renPanAnGan != TianGan.KONG_WANG ? gong.renPanAnGan.name : null;
-
-      return PalaceData(
-        name: '${gong.gongGua.name}宫',
-        number: gong.gongNumber.toString(),
-        star: gong.star.name,
-        door: gong.door.name,
-        god: gong.god.name,
-        diGod: gong.diGod.name,
-        tianPanGan: gong.tianPan.name,
-        diPanGan: gong.diPan.name,
-        diZhi: gong.gongGua.diZhi1.name,
-        wangShuai: '',
-        jiXiong: '',
+      return PalaceData.fromEachGong(
+        gong,
+        isYangDun: pan.shiJiaJu.isYangDun,
         geJu: const [],
         marks: marks,
-        isYangDun: pan.shiJiaJu.isYangDun,
-        yinGan: config.showYinGan ? yinGan : null,
-        tianPanAnGan: config.showAnGan ? tianPanAnGan : null,
-        renPanAnGan: config.showAnGan ? renPanAnGan : null,
       );
     }).toList();
   }

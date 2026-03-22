@@ -130,25 +130,27 @@ enum EightDoorEnum {
 }
 
 enum GongAndDoorRelationship {
-  FU_YIN("伏吟", "伏"),
-  FAN_YIN("反吟", "伏"),
-  DA_JI("大吉", "吉"),
-  XIAO_JI("小吉", "吉"),
-  DA_XIONG("大凶", "凶"),
-  XIAO_XIONG("小凶", "凶"),
+  FU_YIN("伏吟", "伏", "原封不动，利静不利动，主忧。"),
+  FAN_YIN("反吟", "反", "快速变动，反复无常，主动荡。"),
+  DA_JI("大吉", "吉", "环境与人事极度和谐。"),
+  XIAO_JI("小吉", "吉", "环境与人事较为和谐。"),
+  DA_XIONG("大凶", "凶", "环境与人事极度冲突。"),
+  XIAO_XIONG("小凶", "凶", "环境与人事存在冲突。"),
 
-  RU_MU("入墓", "墓"),
-  MEN_PO("门迫", "迫"), // 门克宫 -- 迫
-  SHOU_ZHI("受制", "制"), // 宫克门 -- 制
-  SHOU_SHEN("受生", "义"), // 宫生门 -- 义
-  SHENG_GONG("生宫", "和"), // 门生宫 -- 和
-  SHENG_WANG("生旺", "旺"),
-  XIE_QI("泄气", "泄"),
-  BI_HE("比和", "比");
+  RU_MU("入墓", "墓", "能量被限制，无法发挥。"),
+  MEN_PO("门迫", "迫", "门克宫：人事破坏环境，事倍功半，极凶。"),
+  SHOU_ZHI("受制", "制", "宫克门：环境压制人事，受困难成，小凶。"),
+  SHOU_SHEN("宫生门", "义", "宫生门（义）：环境助人事，得地利之助，通常主吉。"),
+  SHENG_GONG("门生宫", "和", "门生宫（和）：人事利于环境，环境吸收能量，事虽成但劳神。"),
+  SHENG_WANG("生旺", "旺", "能量强旺。"),
+  XIE_QI("泄气", "泄", "能量流失。"),
+  BI_HE("比和", "比", "门宫同性：相互支持，和谐统一，吉。");
 
   final String name;
   final String singleCharName;
-  const GongAndDoorRelationship(this.name, this.singleCharName);
+  final String description;
+  const GongAndDoorRelationship(
+      this.name, this.singleCharName, this.description);
 
   static Map<EightDoorEnum, List<String>> _mapper = {
     EightDoorEnum.KAI: ["伏吟", "小吉", "入墓", "门迫", "反吟", "受制", "大吉", "大吉"],

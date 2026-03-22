@@ -49,9 +49,9 @@ class BriefPalaceLayout extends StatelessWidget {
       fontSize: 9, color: jiColor, fontWeight: FontWeight.w100, height: 1);
   @override
   Widget build(BuildContext context) {
-    final bool showLeftPart = (config.showYinGan && data.yinGan != null) ||
-        (config.showAnGan && data.tianPanAnGan != null);
-    final bool shouldTruncate = data.jiStar != null;
+    final bool showLeftPart = (config.showYinGan && data.yinGanEnum != null) ||
+        (config.showAnGan && data.tianPanAnGanEnum != null);
+    final bool shouldTruncate = data.jiStarEnum != null;
     final double totalWidth = size - (pad * 2);
     // final double totalWidth = size - 8;
     // final double wangShuaiFontSize = 9;
@@ -59,7 +59,7 @@ class BriefPalaceLayout extends StatelessWidget {
     // --- PX 计算 ---
     // 根据状态动态计算左、中、右三列的宽度
     // 当前宫位是否有寄宫的现象
-    final bool withJi = data.tianPanJiGan != null || data.diPanJiGan != null;
+    final bool withJi = data.tianPanJiGanEnum != null || data.diPanJiGanEnum != null;
     // 右侧 天地盘干 列宽度，根据是否有寄宫而变化
     double rightColWidth =
         withJi ? wangShuaiWidgetWidth * 2 : wangShuaiWidgetWidth;
@@ -257,8 +257,8 @@ class BriefPalaceLayout extends StatelessWidget {
   /// 构建左侧的隐干/暗干列
   Widget _buildLeftColumn(
       TextStyle style, double columnWidth, double heightSize) {
-    bool showYinGan = config.showYinGan && data.yinGan != null;
-    bool showAnGan = config.showAnGan && data.tianPanAnGan != null;
+    bool showYinGan = config.showYinGan && data.yinGanEnum != null;
+    bool showAnGan = config.showAnGan && data.tianPanAnGanEnum != null;
     final double w = style.fontSize! + 4 > wangShuaiWidgetWidth
         ? style.fontSize! + 4
         : wangShuaiWidgetWidth;
@@ -273,7 +273,7 @@ class BriefPalaceLayout extends StatelessWidget {
             opacity: showYinGan ? 1 : 0,
             duration: Animations.durationNormal,
             child: _yinAnGanWangShuaiWidget(
-                data.yinGan!, null, style, columnWidth, heightSize),
+                data.yinGanEnum!.name, null, style, columnWidth, heightSize),
           ),
         ),
         SizedBox(height: 16),
@@ -283,7 +283,7 @@ class BriefPalaceLayout extends StatelessWidget {
             opacity: showAnGan ? 1 : 0,
             duration: Animations.durationNormal,
             child: _yinAnGanWangShuaiWidget(
-                data.tianPanAnGan!, null, style, columnWidth, heightSize),
+                data.tianPanAnGanEnum!.name, null, style, columnWidth, heightSize),
           ),
         ),
       ],
@@ -305,8 +305,8 @@ class BriefPalaceLayout extends StatelessWidget {
           // 八神
           // SizedBox(),
           _panGanWangShuaiWidget(
-            data.tianPanGan,
-            data.tianPanJiGan,
+            data.tianPanGanEnum.name,
+            data.tianPanJiGanEnum?.name,
             style,
             columnWidth,
             heightSize,
@@ -317,8 +317,8 @@ class BriefPalaceLayout extends StatelessWidget {
           //   height: 12,
           // ),
           _panGanWangShuaiWidget(
-            data.diPanGan,
-            data.diPanJiGan,
+            data.diPanGanEnum.name,
+            data.diPanJiGanEnum?.name,
             style,
             columnWidth,
             heightSize,
@@ -354,6 +354,60 @@ class BriefPalaceLayout extends StatelessWidget {
             ),
           ],
         ));
+  }
+
+  Widget _starGanWangShuaiWidget(
+      String ganStr,
+      String? jiGanStr,
+      TextStyle style,
+      double columnWidth,
+      double heightSize,
+      double wangShuaiWidgetWidth,
+      {required bool withJi}) {
+    return Container(
+      width: columnWidth,
+      child: Column(
+        children: [
+          AnimatedContainer(
+            duration: Animations.durationNormal,
+            width: columnWidth,
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                AnimatedScale(
+                    scale: config.showWangShuai ? 0.9 : 1,
+                    duration: Animations.durationNormal,
+                    child: Text(ganStr, style: style)),
+                if (jiGanStr != null) ...[
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        AnimatedScale(
+                            scale: config.showWangShuai ? 0.9 : 1,
+                            duration: Animations.durationNormal,
+                            child: Text(jiGanStr,
+                                style: style.copyWith(color: Colors.black54))),
+                        _buildVerticalWangShuaiWidget(gong: "死", month: "沐"),
+                      ],
+                    ),
+                  )
+                ]
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              _buildWangShuaiWidget(gong: "死", month: "沐"),
+              // Expanded(child: SizedBox()),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _panGanWangShuaiWidget(
@@ -406,31 +460,6 @@ class BriefPalaceLayout extends StatelessWidget {
         ],
       ),
     );
-    return Container(
-        width: columnWidth,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _animatedText(ganStr, style),
-                _buildWangShuaiWidget(gong: "死", month: "沐"),
-              ],
-            ),
-            if (jiGanStr != null) ...[
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _buildWangShuaiWidget(gong: "帝", month: "禄"),
-                    _animatedText(
-                        jiGanStr, style.copyWith(color: Colors.black54)),
-                  ]),
-            ],
-          ],
-        ));
   }
 
   Widget _animatedText(String text, TextStyle style) {
@@ -467,6 +496,160 @@ class BriefPalaceLayout extends StatelessWidget {
                       height: 1.2, color: Colors.black, fontSize: 8)),
             )
           : const SizedBox.shrink(key: ValueKey('wang_hidden')),
+    );
+  }
+
+  Widget _buildVerticalWangShuaiWidget({
+    String? gong,
+    String? month,
+  }) {
+    return AnimatedContainer(
+      duration: Animations.durationNormal,
+      curve: Curves.easeInOut,
+      width: config.showWangShuai ? 11 : 0, // 控制占位空间的展开/收缩
+      clipBehavior: Clip.none,
+      child: AnimatedSwitcher(
+        duration: Animations.durationNormal,
+        // 核心：实现滑动 + 透明度动画
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          Offset startOffset;
+          if (config.showWangShuai) {
+            // 正在开启：进入的组件从左（-0.8）往右入
+            startOffset = const Offset(-0.8, 0);
+          } else {
+            // 正在关闭：退出的组件从当前位置向右（0.8）滑出
+            startOffset = const Offset(0.8, 0);
+          }
+
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(begin: startOffset, end: Offset.zero)
+                  .animate(animation),
+              child: child,
+            ),
+          );
+        },
+        // 注意：这里的 Key 是触发动画的关键
+        child: config.showWangShuai
+            ? Column(
+                key: const ValueKey('wang_v_visible'),
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (month != null)
+                    // AnimatedContainer(
+                    // duration: Animations.durationNormal,
+                    Container(
+                      width: 10,
+                      height: gong == null ? 22 : 11,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: gong == null
+                              ? const BorderRadius.all(Radius.circular(6))
+                              : const BorderRadius.only(
+                                  topLeft: Radius.circular(6),
+                                  topRight: Radius.circular(6))),
+                      child: Text(month,
+                          style: subtitleStyle.copyWith(
+                              height: 1.3, color: Colors.black87, fontSize: 8)),
+                    ),
+                  if (gong != null)
+                    // AnimatedContainer(
+                    // duration: Animations.durationNormal,
+                    Container(
+                      height: month == null ? 22 : 11,
+                      width: 10,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: month == null
+                              ? const BorderRadius.all(Radius.circular(6))
+                              : const BorderRadius.only(
+                                  bottomRight: Radius.circular(6),
+                                  bottomLeft: Radius.circular(6))),
+                      child: Text(gong,
+                          style: subtitleStyle.copyWith(
+                              height: 1.0, color: Colors.white70, fontSize: 8)),
+                    ),
+                ],
+              )
+            : SizedBox(key: ValueKey('wang_v_hidden')),
+      ),
+    );
+  }
+
+  Widget _buildVerticalWangShuaiWidget_old({
+    String? gong,
+    String? month,
+  }) {
+    return Container(
+      // duration: Animations.durationNormal,
+      // curve: Curves.easeInOut,
+      width: config.showWangShuai ? 11 : 0,
+      clipBehavior: Clip.none,
+      child: AnimatedSwitcher(
+        duration: Animations.durationNormal,
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          // 根据开启/关闭状态选择滑动方向
+          final Offset startOffset = config.showWangShuai
+              ? const Offset(-0.8, 0) // 开启时：从左往右入
+              : const Offset(0.8, 0); // 关闭时：从左往右出
+
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(begin: startOffset, end: Offset.zero)
+                  .animate(animation),
+              child: child,
+            ),
+          );
+        },
+        child: config.showWangShuai
+            ? Column(
+                key: const ValueKey('wangshuai_vertical_visible'),
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (month != null)
+                    AnimatedContainer(
+                      duration: Animations.durationNormal,
+                      width: 10,
+                      height: gong == null ? 22 : 11,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: gong == null
+                              ? const BorderRadius.all(Radius.circular(6))
+                              : const BorderRadius.only(
+                                  topLeft: Radius.circular(6),
+                                  topRight: Radius.circular(6))),
+                      child: Text(month,
+                          style: subtitleStyle.copyWith(
+                              height: 1.3, color: Colors.black87, fontSize: 8)),
+                    ),
+                  if (gong != null)
+                    AnimatedContainer(
+                      duration: Animations.durationNormal,
+                      height: month == null ? 22 : 11,
+                      width: 10,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: month == null
+                              ? const BorderRadius.all(Radius.circular(6))
+                              : const BorderRadius.only(
+                                  bottomRight: Radius.circular(6),
+                                  bottomLeft: Radius.circular(6))),
+                      child: Text(gong,
+                          style: subtitleStyle.copyWith(
+                              height: 1.0, color: Colors.white70, fontSize: 8)),
+                    ),
+                ],
+              )
+            : const SizedBox.shrink(key: ValueKey('wangshuai_vertical_hidden')),
+      ),
     );
   }
 
@@ -563,7 +746,7 @@ class BriefPalaceLayout extends StatelessWidget {
               ),
               Positioned(
                 left: 6,
-                top: -2,
+                top: 0,
                 child: AnimatedOpacity(
                   opacity: config.showWangShuai ? 1 : 0,
                   duration: const Duration(milliseconds: 300),
@@ -589,17 +772,17 @@ class BriefPalaceLayout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 九星
-            data.jiStar == null
+            data.jiStarEnum == null
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _animatedText(processStarText(data.star), style),
+                      _animatedText(processStarText(data.starEnum.name), style),
                       _buildWangShuaiWidget(gong: "休", month: "旺"),
                     ],
                   )
-                : _panGanWangShuaiWidget(
-                    data.star.substring(1),
-                    data.jiStar!.substring(1),
+                : _starGanWangShuaiWidget(
+                    data.starEnum.name.substring(1),
+                    data.jiStarEnum!.name.substring(1),
                     style,
                     wangShuaiWidgetWidth * 2,
                     11,
@@ -632,27 +815,43 @@ class BriefPalaceLayout extends StatelessWidget {
                         top: 0,
                         child: AnimatedOpacity(
                           opacity: config.showWangShuai ? 1 : 0,
-                          // opacity: 1,
                           duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          child: Container(
-                            key: ValueKey('wang_和'),
-                            margin: const EdgeInsets.only(top: 2),
-                            height: 12,
-                            width: 10,
-                            alignment: Alignment.center,
-                            // decoration: const BoxDecoration(
-                            //   color: Colors.white,
-                            //   borderRadius:
-                            //       BorderRadius.all(Radius.circular(4)),
-                            // ),
-                            child: Text("和",
+                          child: Builder(builder: (context) {
+                            final relation =
+                                GongAndDoorRelationship.getRelationship(
+                              EightDoorEnum.values.firstWhere(
+                                (e) => e.name.contains(data.door),
+                                orElse: () => EightDoorEnum.CENTER,
+                              ),
+                              HouTianGua.values.firstWhere(
+                                (e) => data.name.contains(e.name.substring(0, 1)),
+                                orElse: () => HouTianGua.Center,
+                              ),
+                            );
+                            if (relation == null) return const SizedBox();
+                            return Container(
+                              key: ValueKey(
+                                  'relation_${data.door}_${data.name}'),
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 2, horizontal: 1),
+                              height: 12,
+                              width: 10,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: _getRelationColor(relation),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(4)),
+                              ),
+                              child: Text(
+                                relation.singleCharName,
                                 style: subtitleStyle.copyWith(
                                     height: 1.0,
-                                    color: Colors.green,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.normal,
-                                    fontSize: 10)),
-                          ),
+                                    fontSize: 8),
+                              ),
+                            );
+                          }),
                         ),
                       ),
                     ]),
@@ -682,7 +881,7 @@ class BriefPalaceLayout extends StatelessWidget {
                               children: [
                                 Container(
                                   child: _animatedText(
-                                      data.god,
+                                      data.diGod,
                                       jiStyle.copyWith(
                                           color: const Color(0xFF6B7280)
                                               .withValues(alpha: 0.8))),
@@ -691,7 +890,7 @@ class BriefPalaceLayout extends StatelessWidget {
                             ),
                             Positioned(
                               left: 6,
-                              bottom: -2,
+                              bottom: 0,
                               child: AnimatedOpacity(
                                 opacity: config.showWangShuai ? 1 : 0,
                                 duration: const Duration(milliseconds: 300),
@@ -723,5 +922,26 @@ class BriefPalaceLayout extends StatelessWidget {
         )
       ],
     );
+  }
+
+  Color _getRelationColor(GongAndDoorRelationship? relation) {
+    if (relation == null) return Colors.transparent;
+    switch (relation) {
+      case GongAndDoorRelationship.MEN_PO: // 门迫 - 极凶
+        return const Color(0xFFD32F2F);
+      case GongAndDoorRelationship.SHOU_ZHI: // 宫制 - 小凶
+        return const Color(0xFFBF360C);
+      case GongAndDoorRelationship.SHENG_GONG: // 和
+      case GongAndDoorRelationship.SHOU_SHEN: // 义
+      case GongAndDoorRelationship.BI_HE: // 比和
+        return const Color(0xFF2E7D32); // 吉
+      case GongAndDoorRelationship.FU_YIN: // 伏吟 - 中性偏忧
+        return const Color(0xFF455A64);
+      case GongAndDoorRelationship.FAN_YIN: // 反吟 - 动荡
+        return const Color(0xFF7B1FA2);
+      default:
+        if (relation.name.contains('吉')) return const Color(0xFF2E7D32);
+        return Colors.grey;
+    }
   }
 }
