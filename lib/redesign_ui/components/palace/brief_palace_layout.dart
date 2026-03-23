@@ -90,7 +90,7 @@ class BriefPalaceLayout extends StatelessWidget {
     //    size + (pad * 2) - leftColWidth - rightColWidth;
     final double middleColWidth = size - leftColWidth - rightColWidth;
     // 格局高度
-    final double geJuHeight = 40;
+    final double geJuHeight = 34;
     final double geJuContentHeight = config.showGeJu ? geJuHeight : 0;
     final double mainContentHeight =
         config.showGeJu ? totalWidth - geJuHeight : totalWidth;
@@ -425,12 +425,6 @@ class BriefPalaceLayout extends StatelessWidget {
                 ]
               ],
             ),
-          ),
-          Row(
-            children: [
-              _buildWangShuaiWidget(gong: "死", month: "沐"),
-              // Expanded(child: SizedBox()),
-            ],
           ),
         ],
       ),
@@ -1020,7 +1014,7 @@ class BriefPalaceLayout extends StatelessWidget {
                     wangShuaiWidgetWidth,
                     withJi: true),
             SizedBox(
-              height: 4,
+              height: 2,
             ),
 
             // 八门 & 地神
@@ -1098,7 +1092,7 @@ class BriefPalaceLayout extends StatelessWidget {
                     _buildWangShuaiWidget(gong: "休", month: "旺"),
                   ],
                 ),
-                SizedBox(height: 2),
+                SizedBox(height: 1),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   transitionBuilder:
