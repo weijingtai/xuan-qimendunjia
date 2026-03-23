@@ -17,11 +17,13 @@ class BriefPalaceTheme {
   final Color emptinessIconColor;
 
   // --- 标记相关 (击刑/遁甲) ---
-  final double markerSize;
+  final double dunjiaMarkerSize;
+  final double jiXingMarkerSize;
   final double markerOpacity;
   final double markerOffset;
   final Color jiXingColor;
   final Color dunjiaColor;
+  final double markerThickness; // 层叠偏移厚度
 
   // --- 旺衰角标相关 ---
   final double wangShuaiFontSize;
@@ -65,11 +67,13 @@ class BriefPalaceTheme {
     this.horseIconSize = 18,
     this.emptinessIconSize = 14,
     this.emptinessIconColor = const Color(0xFFE53935),
-    this.markerSize = 14,
+    this.dunjiaMarkerSize = 20,
+    this.jiXingMarkerSize = 12,
     this.markerOpacity = 0.8,
-    this.markerOffset = -3,
+    this.markerOffset = -2,
     this.jiXingColor = const Color(0xFFF44336), // Colors.red
     this.dunjiaColor = const Color(0xFF4CAF50), // Colors.green
+    this.markerThickness = 0.5,
     this.wangShuaiFontSize = 8,
     this.wangShuaiBadgeHeight = 11,
     this.wangShuaiBadgeWidth = 10,
@@ -115,6 +119,9 @@ class BriefPalaceConfig {
 
   final bool showSimpleLayout;
 
+  /// 是否是飞盘（默认 false, 即转盘）
+  final bool isFeipan;
+
   /// 宫位主题
   final BriefPalaceTheme theme;
 
@@ -125,6 +132,7 @@ class BriefPalaceConfig {
     this.showGeJu = false,
     this.showWangShuai = false,
     this.showSimpleLayout = false,
+    this.isFeipan = false,
     this.theme = const BriefPalaceTheme(),
   });
 }
