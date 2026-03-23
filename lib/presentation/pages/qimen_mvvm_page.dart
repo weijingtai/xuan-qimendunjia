@@ -504,6 +504,7 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                 showDiGod: config.showDiGod,
                 showYinGan: config.showYinGan,
                 showAnGan: config.showAnGan,
+                showSimpleLayout: config.showSimpleLayout,
               ),
               onPalaceTap: (index) {
                 final gua = _gridOrderedGuas[index];
@@ -602,6 +603,10 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
     final kongWang = pan.shiJiaJu.fuTouJiaZi.getKongWang();
     final kongWangSet = {kongWang.item1, kongWang.item2};
 
+    final xunHeaderGan = pan.gongMapper.values
+        .map((g) => g.sixJiaXunHeader?.gan)
+        .firstWhere((gan) => gan != null, orElse: () => null);
+
     return _gridOrderedGuas.map((gua) {
       final gong = pan.gongMapper[gua];
       if (gong == null) {
@@ -639,6 +644,7 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
         isYangDun: pan.shiJiaJu.isYangDun,
         geJu: const [],
         marks: marks,
+        xunHeaderGan: xunHeaderGan ?? pan.shiJiaJu.fuTouJiaZi.xunHeader.gan, // Fallback to FuTou gan if board xunshou not in mapper (rare)
       );
     }).toList();
   }
@@ -687,6 +693,19 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                   Text(
                     '选择发送给 AI 的可选盘信息',
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                  ),
+                  const Divider(),
+                  CheckboxListTile(
+                    title: const Text('简版显示'),
+                    subtitle: const Text('宫位内元素使用单字显示（如：天蓬->蓬、休门->休）'),
+                    value: config.showSimpleLayout,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(
+                          config.copyWith(showSimpleLayout: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
+                    },
                   ),
                   const Divider(),
                   CheckboxListTile(

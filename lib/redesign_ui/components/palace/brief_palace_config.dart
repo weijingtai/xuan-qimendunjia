@@ -13,11 +13,14 @@ class BriefPalaceConfig {
 
   final bool showWangShuai;
 
+  final bool showSimpleLayout;
+
   const BriefPalaceConfig({
     this.showDiGod = false,
     this.showYinGan = false,
     this.showAnGan = false,
     this.showGeJu = false,
     this.showWangShuai = false,
+    this.showSimpleLayout = false,
   });
 }

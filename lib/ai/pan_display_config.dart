@@ -25,6 +25,9 @@ class PanDisplayConfig {
   /// 格局（盘级别的常见格局）
   final bool showGeJu;
 
+  /// 简版宫位布局（显示1个字还是两个字）
+  final bool showSimpleLayout;
+
   const PanDisplayConfig({
     this.showAnGan = false,
     this.showYinGan = false,
@@ -33,6 +36,7 @@ class PanDisplayConfig {
     this.showSixJiaXunHeader = false,
     this.showJiGan = false,
     this.showGeJu = false,
+    this.showSimpleLayout = false,
   });
 
   const PanDisplayConfig.defaultConfig()
@@ -42,7 +46,8 @@ class PanDisplayConfig {
         showDiGod = false,
         showSixJiaXunHeader = false,
         showJiGan = false,
-        showGeJu = false;
+        showGeJu = false,
+        showSimpleLayout = false;
 
   PanDisplayConfig copyWith({
     bool? showAnGan,
@@ -51,6 +56,8 @@ class PanDisplayConfig {
     bool? showDiGod,
     bool? showSixJiaXunHeader,
     bool? showJiGan,
+    bool? showGeJu,
+    bool? showSimpleLayout,
   }) {
     return PanDisplayConfig(
       showAnGan: showAnGan ?? this.showAnGan,
@@ -59,6 +66,8 @@ class PanDisplayConfig {
       showDiGod: showDiGod ?? this.showDiGod,
       showSixJiaXunHeader: showSixJiaXunHeader ?? this.showSixJiaXunHeader,
       showJiGan: showJiGan ?? this.showJiGan,
+      showGeJu: showGeJu ?? this.showGeJu,
+      showSimpleLayout: showSimpleLayout ?? this.showSimpleLayout,
     );
   }
 }

@@ -9,6 +9,7 @@ import '../../enums/enum_eight_gods.dart';
 import '../../enums/enum_nine_stars.dart';
 import 'package:common/enums.dart';
 import '../../domain/entities/each_gong.dart';
+import '../../enums/enum_six_jia.dart';
 
 part '../components/palace/brief_palace_layout.dart';
 
@@ -249,6 +250,14 @@ class PalaceData {
   final TianGan? tianPanJiGanEnum; // 天盘寄宫干
   final TianGan? diPanJiGanEnum; // 地盘寄宫干
   final NineStarsEnum? jiStarEnum; // 寄宫九星
+  final bool isTianPanDunjia; // 天盘干是遁甲
+  final bool isDiPanDunjia; // 地盘干是遁甲
+  final bool isTianJiGanDunjia; // 天盘寄干是遁甲
+  final bool isDiJiGanDunjia; // 地盘寄干是遁甲
+  final bool isTianPanJiXing; // 天盘干是击刑
+  final bool isDiPanJiXing; // 地盘干是击刑
+  final bool isTianJiGanJiXing; // 天盘寄干是击刑
+  final bool isDiJiGanJiXing; // 地盘寄干是击刑
 
   // --- 为了 UI 层的平滑过渡，提供字符串 Getter ---
   String get name => gongEnum.name;
@@ -286,10 +295,22 @@ class PalaceData {
     this.tianPanJiGanEnum,
     this.diPanJiGanEnum,
     this.jiStarEnum,
+    this.isTianPanDunjia = false,
+    this.isDiPanDunjia = false,
+    this.isTianJiGanDunjia = false,
+    this.isDiJiGanDunjia = false,
+    this.isTianPanJiXing = false,
+    this.isDiPanJiXing = false,
+    this.isTianJiGanJiXing = false,
+    this.isDiJiGanJiXing = false,
   });
 
   /// 核心转换工厂方法：从领域实体转换到 UI 数据
-  factory PalaceData.fromEachGong(EachGong domain, {bool isYangDun = true, List<String> geJu = const [], List<String> marks = const []}) {
+  factory PalaceData.fromEachGong(EachGong domain,
+      {bool isYangDun = true,
+      List<String> geJu = const [],
+      List<String> marks = const [],
+      TianGan? xunHeaderGan}) {
     return PalaceData(
       gongEnum: domain.gongGua,
       number: domain.gongNumber.toString(),
@@ -311,6 +332,23 @@ class PalaceData {
       tianPanJiGanEnum: domain.tianPanJiGan,
       diPanJiGanEnum: domain.diPanJiGan,
       jiStarEnum: domain.isJiTianQin ? NineStarsEnum.QIN : null, // 天禽寄宫
+      isTianPanDunjia: xunHeaderGan != null && domain.tianPan == xunHeaderGan,
+      isDiPanDunjia: xunHeaderGan != null && domain.diPan == xunHeaderGan,
+      isTianJiGanDunjia:
+          xunHeaderGan != null && domain.tianPanJiGan == xunHeaderGan,
+      isDiJiGanDunjia: xunHeaderGan != null && domain.diPanJiGan == xunHeaderGan,
+      isTianPanJiXing: xunHeaderGan != null &&
+          domain.tianPan == xunHeaderGan &&
+          SixJia.getSixJiaByGan(xunHeaderGan).isSixJiXing(domain.gongGua),
+      isDiPanJiXing: xunHeaderGan != null &&
+          domain.diPan == xunHeaderGan &&
+          SixJia.getSixJiaByGan(xunHeaderGan).isSixJiXing(domain.gongGua),
+      isTianJiGanJiXing: xunHeaderGan != null &&
+          domain.tianPanJiGan == xunHeaderGan &&
+          SixJia.getSixJiaByGan(xunHeaderGan).isSixJiXing(domain.gongGua),
+      isDiJiGanJiXing: xunHeaderGan != null &&
+          domain.diPanJiGan == xunHeaderGan &&
+          SixJia.getSixJiaByGan(xunHeaderGan).isSixJiXing(domain.gongGua),
     );
   }
 
@@ -361,6 +399,8 @@ class PalaceData {
         geJu: _getRandomGeJus(),
         marks: ['驿马'],
         isYangDun: true,
+        isTianPanDunjia: true,
+        isTianPanJiXing: true, // Test: 戊 in Xun
         yinGanEnum: TianGan.GENG,
         tianPanAnGanEnum: TianGan.BING,
       ),
@@ -379,6 +419,8 @@ class PalaceData {
         geJu: _getRandomGeJus(),
         marks: ['值符'],
         isYangDun: true,
+        isDiPanDunjia: true,
+        isDiPanJiXing: true, // Test: Geng in Li (Not JiXing in real rules, but for UI test)
         yinGanEnum: TianGan.WU,
         tianPanAnGanEnum: TianGan.WU,
       ),
@@ -397,6 +439,8 @@ class PalaceData {
         geJu: _getRandomGeJus(),
         marks: [],
         isYangDun: true,
+        isTianJiGanDunjia: true,
+        isTianJiGanJiXing: true, // Test: JiGan JiXing (Bottom-Right)
         jiStarEnum: NineStarsEnum.QIN, // 天禽寄宫
         tianPanJiGanEnum: TianGan.JI,
         diPanJiGanEnum: TianGan.DING,
