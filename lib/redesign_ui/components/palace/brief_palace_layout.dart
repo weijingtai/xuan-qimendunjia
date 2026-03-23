@@ -90,7 +90,7 @@ class BriefPalaceLayout extends StatelessWidget {
     //    size + (pad * 2) - leftColWidth - rightColWidth;
     final double middleColWidth = size - leftColWidth - rightColWidth;
     // 格局高度
-    final double geJuHeight = 32;
+    final double geJuHeight = 40;
     final double geJuContentHeight = config.showGeJu ? geJuHeight : 0;
     final double mainContentHeight =
         config.showGeJu ? totalWidth - geJuHeight : totalWidth;
@@ -111,93 +111,95 @@ class BriefPalaceLayout extends StatelessWidget {
             width: size + 12,
             height: config.showGeJu ? geJuContentHeight : 18,
             // color: Colors.blueGrey.withAlpha(50),
-            child: Stack(
+            child: Row(
               children: [
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  switchInCurve: Curves.easeInOut,
-                  switchOutCurve: Curves.easeInOut,
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: child,
-                    );
-                  },
-                  child: config.showGeJu
-                      ? AnimatedContainer(
-                          key: const ValueKey('geju_visible'),
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              List<String> geJus = data.geJu.take(4).toList();
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    transitionBuilder: (child, animation) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      );
+                    },
+                    child: config.showGeJu
+                        ? AnimatedContainer(
+                            key: const ValueKey('geju_visible'),
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            alignment: Alignment.topCenter,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                List<String> geJus = data.geJu.take(4).toList();
 
-                              if (geJus.isEmpty) return const SizedBox.shrink();
+                                if (geJus.isEmpty) return const SizedBox.shrink();
 
-                              final bool isSingle = geJus.length == 1;
-                              final double itemWidth = isSingle
-                                  ? constraints.maxWidth
-                                  : (constraints.maxWidth - 4) / 2;
-
-                              return Wrap(
-                                spacing: 4,
-                                runSpacing: 4,
-                                children: geJus.map((geJuText) {
-                                  return Container(
-                                    width: itemWidth,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 4),
-                                    // color: Colors.blueGrey.withAlpha(50),
-                                    alignment: Alignment.center,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
+                                return Wrap(
+                                  spacing: 4,
+                                  runSpacing: 4,
+                                  alignment: WrapAlignment.center,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: geJus.map((geJuText) {
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueGrey.withAlpha(30),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
                                       child: Text(
                                         geJuText,
                                         style: secondaryStyle.copyWith(
-                                            fontSize: isSingle ? 14 : 12),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w500),
                                         maxLines: 1,
                                       ),
-                                    ),
-                                  );
-                                }).toList(),
-                              );
-                            },
-                          ),
-                        )
-                      : const SizedBox.shrink(key: ValueKey('geju_hidden')),
-                ),
-                AnimatedPositioned(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  right: config.showGeJu ? 0 : 20,
-                  bottom: config.showGeJu ? 18 : 2,
-                  child: SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: Lottie.asset(
-                      'assets/lotties/horse_walking.json',
-                      fit: BoxFit.contain,
-                    ),
+                                    );
+                                  }).toList(),
+                                );
+                              },
+                            ),
+                          )
+                        : const SizedBox.shrink(key: ValueKey('geju_hidden')),
                   ),
                 ),
-                AnimatedPositioned(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  right: 0,
-                  top: config.showGeJu ? 18 : 2,
-                  child: SizedBox(
-                    width: 14,
-                    height: 14,
-                    child: ColorFiltered(
-                      colorFilter: const ColorFilter.mode(
-                        Color(0xFFE53935),
-                        BlendMode.srcIn,
-                      ),
-                      child: Image.asset(
-                        'assets/icons/thin-black-ink-circle.png',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                // 状态图标 (驿马/空亡) 靠右显示
+                Container(
+                  width: 20,
+                  height: config.showGeJu ? geJuHeight : 18,
+                  alignment: Alignment.topRight,
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      if (data.marks.contains('驿马'))
+                        SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: Lottie.asset(
+                            'assets/lotties/horse_walking.json',
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      if (data.marks.contains('空亡'))
+                        Center(
+                          child: SizedBox(
+                            width: 14,
+                            height: 14,
+                            child: ColorFiltered(
+                              colorFilter: const ColorFilter.mode(
+                                Color(0xFFE53935),
+                                BlendMode.srcIn,
+                              ),
+                              child: Image.asset(
+                                'assets/icons/thin-black-ink-circle.png',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
