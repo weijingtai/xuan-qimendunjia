@@ -30,17 +30,16 @@ class BriefPalaceLayout extends StatelessWidget {
     required this.size,
   });
 
-  final double pad = 8;
+  BriefPalaceTheme get theme => config.theme;
 
-  final double fs = 18;
+  double get pad => theme.palacePadding;
+  double get fs => theme.primaryFontSize;
+  double get fsJi => theme.secondaryFontSize;
+  double get wangShuaiWidgetWidth => theme.columnWidthUnit;
 
-  final double fsJi = 16;
-  final double wangShuaiWidgetWidth = 24;
+  Color get textColor => theme.primaryTextColor;
+  Color get jiColor => theme.secondaryTextColor;
 
-  // double get fs => config.showWangShuai ? 16 : 18;
-  // double get fsJi => config.showWangShuai ? 13 : 15;
-  final textColor = Color(0xFF2C2C2C);
-  final jiColor = Color(0xFF6B7280);
   TextStyle get primaryStyle => TextStyle(
       fontSize: fs, color: textColor, fontWeight: FontWeight.w500, height: 1);
   TextStyle get secondaryStyle => TextStyle(
@@ -90,7 +89,7 @@ class BriefPalaceLayout extends StatelessWidget {
     //    size + (pad * 2) - leftColWidth - rightColWidth;
     final double middleColWidth = size - leftColWidth - rightColWidth;
     // 格局高度
-    final double geJuHeight = 34;
+    final double geJuHeight = theme.geJuHeight;
     final double geJuContentHeight = config.showGeJu ? geJuHeight : 0;
     final double mainContentHeight =
         config.showGeJu ? totalWidth - geJuHeight : totalWidth;
@@ -143,17 +142,17 @@ class BriefPalaceLayout extends StatelessWidget {
                                   crossAxisAlignment: WrapCrossAlignment.center,
                                   children: geJus.map((geJuText) {
                                     return Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 2),
+                                      padding: theme.geJuTagPadding,
                                       decoration: BoxDecoration(
-                                        color: Colors.blueGrey.withAlpha(30),
-                                        borderRadius: BorderRadius.circular(4),
+                                        color: theme.geJuTagBackgroundColor,
+                                        borderRadius: BorderRadius.circular(
+                                            theme.geJuTagBorderRadius),
                                       ),
                                       child: Text(
                                         geJuText,
                                         style: secondaryStyle.copyWith(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w500),
+                                            fontSize: theme.geJuFontSize,
+                                            fontWeight: theme.geJuFontWeight),
                                         maxLines: 1,
                                       ),
                                     );
@@ -167,7 +166,7 @@ class BriefPalaceLayout extends StatelessWidget {
                 ),
                 // 状态图标 (驿马/空亡) 靠右显示
                 Container(
-                  width: 20,
+                  width: theme.statusIconWidth,
                   height: config.showGeJu ? geJuHeight : 18,
                   alignment: Alignment.topRight,
                   child: Stack(
@@ -175,8 +174,8 @@ class BriefPalaceLayout extends StatelessWidget {
                     children: [
                       if (data.marks.contains('驿马'))
                         SizedBox(
-                          width: 18,
-                          height: 18,
+                          width: theme.horseIconSize,
+                          height: theme.horseIconSize,
                           child: Lottie.asset(
                             'assets/lotties/horse_walking.json',
                             fit: BoxFit.contain,
@@ -185,11 +184,11 @@ class BriefPalaceLayout extends StatelessWidget {
                       if (data.marks.contains('空亡'))
                         Center(
                           child: SizedBox(
-                            width: 14,
-                            height: 14,
+                            width: theme.emptinessIconSize,
+                            height: theme.emptinessIconSize,
                             child: ColorFiltered(
-                              colorFilter: const ColorFilter.mode(
-                                Color(0xFFE53935),
+                              colorFilter: ColorFilter.mode(
+                                theme.emptinessIconColor,
                                 BlendMode.srcIn,
                               ),
                               child: Image.asset(
@@ -503,18 +502,18 @@ class BriefPalaceLayout extends StatelessWidget {
 
   Widget _buildJiXingMarker({required bool isJi}) {
     return Positioned(
-      bottom: -3,
-      left: isJi ? null : -3,
-      right: isJi ? -3 : null,
+      bottom: theme.markerOffset,
+      left: isJi ? null : theme.markerOffset,
+      right: isJi ? theme.markerOffset : null,
       child: Opacity(
-        opacity: 0.8,
+        opacity: theme.markerOpacity,
         child: Stack(
           children: [
             Image.asset(
               'assets/icons/ji_xing.png',
-              width: 14,
-              height: 14,
-              color: Colors.red,
+              width: theme.markerSize,
+              height: theme.markerSize,
+              color: theme.jiXingColor,
               colorBlendMode: BlendMode.srcIn,
               package: 'qimendunjia',
             ),
@@ -524,9 +523,9 @@ class BriefPalaceLayout extends StatelessWidget {
               top: 0.5,
               child: Image.asset(
                 'assets/icons/ji_xing.png',
-                width: 14,
-                height: 14,
-                color: Colors.red,
+                width: theme.markerSize,
+                height: theme.markerSize,
+                color: theme.jiXingColor,
                 colorBlendMode: BlendMode.srcIn,
                 package: 'qimendunjia',
               ),
@@ -539,18 +538,18 @@ class BriefPalaceLayout extends StatelessWidget {
 
   Widget _buildDunjiaMarker({required bool isJi}) {
     return Positioned(
-      top: -3,
-      left: isJi ? null : -3,
-      right: isJi ? -3 : null,
+      top: theme.markerOffset,
+      left: isJi ? null : theme.markerOffset,
+      right: isJi ? theme.markerOffset : null,
       child: Opacity(
-        opacity: 0.8,
+        opacity: theme.markerOpacity,
         child: Stack(
           children: [
             Image.asset(
               'assets/icons/red-ink-circle.png',
-              width: 14,
-              height: 14,
-              color: Colors.green,
+              width: theme.markerSize,
+              height: theme.markerSize,
+              color: theme.dunjiaColor,
               colorBlendMode: BlendMode.srcIn,
               package: 'qimendunjia',
             ),
@@ -560,9 +559,9 @@ class BriefPalaceLayout extends StatelessWidget {
               top: 0.5,
               child: Image.asset(
                 'assets/icons/red-ink-circle.png',
-                width: 14,
-                height: 14,
-                color: Colors.green,
+                width: theme.markerSize,
+                height: theme.markerSize,
+                color: theme.dunjiaColor,
                 colorBlendMode: BlendMode.srcIn,
                 package: 'qimendunjia',
               ),
@@ -575,7 +574,7 @@ class BriefPalaceLayout extends StatelessWidget {
 
   Widget _animatedText(String text, TextStyle style) {
     return AnimatedScale(
-      scale: config.showWangShuai ? .8 : 1,
+      scale: config.showWangShuai ? theme.wangShuaiScale : 1,
       duration: Animations.durationNormal,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
@@ -619,7 +618,7 @@ class BriefPalaceLayout extends StatelessWidget {
     }
 
     return AnimatedScale(
-      scale: config.showWangShuai ? .8 : 1,
+      scale: config.showWangShuai ? theme.wangShuaiScale : 1,
       duration: Animations.durationNormal,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -673,16 +672,19 @@ class BriefPalaceLayout extends StatelessWidget {
           ? Container(
               key: ValueKey('wang_$wang'),
               margin: const EdgeInsets.only(top: 2),
-              height: 12,
-              width: 12,
+              height: theme.wangShuaiGodSize,
+              width: theme.wangShuaiGodSize,
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(6)),
+              decoration: BoxDecoration(
+                color: theme.wangShuaiGongTextColor,
+                borderRadius: BorderRadius.all(
+                    Radius.circular(theme.wangShuaiGodSize / 2)),
               ),
               child: Text(wang,
                   style: subtitleStyle.copyWith(
-                      height: 1.2, color: Colors.black, fontSize: 8)),
+                      height: 1.2,
+                      color: theme.wangShuaiMonthTextColor,
+                      fontSize: theme.wangShuaiFontSize)),
             )
           : const SizedBox.shrink(key: ValueKey('wang_hidden')),
     );
@@ -730,16 +732,21 @@ class BriefPalaceLayout extends StatelessWidget {
                     // AnimatedContainer(
                     // duration: Animations.durationNormal,
                     Container(
-                      width: 10,
-                      height: gong == null ? 22 : 11,
+                      width: theme.wangShuaiBadgeWidth,
+                      height: gong == null
+                          ? theme.wangShuaiBadgeHeight * 2
+                          : theme.wangShuaiBadgeHeight,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          color: theme.wangShuaiMonthBg,
                           borderRadius: gong == null
-                              ? const BorderRadius.all(Radius.circular(6))
-                              : const BorderRadius.only(
-                                  topLeft: Radius.circular(6),
-                                  topRight: Radius.circular(6))),
+                              ? BorderRadius.all(
+                                  Radius.circular(theme.wangShuaiBadgeRadius))
+                              : BorderRadius.only(
+                                  topLeft: Radius.circular(
+                                      theme.wangShuaiBadgeRadius),
+                                  topRight: Radius.circular(
+                                      theme.wangShuaiBadgeRadius))),
                       child: Text(month,
                           style: subtitleStyle.copyWith(
                               height: 1.3,
@@ -747,23 +754,28 @@ class BriefPalaceLayout extends StatelessWidget {
                                   ? const Color(0xFF8B0000)
                                   : (month == "禄"
                                       ? Colors.green[700]
-                                      : Colors.black87),
-                              fontSize: 8)),
+                                      : theme.wangShuaiMonthTextColor),
+                              fontSize: theme.wangShuaiFontSize)),
                     ),
                   if (gong != null)
                     // AnimatedContainer(
                     // duration: Animations.durationNormal,
                     Container(
-                      height: month == null ? 22 : 11,
-                      width: 10,
+                      height: month == null
+                          ? theme.wangShuaiBadgeHeight * 2
+                          : theme.wangShuaiBadgeHeight,
+                      width: theme.wangShuaiBadgeWidth,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: Colors.black54,
+                          color: theme.wangShuaiGongBg,
                           borderRadius: month == null
-                              ? const BorderRadius.all(Radius.circular(6))
-                              : const BorderRadius.only(
-                                  bottomRight: Radius.circular(6),
-                                  bottomLeft: Radius.circular(6))),
+                              ? BorderRadius.all(
+                                  Radius.circular(theme.wangShuaiBadgeRadius))
+                              : BorderRadius.only(
+                                  bottomRight: Radius.circular(
+                                      theme.wangShuaiBadgeRadius),
+                                  bottomLeft: Radius.circular(
+                                      theme.wangShuaiBadgeRadius))),
                       child: Text(gong,
                           style: subtitleStyle.copyWith(
                               height: 1.0,
@@ -772,8 +784,8 @@ class BriefPalaceLayout extends StatelessWidget {
                                       0xFFFF4D4D) // On dark background
                                   : (gong == "禄"
                                       ? Colors.greenAccent
-                                      : Colors.white70),
-                              fontSize: 8)),
+                                      : theme.wangShuaiGongTextColor),
+                              fontSize: theme.wangShuaiFontSize)),
                     ),
                 ],
               )
@@ -875,7 +887,7 @@ class BriefPalaceLayout extends StatelessWidget {
       duration: Animations.durationNormal,
       key: ValueKey('wangshuai_${gong}_$month'),
       // margin: const EdgeInsets.only(top: 2),
-      height: config.showWangShuai ? 11 : 0,
+      height: config.showWangShuai ? theme.wangShuaiBadgeHeight : 0,
       width: wangShuaiWidgetWidth,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -884,45 +896,57 @@ class BriefPalaceLayout extends StatelessWidget {
           if (gong != null)
             AnimatedContainer(
               duration: Animations.durationNormal,
-              width: gong == null ? wangShuaiWidgetWidth : 12,
-              height: 11,
+              width: gong == null
+                  ? wangShuaiWidgetWidth
+                  : theme.wangShuaiBadgeWidth + 2,
+              height: theme.wangShuaiBadgeHeight,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: Colors.black54,
+                  color: theme.wangShuaiGongBg,
                   borderRadius: gong == null
-                      ? BorderRadius.all(Radius.circular(6))
+                      ? BorderRadius.all(
+                          Radius.circular(theme.wangShuaiBadgeRadius))
                       : BorderRadius.only(
-                          topLeft: Radius.circular(6),
-                          bottomLeft: Radius.circular(6))),
+                          topLeft: Radius.circular(theme.wangShuaiBadgeRadius),
+                          bottomLeft:
+                              Radius.circular(theme.wangShuaiBadgeRadius))),
               child: Text(gong ?? "",
                   style: subtitleStyle.copyWith(
                       height: 1.2,
                       color: gong == "墓"
                           ? const Color(0xFFFF4D4D)
-                          : (gong == "禄" ? Colors.greenAccent : Colors.white70),
-                      fontSize: 8)),
+                          : (gong == "禄"
+                              ? Colors.greenAccent
+                              : theme.wangShuaiGongTextColor),
+                      fontSize: theme.wangShuaiFontSize)),
             ),
           // 月
           if (month != null)
             AnimatedContainer(
               duration: Animations.durationNormal,
-              width: gong == null ? wangShuaiWidgetWidth : 12,
-              height: 11,
+              width: gong == null
+                  ? wangShuaiWidgetWidth
+                  : theme.wangShuaiBadgeWidth + 2,
+              height: theme.wangShuaiBadgeHeight,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: theme.wangShuaiMonthBg,
                   borderRadius: gong == null
-                      ? BorderRadius.all(Radius.circular(6))
+                      ? BorderRadius.all(
+                          Radius.circular(theme.wangShuaiBadgeRadius))
                       : BorderRadius.only(
-                          topRight: Radius.circular(6),
-                          bottomRight: Radius.circular(6))),
+                          topRight: Radius.circular(theme.wangShuaiBadgeRadius),
+                          bottomRight:
+                              Radius.circular(theme.wangShuaiBadgeRadius))),
               child: Text(month ?? "",
                   style: subtitleStyle.copyWith(
                       height: 1.2,
                       color: month == "墓"
                           ? const Color(0xFF8B0000)
-                          : (month == "禄" ? Colors.green[700] : Colors.black87),
-                      fontSize: 8)),
+                          : (month == "禄"
+                              ? Colors.green[700]
+                              : theme.wangShuaiMonthTextColor),
+                      fontSize: theme.wangShuaiFontSize)),
             )
         ],
       ),
@@ -958,8 +982,7 @@ class BriefPalaceLayout extends StatelessWidget {
                       data.godEnum.singleCharName,
                       config.showSimpleLayout,
                       jiStyle.copyWith(
-                          color:
-                              const Color(0xFF6B7280).withValues(alpha: 0.8)),
+                          color: theme.secondaryTextColor.withOpacity(0.8)),
                     ),
                   ),
                 ],
@@ -982,7 +1005,9 @@ class BriefPalaceLayout extends StatelessWidget {
                     ),
                     child: Text("旺",
                         style: subtitleStyle.copyWith(
-                            height: 1.0, color: Colors.black, fontSize: 10)),
+                            height: 1.0,
+                            color: theme.wangShuaiMonthTextColor,
+                            fontSize: theme.geJuFontSize)),
                   ),
                 ),
               ),
@@ -1068,13 +1093,13 @@ class BriefPalaceLayout extends StatelessWidget {
                                   ValueKey('relation_${doorText}_${data.name}'),
                               margin: const EdgeInsets.symmetric(
                                   vertical: 2, horizontal: 1),
-                              height: 12,
-                              width: 10,
+                              height: theme.relationBadgeHeight,
+                              width: theme.relationBadgeWidth,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: _getRelationColor(relation),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(4)),
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(theme.relationBadgeRadius)),
                               ),
                               child: Text(
                                 relation.singleCharName,
@@ -1082,7 +1107,7 @@ class BriefPalaceLayout extends StatelessWidget {
                                     height: 1.0,
                                     color: Colors.white,
                                     fontWeight: FontWeight.normal,
-                                    fontSize: 8),
+                                    fontSize: theme.relationFontSize),
                               ),
                             );
                           }),
@@ -1119,8 +1144,8 @@ class BriefPalaceLayout extends StatelessWidget {
                                     data.diGodEnum?.singleCharName ?? '',
                                     config.showSimpleLayout,
                                     jiStyle.copyWith(
-                                        color: const Color(0xFF6B7280)
-                                            .withValues(alpha: 0.8)),
+                                        color: theme.secondaryTextColor
+                                            .withOpacity(0.8)),
                                   ),
                                 ),
                               ],
@@ -1145,8 +1170,8 @@ class BriefPalaceLayout extends StatelessWidget {
                                   child: Text("旺",
                                       style: subtitleStyle.copyWith(
                                           height: 1.0,
-                                          color: Colors.black,
-                                          fontSize: 10)),
+                                          color: theme.wangShuaiMonthTextColor,
+                                          fontSize: theme.geJuFontSize)),
                                 ),
                               ),
                             ),
@@ -1165,19 +1190,19 @@ class BriefPalaceLayout extends StatelessWidget {
     if (relation == null) return Colors.transparent;
     switch (relation) {
       case GongAndDoorRelationship.MEN_PO: // 门迫 - 极凶
-        return const Color(0xFFD32F2F);
+        return theme.relationMenPoColor;
       case GongAndDoorRelationship.SHOU_ZHI: // 宫制 - 小凶
-        return const Color(0xFFBF360C);
+        return theme.relationShouZhiColor;
       case GongAndDoorRelationship.SHENG_GONG: // 和
       case GongAndDoorRelationship.SHOU_SHEN: // 义
       case GongAndDoorRelationship.BI_HE: // 比和
-        return const Color(0xFF2E7D32); // 吉
+        return theme.relationGoodColor; // 吉
       case GongAndDoorRelationship.FU_YIN: // 伏吟 - 中性偏忧
-        return const Color(0xFF455A64);
+        return theme.relationFuYinColor;
       case GongAndDoorRelationship.FAN_YIN: // 反吟 - 动荡
-        return const Color(0xFF7B1FA2);
+        return theme.relationFanYinColor;
       default:
-        if (relation.name.contains('吉')) return const Color(0xFF2E7D32);
+        if (relation.name.contains('吉')) return theme.relationGoodColor;
         return Colors.grey;
     }
   }
