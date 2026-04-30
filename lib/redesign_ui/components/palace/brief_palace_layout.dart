@@ -79,11 +79,11 @@ class BriefPalaceLayout extends StatelessWidget {
     double rightColWidth =
         withJi ? wangShuaiWidgetWidth * 2 : wangShuaiWidgetWidth;
     // rightColWidth += 6;
-    final double starDoorGodTextBoxWidth = primaryStyle.fontSize! * 2 + 2;
+    final double starDoorGodTextBoxWidth = (primaryStyle.fontSize ?? 14) * 2 + 2;
 
     // 左侧有右侧宽度保持一致，此时可以确保 middle 为中心对齐时，神星门等保持中心对齐
     // final double leftColWidth = showLeftPart ? rightColWidth : 0;
-    final double expandedLeftColWidth = primaryStyle.fontSize! * 1.6;
+    final double expandedLeftColWidth = (primaryStyle.fontSize ?? 14) * 1.6;
     final double leftColWidth = showLeftPart ? expandedLeftColWidth : 0;
     // final double middleColWidth =
     //    size + (pad * 2) - leftColWidth - rightColWidth;
@@ -97,11 +97,13 @@ class BriefPalaceLayout extends StatelessWidget {
     // 主内容始终居中对齐
     // final CrossAxisAlignment middleCrossAxisAlignment =
     // showLeftPart ? CrossAxisAlignment.center : CrossAxisAlignment.start;
+    final bool isCenter = data.gongEnum == HouTianGua.Center;
+    final bool isZhuanPanCenter = isCenter && !config.isFeipan;
+
     return Container(
       width: size + 12,
       height: size,
       padding: EdgeInsets.all(pad),
-      // color: Colors.black87,
       child: Column(
         children: [
           AnimatedContainer(
@@ -109,7 +111,6 @@ class BriefPalaceLayout extends StatelessWidget {
             curve: Curves.easeInOut,
             width: size + 12,
             height: config.showGeJu ? geJuContentHeight : 18,
-            // color: Colors.blueGrey.withAlpha(50),
             child: Row(
               children: [
                 Expanded(
@@ -118,10 +119,7 @@ class BriefPalaceLayout extends StatelessWidget {
                     switchInCurve: Curves.easeInOut,
                     switchOutCurve: Curves.easeInOut,
                     transitionBuilder: (child, animation) {
-                      return FadeTransition(
-                        opacity: animation,
-                        child: child,
-                      );
+                      return FadeTransition(opacity: animation, child: child);
                     },
                     child: config.showGeJu
                         ? AnimatedContainer(
@@ -131,27 +129,59 @@ class BriefPalaceLayout extends StatelessWidget {
                             alignment: Alignment.topCenter,
                             child: LayoutBuilder(
                               builder: (context, constraints) {
-                                List<String> geJus = data.geJu.take(4).toList();
-
-                                if (geJus.isEmpty) return const SizedBox.shrink();
-
+                                List<String> allTags = [...(data.geJu ?? [])];
+                                if (isZhuanPanCenter) {
+                                  if ((data.marks ?? []).contains('值符')) {
+                                    allTags.insert(0, '值符');
+                                  }
+                                  if ((data.marks ?? []).contains('旬首')) {
+                                    allTags.insert(0, '旬首');
+                                  }
+                                }
+                                List<String> geJus =
+                                    allTags.take(4).toList();
+                                if (geJus.isEmpty) {
+                                  return const SizedBox.shrink();
+                                }
                                 return Wrap(
                                   spacing: 4,
                                   runSpacing: 4,
                                   alignment: WrapAlignment.center,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  crossAxisAlignment:
+                                      WrapCrossAlignment.center,
                                   children: geJus.map((geJuText) {
+                                    Color bgColor =
+                                        theme.geJuTagBackgroundColor;
+                                    Color textColor = theme.primaryTextColor
+                                        .withOpacity(0.8);
+
+                                    if (geJuText == '值符') {
+                                      bgColor = const Color(0xFFD32F2F)
+                                          .withOpacity(0.1);
+                                      textColor = const Color(0xFFD32F2F);
+                                    } else if (geJuText == '旬首') {
+                                      bgColor = const Color(0xFF1976D2)
+                                          .withOpacity(0.1);
+                                      textColor = const Color(0xFF1976D2);
+                                    }
+
                                     return Container(
                                       padding: theme.geJuTagPadding,
                                       decoration: BoxDecoration(
-                                        color: theme.geJuTagBackgroundColor,
+                                        color: bgColor,
                                         borderRadius: BorderRadius.circular(
                                             theme.geJuTagBorderRadius),
+                                        border: (geJuText == '值符' ||
+                                                geJuText == '旬首')
+                                            ? Border.all(
+                                                color: textColor
+                                                    .withOpacity(0.3),
+                                                width: 0.5)
+                                            : null,
                                       ),
                                       child: Text(
                                         geJuText,
                                         style: secondaryStyle.copyWith(
-                                            fontSize: theme.geJuFontSize,
                                             fontWeight: theme.geJuFontWeight),
                                         maxLines: 1,
                                       ),
@@ -164,7 +194,6 @@ class BriefPalaceLayout extends StatelessWidget {
                         : const SizedBox.shrink(key: ValueKey('geju_hidden')),
                   ),
                 ),
-                // 状态图标 (驿马/空亡) 靠右显示
                 Container(
                   width: theme.statusIconWidth,
                   height: config.showGeJu ? geJuHeight : 18,
@@ -172,7 +201,7 @@ class BriefPalaceLayout extends StatelessWidget {
                   child: Stack(
                     alignment: Alignment.topCenter,
                     children: [
-                      if (data.marks.contains('驿马'))
+                      if ((data.marks ?? []).contains('驿马'))
                         SizedBox(
                           width: theme.horseIconSize,
                           height: theme.horseIconSize,
@@ -181,7 +210,7 @@ class BriefPalaceLayout extends StatelessWidget {
                             fit: BoxFit.contain,
                           ),
                         ),
-                      if (data.marks.contains('空亡'))
+                      if ((data.marks ?? []).contains('空亡'))
                         Center(
                           child: SizedBox(
                             width: theme.emptinessIconSize,
@@ -205,67 +234,72 @@ class BriefPalaceLayout extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Container(
-              alignment: Alignment.center,
-              width: size,
-              // color: Colors.red.withAlpha(40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // 左列：隐干/暗干
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    width: leftColWidth,
-                    // color: Colors.blue.withAlpha(50),
-                    color: Colors.transparent,
-                    clipBehavior: Clip.antiAlias,
-                    child: OverflowBox(
-                      alignment: Alignment.centerRight,
-                      minWidth: expandedLeftColWidth,
-                      maxWidth: expandedLeftColWidth,
-                      child: _buildLeftColumn(
-                          primaryStyle, expandedLeftColWidth, 12),
-                    ),
-                  ),
-
-                  // 中列：神/星/门/地神
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    alignment:
-                        showLeftPart ? Alignment.center : Alignment.centerLeft,
-                    // alignment: Alignment.centerLeft,
-                    width: middleColWidth,
-                    // color: Colors.green.withAlpha(50),
-                    child: SizedBox(
-                      // color: Colors.blue.withAlpha(50),
-                      width: starDoorGodTextBoxWidth + 20,
-                      child: _buildMainContent(
-                        // middleCrossAxisAlignment,
-                        starDoorGodTextBoxWidth + 20,
-                        starText,
-                        doorText,
-                        godText,
-                        diGodText,
+            child: isZhuanPanCenter
+                ? Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      _buildCenterHub(),
+                      Positioned(
+                        right: pad,
+                        bottom: pad,
+                        child: Text(
+                          data.diPanJiGanEnum?.name ?? data.diPanGanEnum.name,
+                          style: primaryStyle,
+                        ),
                       ),
+                    ],
+                  )
+                : Container(
+                    alignment: Alignment.center,
+                    width: size,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          width: leftColWidth,
+                          color: Colors.transparent,
+                          clipBehavior: Clip.antiAlias,
+                          child: OverflowBox(
+                            alignment: Alignment.centerRight,
+                            minWidth: expandedLeftColWidth,
+                            maxWidth: expandedLeftColWidth,
+                            child: _buildLeftColumn(
+                                primaryStyle, expandedLeftColWidth, 12),
+                          ),
+                        ),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          alignment: showLeftPart
+                              ? Alignment.center
+                              : Alignment.centerLeft,
+                          width: middleColWidth,
+                          child: SizedBox(
+                            width: starDoorGodTextBoxWidth + 20,
+                            child: _buildMainContent(
+                                starDoorGodTextBoxWidth + 20,
+                                starText,
+                                doorText,
+                                godText,
+                                diGodText,
+                              ),
+                          ),
+                        ),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          width: rightColWidth,
+                          child: _buildRightGans(
+                              primaryStyle, secondaryStyle, rightColWidth,
+                              wangShuaiWidgetWidth,
+                              withJi: withJi),
+                        ),
+                      ],
                     ),
                   ),
-
-                  // 右列：天地盘干
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    width: rightColWidth,
-                    // color: Colors.red,
-                    child: _buildRightGans(primaryStyle, secondaryStyle,
-                        rightColWidth, wangShuaiWidgetWidth,
-                        withJi: withJi),
-                  ),
-                ],
-              ),
-            ),
           ),
         ],
       ),
@@ -277,10 +311,11 @@ class BriefPalaceLayout extends StatelessWidget {
       TextStyle style, double columnWidth, double heightSize) {
     bool showYinGan = config.showYinGan && data.yinGanEnum != null;
     bool showAnGan = config.showAnGan && data.tianPanAnGanEnum != null;
-    final double w = style.fontSize! + 4 > wangShuaiWidgetWidth
-        ? style.fontSize! + 4
+    final double fs = style.fontSize ?? 14;
+    final double w = fs + 4 > wangShuaiWidgetWidth
+        ? fs + 4
         : wangShuaiWidgetWidth;
-    Size size = Size(w, heightSize + style.fontSize! + 2);
+    Size size = Size(w, heightSize + fs + 2);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,19 +326,22 @@ class BriefPalaceLayout extends StatelessWidget {
             opacity: showYinGan ? 1 : 0,
             duration: Animations.durationNormal,
             child: _yinAnGanWangShuaiWidget(
-                data.yinGanEnum!.name, null, style, columnWidth, heightSize),
+                data.yinGanEnum?.name ?? '', null, style, columnWidth, heightSize),
           ),
         ),
-        SizedBox(height: 16),
-        SizedBox.fromSize(
-          size: size,
-          child: AnimatedOpacity(
-            opacity: showAnGan ? 1 : 0,
-            duration: Animations.durationNormal,
-            child: _yinAnGanWangShuaiWidget(data.tianPanAnGanEnum!.name, null,
-                style, columnWidth, heightSize),
+        if (showAnGan)
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: SizedBox.fromSize(
+              size: size,
+              child: AnimatedOpacity(
+                opacity: showAnGan ? 1 : 0,
+                duration: Animations.durationNormal,
+                child: _yinAnGanWangShuaiWidget(data.tianPanAnGanEnum?.name ?? '', null,
+                    style, columnWidth, heightSize),
+              ),
+            ),
           ),
-        ),
       ],
     );
   }
@@ -467,6 +505,7 @@ class BriefPalaceLayout extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Stack(
+                  alignment: Alignment.center,
                   clipBehavior: Clip.none,
                   children: [
                     _animatedText(ganStr, style),
@@ -477,6 +516,7 @@ class BriefPalaceLayout extends StatelessWidget {
                 if (jiGanStr != null) ...[
                   const SizedBox(width: 2),
                   Stack(
+                    alignment: Alignment.center,
                     clipBehavior: Clip.none,
                     children: [
                       _animatedText(
@@ -511,20 +551,19 @@ class BriefPalaceLayout extends StatelessWidget {
           children: [
             Image.asset(
               'assets/icons/ji_xing.png',
-              width: theme.markerSize,
-              height: theme.markerSize,
+              width: theme.jiXingMarkerSize,
+              height: theme.jiXingMarkerSize,
               color: theme.jiXingColor,
               colorBlendMode: BlendMode.srcIn,
               package: 'qimendunjia',
             ),
-            // 重叠偏移以增加粗度 / Layering to increase thickness
             Positioned(
-              left: 0.5,
-              top: 0.5,
+              left: theme.markerThickness,
+              top: theme.markerThickness,
               child: Image.asset(
                 'assets/icons/ji_xing.png',
-                width: theme.markerSize,
-                height: theme.markerSize,
+                width: theme.jiXingMarkerSize,
+                height: theme.jiXingMarkerSize,
                 color: theme.jiXingColor,
                 colorBlendMode: BlendMode.srcIn,
                 package: 'qimendunjia',
@@ -537,30 +576,27 @@ class BriefPalaceLayout extends StatelessWidget {
   }
 
   Widget _buildDunjiaMarker({required bool isJi}) {
-    return Positioned(
-      top: theme.markerOffset,
-      left: isJi ? null : theme.markerOffset,
-      right: isJi ? theme.markerOffset : null,
+    return Center(
       child: Opacity(
         opacity: theme.markerOpacity,
         child: Stack(
+          alignment: Alignment.center,
           children: [
             Image.asset(
               'assets/icons/red-ink-circle.png',
-              width: theme.markerSize,
-              height: theme.markerSize,
+              width: theme.dunjiaMarkerSize,
+              height: theme.dunjiaMarkerSize,
               color: theme.dunjiaColor,
               colorBlendMode: BlendMode.srcIn,
               package: 'qimendunjia',
             ),
-            // 重叠偏移以增加粗度 / Layering to increase thickness
             Positioned(
-              left: 0.5,
-              top: 0.5,
+              left: theme.markerThickness,
+              top: theme.markerThickness,
               child: Image.asset(
                 'assets/icons/red-ink-circle.png',
-                width: theme.markerSize,
-                height: theme.markerSize,
+                width: theme.dunjiaMarkerSize,
+                height: theme.dunjiaMarkerSize,
                 color: theme.dunjiaColor,
                 colorBlendMode: BlendMode.srcIn,
                 package: 'qimendunjia',
@@ -953,6 +989,40 @@ class BriefPalaceLayout extends StatelessWidget {
     );
   }
 
+  /// 构建中宫核心枢纽（元数据圆环）
+  Widget _buildCenterHub() {
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: theme.secondaryTextColor.withOpacity(0.2)),
+          color: theme.secondaryTextColor.withOpacity(0.05),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '中',
+              style: (primaryStyle ?? const TextStyle()).copyWith(
+                fontSize: (theme.primaryFontSize ?? 18) * 1.2,
+                color: theme.secondaryTextColor ?? Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '五宫',
+              style: (secondaryStyle ?? const TextStyle()).copyWith(
+                fontSize: 10,
+                color: (theme.secondaryTextColor ?? Colors.grey).withOpacity(0.6),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildMainContent(
     double width,
     String starText,
@@ -1031,8 +1101,12 @@ class BriefPalaceLayout extends StatelessWidget {
                     ],
                   )
                 : _starGanWangShuaiWidget(
-                    data.starEnum.name.substring(1),
-                    data.jiStarEnum!.name.substring(1),
+                    data.starEnum.name.isNotEmpty 
+                        ? data.starEnum.name.substring(1) 
+                        : '',
+                    (data.jiStarEnum?.name ?? '').isNotEmpty 
+                        ? data.jiStarEnum!.name.substring(1) 
+                        : '',
                     style,
                     wangShuaiWidgetWidth * 2,
                     11,

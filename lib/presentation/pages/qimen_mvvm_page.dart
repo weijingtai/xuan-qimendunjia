@@ -476,10 +476,10 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
               spacing: 24,
               runSpacing: 4,
               children: [
-                _buildInfoRow('盘类型', pan.plateType.name),
-                _buildInfoRow('局数', ju.juDescription),
-                _buildInfoRow('旬首', ju.fuTouJiaZi.name),
-                _buildInfoRow('节气', ju.jieQiAt.name),
+                _buildInfoRow('盘类型', pan.plateType?.name ?? '未知'),
+                _buildInfoRow('局数', ju?.juDescription ?? '未知'),
+                _buildInfoRow('旬首', ju?.fuTouJiaZi?.name ?? '未知'),
+                _buildInfoRow('节气', ju?.jieQiAt?.name ?? '未知'),
               ],
             ),
           ),
@@ -505,6 +505,7 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                 showYinGan: config.showYinGan,
                 showAnGan: config.showAnGan,
                 showSimpleLayout: config.showSimpleLayout,
+                isFeipan: pan.plateType == PlateType.FEI_PAN,
               ),
               onPalaceTap: (index) {
                 final gua = _gridOrderedGuas[index];

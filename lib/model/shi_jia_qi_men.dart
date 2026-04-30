@@ -307,9 +307,9 @@ class ShiJiaQiMen {
     Map<HouTianGua, EachGong> gongRes = {};
 
     for (int i = 1; i < 10; i++) {
-      // if (i == 5){
-      //   continue;
-      // }
+      if (i == 5) {
+        continue;
+      }
       gongRes[HouTianGua.getGua(i)] = generateEachGong(
           i: i,
           nineStarsGongNumberMapper: nineStarsGongNumberMapper,
@@ -322,10 +322,6 @@ class ShiJiaQiMen {
           houGuaNumberGanMapper: diPanGanWithGongMapper,
           diPanEightGodsMapper: diGodsGongNumberMapper);
     }
-
-    // 中五宫 寄宫
-    // gongRes = settleCenterGongJiGong(gongRes, _diPanGanWithGongMapper,TianGan.YI);
-    // gongRes = settleCenterGongJiGong(gongRes, _diPanGanWithGongMapper,_diPanGanWithGongMapper[5]!);
 
     return gongRes;
   }
