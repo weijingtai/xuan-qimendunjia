@@ -130,44 +130,52 @@ class GanZhiDrivenQiMenPan {
   // ============== 排盘流程 ==============
 
   void _arrange() {
-    // 步骤 1：地盘三奇六仪（阴遁逆飞戊起，已实现）
+    // 步骤 1：地盘三奇六仪（阴遁逆飞戊起）
     diPanGanByGong = _placeDiPan();
 
-    // 步骤 2：旬首得值符值使（TODO）
+    // 步骤 2：旬首得值符值使
     final drivingJiaZi =
         JiaZi.getFromGanZhiEnum(drivingGan, drivingZhi);
     final xunHeaderJiaZi = drivingJiaZi.xunHeader;
     final xunHeaderTianGan = SixJia.getSixJiaByJiaZi(xunHeaderJiaZi).gan;
-    final xunHeaderGongNumber = diPanGanByGong.entries
+
+    // 旬首在地盘的原始落宫（可能为 5）
+    final xunHeaderGongRaw = diPanGanByGong.entries
         .firstWhere((e) => e.value == xunHeaderTianGan,
             orElse: () => throw StateError(
                 '旬首天干 $xunHeaderTianGan 未落入地盘'))
         .key;
-    zhiFuStar = starSet[xunHeaderGongNumber - 1];
-    zhiShiDoor = _gongNumberToDoorBenWei[xunHeaderGongNumber] ??
-        (throw StateError('旬首落中5宫，应寄坤2，请使用寄宫规则'));
+    // 值符星按原始落宫的本位星（中5 即天禽 = starSet[4]）
+    zhiFuStar = starSet[xunHeaderGongRaw - 1];
+    // 中5寄坤2：值使门 / 后续门-神路径都按坤2处理
+    final xunHeaderGongNumber =
+        xunHeaderGongRaw == 5 ? 2 : xunHeaderGongRaw;
+    zhiShiDoor = _gongNumberToDoorBenWei[xunHeaderGongNumber]!;
 
-    // 步骤 3：天盘九星（值符随 drivingGan，TODO 完整逆飞分配）
-    final drivingGanGongNumber = diPanGanByGong.entries
+    // drivingGan 在地盘的原始落宫（可能为 5）
+    final drivingGanGongRaw = diPanGanByGong.entries
         .firstWhere((e) => e.value == drivingGan,
             orElse: () =>
                 throw StateError('drivingGan $drivingGan 未落入地盘'))
         .key;
+    // 中5寄坤2：值符星 / 神盘起算落宫都按坤2处理
+    final drivingGanGongNumber =
+        drivingGanGongRaw == 5 ? 2 : drivingGanGongRaw;
     zhiFuStarAtGong = HouTianGua.getGua(drivingGanGongNumber);
 
-    // 步骤 4：人盘八门（值使逆数到 drivingZhi 宫，TODO）
+    // 步骤 4：人盘八门（值使逆数到 drivingZhi 宫；地支不会落中5）
     final drivingZhiGongNumber = _diZhiToGongNumber(drivingZhi);
     zhiShiDoorAtGong = HouTianGua.getGua(drivingZhiGongNumber);
 
-    // 步骤 3：天盘九星 — 飞盘逆飞，值符跟 drivingGan 落宫
+    // 步骤 3：天盘九星 — 飞盘逆飞，值符跟 drivingGan 落宫（已寄坤2修正）
     final tianPanStarByGong =
-        _arrangeTianPanStars(drivingGanGongNumber, xunHeaderGongNumber);
+        _arrangeTianPanStars(drivingGanGongNumber, xunHeaderGongRaw);
 
-    // 步骤 4：人盘八门 — 飞盘逆飞，值使从 xunHeaderGong 飞至 drivingZhiGong
+    // 步骤 4：人盘八门 — 飞盘逆飞，值使从 xunHeaderGong（寄2 后）飞至 drivingZhiGong
     final renPanDoorByGong =
         _arrangeRenPanDoors(drivingZhiGongNumber, xunHeaderGongNumber);
 
-    // 步骤 5：神盘八神 — 值符神跟天盘值符星落宫，其余逆排
+    // 步骤 5：神盘八神 — 值符神跟天盘值符星落宫（寄2 后），其余逆排
     final shenPanGodByGong = _arrangeShenPanGods(drivingGanGongNumber);
 
     gongMapper = _assemble(
@@ -217,11 +225,12 @@ class GanZhiDrivenQiMenPan {
   /// 排人盘八门（飞盘 + 阴遁逆飞，跳中5）
   ///
   /// 算法（对照表 §六 + yue_jia_algorithm.md §8）：
-  /// - 值使门 = xunHeaderGong 宫的本位门
+  /// - 值使门 = xunHeaderGong 宫的本位门（中5 寄坤 2 已在调用前处理）
   /// - 值使从其本宫起，逆数到 drivingZhiGong
   /// - 其余八门按本位顺序逆飞
   ///
   /// 中5无门：8 个门飞布在 [1, 9, 8, 7, 6, 4, 3, 2] 八宫。
+  /// 调用方保证 xunHeaderGong ≠ 5，drivingZhiGong ≠ 5。
   Map<int, EightDoorEnum> _arrangeRenPanDoors(
       int targetGong, int xunHeaderGong) {
     // 八门按"宫号本位"展开（跳5）
@@ -240,9 +249,9 @@ class GanZhiDrivenQiMenPan {
 
     final doorStartIdx = doorGongNumbers.indexOf(xunHeaderGong);
     if (doorStartIdx < 0) {
-      // 旬首落中5：寄坤2，等价于值使按坤2本位起算
-      // TODO P3-T1.1 评审：旬首落中5的值使寄宫规则
-      throw UnimplementedError('旬首落中5，值使寄宫规则待评审');
+      throw StateError(
+          '_arrangeRenPanDoors: xunHeaderGong=$xunHeaderGong 不应到达此处（'
+          '调用方应已对中5寄坤2做重定向）');
     }
     final pathStartIdx = doorPath.indexOf(targetGong);
     if (pathStartIdx < 0) {
@@ -261,7 +270,7 @@ class GanZhiDrivenQiMenPan {
   /// 排神盘八神（飞盘 + 阴遁逆飞，跳中5）
   ///
   /// 算法（对照表 §七 + yue_jia_algorithm.md §9）：
-  /// - 值符神跟天盘值符星，落于 zhiFuGongNumber
+  /// - 值符神跟天盘值符星，落于 zhiFuGongNumber（中5 寄坤2 已在调用前处理）
   /// - 其余八神按"值符 → 螣蛇 → 太阴 → 六合 → 白虎 → 玄武 → 九地 → 九天"逆排
   Map<int, EightGodsEnum> _arrangeShenPanGods(int zhiFuGongNumber) {
     const godOrder = <EightGodsEnum>[
@@ -278,9 +287,9 @@ class GanZhiDrivenQiMenPan {
 
     final pathStartIdx = godPath.indexOf(zhiFuGongNumber);
     if (pathStartIdx < 0) {
-      // 值符星落中5：寄坤2 — 同八门寄宫规则
-      // TODO P3-T1.1 评审
-      throw UnimplementedError('值符星落中5，神盘寄宫规则待评审');
+      throw StateError(
+          '_arrangeShenPanGods: zhiFuGongNumber=$zhiFuGongNumber 不应到达此处（'
+          '调用方应已对中5寄坤2做重定向）');
     }
 
     final result = <int, EightGodsEnum>{};
