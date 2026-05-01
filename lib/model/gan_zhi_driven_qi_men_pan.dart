@@ -291,8 +291,10 @@ class GanZhiDrivenQiMenPan {
     return result;
   }
 
-  /// 组装 8 宫（中5不参与）的 EachGong
+  /// 组装 9 宫的 EachGong
   ///
+  /// 八门 / 八神只在 8 个非中宫飞布；中 5 宫**寄坤 2**：
+  /// star/door/god 直接复用坤 2 的对应值（与时家一致语义）。
   /// 月家 / 年家无"天盘干"概念，`tianPan` 字段填地盘干占位；
   /// 暗干 / 隐干同样置占位（这些字段属时家的延伸概念，月年家不强相关）。
   Map<HouTianGua, EachGong> _assemble({
@@ -303,7 +305,7 @@ class GanZhiDrivenQiMenPan {
   }) {
     final result = <HouTianGua, EachGong>{};
     for (int i = 1; i <= 9; i++) {
-      if (i == 5) continue;
+      if (i == 5) continue; // 中宫晚于 8 宫处理（见下方寄坤2）
       final gua = HouTianGua.getGua(i);
       final ganHere = diPan[i] ?? TianGan.WU;
       result[gua] = EachGong(
@@ -323,6 +325,24 @@ class GanZhiDrivenQiMenPan {
         yinGan: ganHere,
       );
     }
+
+    // 中 5 寄坤 2：直接复用坤 2 宫的星 / 门 / 神，地盘干用中宫自己的
+    final kunGong = result[HouTianGua.Kun]!;
+    final ganAtCenter = diPan[5] ?? TianGan.WU;
+    result[HouTianGua.Center] = EachGong(
+      gongNumber: 5,
+      gongGua: HouTianGua.Center,
+      star: kunGong.star,
+      door: kunGong.door,
+      god: kunGong.god,
+      diGod: kunGong.diGod,
+      diPan: ganAtCenter,
+      tianPan: ganAtCenter,
+      tianPanAnGan: ganAtCenter,
+      renPanAnGan: ganAtCenter,
+      yinGan: ganAtCenter,
+    );
+
     return result;
   }
 }

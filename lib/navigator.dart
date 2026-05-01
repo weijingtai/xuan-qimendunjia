@@ -5,6 +5,7 @@ import 'package:qimendunjia/pages/primary_page.dart';
 import 'package:qimendunjia/pages/scalable_shi_jia_qi_men_view_page.dart';
 import 'package:qimendunjia/pages/shi_jia_qi_men_view_model.dart';
 import 'package:qimendunjia/presentation/pages/qimen_mvvm_page.dart';
+import 'package:qimendunjia/presentation/pages/multi_jia_qimen_page.dart';
 import 'package:qimendunjia/di/service_locator.dart';
 import 'package:qimendunjia/redesign_ui/demo/smart_grid_demo.dart';
 
@@ -29,6 +30,12 @@ class NavigatorGenerator {
     "/qimendunjia/mvvm": (context, {arguments}) => ChangeNotifierProvider(
           create: (_) => serviceLocator.createQiMenViewModel(),
           child: const QiMenMvvmPage(),
+        ),
+
+    // 多家奇门（时/月/年家）
+    "/qimendunjia/multi_jia": (context, {arguments}) => ChangeNotifierProvider(
+          create: (_) => serviceLocator.createQiMenViewModel(),
+          child: const MultiJiaQiMenPage(),
         ),
 
     // UI重设计 - 智能九宫格演示
