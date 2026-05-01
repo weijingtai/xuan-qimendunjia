@@ -97,7 +97,8 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     _externalPan = pan;
 
     // Convert entity ShiJiaJu → model ShiJiaJu
-    final modelJu = ShiJiaJuMapper.toModel(pan.shiJiaJu);
+    // 此 ViewModel 是传统时家专用页面；非时家盘不会到达此分支。
+    final modelJu = ShiJiaJuMapper.toModel(pan.shiJiaJu!);
 
     // Use default PanArrangeSettings (matching PanSettings.defaultSettings())
     final defaultSettings = PanArrangeSettings(

@@ -159,9 +159,23 @@ class GanZhiDrivenQiMenPan {
     final drivingZhiGongNumber = _diZhiToGongNumber(drivingZhi);
     zhiShiDoorAtGong = HouTianGua.getGua(drivingZhiGongNumber);
 
-    // TODO P3-T5.1+：天盘九星完整逆飞、人盘八门完整逆飞、神盘八神逆排
-    //              组装 EachGong 并填充 gongMapper
-    gongMapper = _placeholderGongMapper();
+    // 步骤 3：天盘九星 — 飞盘逆飞，值符跟 drivingGan 落宫
+    final tianPanStarByGong =
+        _arrangeTianPanStars(drivingGanGongNumber, xunHeaderGongNumber);
+
+    // 步骤 4：人盘八门 — 飞盘逆飞，值使从 xunHeaderGong 飞至 drivingZhiGong
+    final renPanDoorByGong =
+        _arrangeRenPanDoors(drivingZhiGongNumber, xunHeaderGongNumber);
+
+    // 步骤 5：神盘八神 — 值符神跟天盘值符星落宫，其余逆排
+    final shenPanGodByGong = _arrangeShenPanGods(drivingGanGongNumber);
+
+    gongMapper = _assemble(
+      diPan: diPanGanByGong,
+      tianPanStars: tianPanStarByGong,
+      renPanDoors: renPanDoorByGong,
+      shenPanGods: shenPanGodByGong,
+    );
   }
 
   /// 阴遁地盘三奇六仪：起局宫放戊，按九宫逆飞填入 9 个干。
@@ -179,25 +193,134 @@ class GanZhiDrivenQiMenPan {
     return result;
   }
 
-  /// 占位：返回 8 宫（中5不参与）的最小 EachGong，仅含 gongGua/gongNumber/diPan
-  /// 待 P3-T5 后续步骤完整实现后替换。
-  Map<HouTianGua, EachGong> _placeholderGongMapper() {
+  /// 排天盘九星（飞盘 + 阴遁逆飞）
+  ///
+  /// 算法（对照表 §五 + yue_jia_algorithm.md §7）：
+  /// - 值符星 = `starSet[xunHeaderGong - 1]`
+  /// - 值符星飞至 `targetGong`（即 drivingGanGong）
+  /// - 其余九星按 `starSet` 顺序，沿"九宫逆飞"路径依次填入
+  Map<int, QiMenStar> _arrangeTianPanStars(int targetGong, int xunHeaderGong) {
+    final pathStartIdx = _yinDunGongSeq.indexOf(targetGong);
+    if (pathStartIdx < 0) {
+      throw StateError('drivingGan 落入中5（路径外），暂不支持');
+    }
+    final starStartIdx = xunHeaderGong - 1;
+    final result = <int, QiMenStar>{};
+    for (int i = 0; i < 9; i++) {
+      final gongNum = _yinDunGongSeq[(pathStartIdx + i) % 9];
+      final starIdx = (starStartIdx + i) % 9;
+      result[gongNum] = starSet[starIdx];
+    }
+    return result;
+  }
+
+  /// 排人盘八门（飞盘 + 阴遁逆飞，跳中5）
+  ///
+  /// 算法（对照表 §六 + yue_jia_algorithm.md §8）：
+  /// - 值使门 = xunHeaderGong 宫的本位门
+  /// - 值使从其本宫起，逆数到 drivingZhiGong
+  /// - 其余八门按本位顺序逆飞
+  ///
+  /// 中5无门：8 个门飞布在 [1, 9, 8, 7, 6, 4, 3, 2] 八宫。
+  Map<int, EightDoorEnum> _arrangeRenPanDoors(
+      int targetGong, int xunHeaderGong) {
+    // 八门按"宫号本位"展开（跳5）
+    const doorBenWeiOrdered = <EightDoorEnum>[
+      EightDoorEnum.XIU,    // 坎1
+      EightDoorEnum.SI,     // 坤2
+      EightDoorEnum.SHANG,  // 震3
+      EightDoorEnum.DU,     // 巽4
+      EightDoorEnum.KAI,    // 乾6
+      EightDoorEnum.JING_W, // 兑7
+      EightDoorEnum.SHENG,  // 艮8
+      EightDoorEnum.JING_S, // 离9
+    ];
+    const doorGongNumbers = [1, 2, 3, 4, 6, 7, 8, 9];
+    const doorPath = [1, 9, 8, 7, 6, 4, 3, 2]; // 阴遁逆飞跳中5
+
+    final doorStartIdx = doorGongNumbers.indexOf(xunHeaderGong);
+    if (doorStartIdx < 0) {
+      // 旬首落中5：寄坤2，等价于值使按坤2本位起算
+      // TODO P3-T1.1 评审：旬首落中5的值使寄宫规则
+      throw UnimplementedError('旬首落中5，值使寄宫规则待评审');
+    }
+    final pathStartIdx = doorPath.indexOf(targetGong);
+    if (pathStartIdx < 0) {
+      throw StateError('drivingZhi 落入中5无门，路径不存在');
+    }
+
+    final result = <int, EightDoorEnum>{};
+    for (int i = 0; i < 8; i++) {
+      final gongNum = doorPath[(pathStartIdx + i) % 8];
+      final doorIdx = (doorStartIdx + i) % 8;
+      result[gongNum] = doorBenWeiOrdered[doorIdx];
+    }
+    return result;
+  }
+
+  /// 排神盘八神（飞盘 + 阴遁逆飞，跳中5）
+  ///
+  /// 算法（对照表 §七 + yue_jia_algorithm.md §9）：
+  /// - 值符神跟天盘值符星，落于 zhiFuGongNumber
+  /// - 其余八神按"值符 → 螣蛇 → 太阴 → 六合 → 白虎 → 玄武 → 九地 → 九天"逆排
+  Map<int, EightGodsEnum> _arrangeShenPanGods(int zhiFuGongNumber) {
+    const godOrder = <EightGodsEnum>[
+      EightGodsEnum.ZHI_FU,
+      EightGodsEnum.TENG_SHE,
+      EightGodsEnum.TAI_YIN,
+      EightGodsEnum.LIU_HE,
+      EightGodsEnum.BAI_HU,
+      EightGodsEnum.XUAN_WU,
+      EightGodsEnum.JIU_DI,
+      EightGodsEnum.JIU_TIAN,
+    ];
+    const godPath = [1, 9, 8, 7, 6, 4, 3, 2]; // 跳中5
+
+    final pathStartIdx = godPath.indexOf(zhiFuGongNumber);
+    if (pathStartIdx < 0) {
+      // 值符星落中5：寄坤2 — 同八门寄宫规则
+      // TODO P3-T1.1 评审
+      throw UnimplementedError('值符星落中5，神盘寄宫规则待评审');
+    }
+
+    final result = <int, EightGodsEnum>{};
+    for (int i = 0; i < 8; i++) {
+      final gongNum = godPath[(pathStartIdx + i) % 8];
+      result[gongNum] = godOrder[i];
+    }
+    return result;
+  }
+
+  /// 组装 8 宫（中5不参与）的 EachGong
+  ///
+  /// 月家 / 年家无"天盘干"概念，`tianPan` 字段填地盘干占位；
+  /// 暗干 / 隐干同样置占位（这些字段属时家的延伸概念，月年家不强相关）。
+  Map<HouTianGua, EachGong> _assemble({
+    required Map<int, TianGan> diPan,
+    required Map<int, QiMenStar> tianPanStars,
+    required Map<int, EightDoorEnum> renPanDoors,
+    required Map<int, EightGodsEnum> shenPanGods,
+  }) {
     final result = <HouTianGua, EachGong>{};
     for (int i = 1; i <= 9; i++) {
       if (i == 5) continue;
       final gua = HouTianGua.getGua(i);
+      final ganHere = diPan[i] ?? TianGan.WU;
       result[gua] = EachGong(
         gongNumber: i,
         gongGua: gua,
-        star: starSet[i - 1],
-        door: _gongNumberToDoorBenWei[i] ?? EightDoorEnum.XIU,
-        god: EightGodsEnum.ZHI_FU, // 占位
-        diGod: EightGodsEnum.ZHI_FU, // 占位
-        diPan: diPanGanByGong[i] ?? TianGan.WU,
-        tianPan: diPanGanByGong[i] ?? TianGan.WU, // 占位 = 地盘
-        tianPanAnGan: diPanGanByGong[i] ?? TianGan.WU,
-        renPanAnGan: diPanGanByGong[i] ?? TianGan.WU,
-        yinGan: diPanGanByGong[i] ?? TianGan.WU,
+        star: tianPanStars[i] ?? starSet[i - 1],
+        door: renPanDoors[i] ??
+            (throw StateError('宫 $i 缺八门')),
+        god: shenPanGods[i] ??
+            (throw StateError('宫 $i 缺八神')),
+        diGod: shenPanGods[i] ??
+            EightGodsEnum.ZHI_FU, // 月年家暂不区分天地神
+        diPan: ganHere,
+        tianPan: ganHere, // 月年家暂无"天盘干"独立概念，用地盘干占位
+        tianPanAnGan: ganHere,
+        renPanAnGan: ganHere,
+        yinGan: ganHere,
       );
     }
     return result;

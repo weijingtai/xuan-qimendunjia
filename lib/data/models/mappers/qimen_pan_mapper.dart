@@ -27,7 +27,7 @@ class QiMenPanMapper {
     return entity.QiMenPan(
       id: _generateId(),
       panDateTime: modelPan.shiJiaJu.panDateTime,
-      shiJiaJu: ShiJiaJuMapper.fromModel(modelPan.shiJiaJu),
+      ju: ShiJiaJuMapper.fromModel(modelPan.shiJiaJu),
       plateType: modelPan.plateType,
       gongMapper: gongMapper,
       zhiShiDoor: modelPan.zhiShiDoor,

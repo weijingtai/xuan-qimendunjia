@@ -601,8 +601,13 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
 
   /// 将 [QiMenPan] 转换为 [PalaceData] 列表（按网格顺序）
   List<PalaceData> _buildPalaceDataList(QiMenPan pan, PanDisplayConfig config) {
-    final kongWang = pan.shiJiaJu.fuTouJiaZi.getKongWang();
-    final kongWangSet = {kongWang.item1, kongWang.item2};
+    // 时家盘才有"旬空"概念（依赖 fuTouJiaZi）；非时家盘退化为无空亡
+    final shiJiaJu = pan.shiJiaJu;
+    final kongWangSet = <DiZhi>{};
+    if (shiJiaJu != null) {
+      final kongWang = shiJiaJu.fuTouJiaZi.getKongWang();
+      kongWangSet.addAll([kongWang.item1, kongWang.item2]);
+    }
 
     final xunHeaderGan = pan.gongMapper.values
         .map((g) => g.sixJiaXunHeader?.gan)
@@ -642,10 +647,12 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
 
       return PalaceData.fromEachGong(
         gong,
-        isYangDun: pan.shiJiaJu.isYangDun,
+        isYangDun: pan.ju.yinYangDun.isYang,
         geJu: const [],
         marks: marks,
-        xunHeaderGan: xunHeaderGan ?? pan.shiJiaJu.fuTouJiaZi.xunHeader.gan, // Fallback to FuTou gan if board xunshou not in mapper (rare)
+        xunHeaderGan: xunHeaderGan ??
+            shiJiaJu?.fuTouJiaZi.xunHeader.gan ??
+            TianGan.JIA, // 非时家盘无旬首概念，回退甲
       );
     }).toList();
   }

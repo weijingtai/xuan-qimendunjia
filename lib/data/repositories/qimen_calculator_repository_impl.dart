@@ -1,12 +1,17 @@
+import 'package:common/enums.dart';
 import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart';
+import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
+import 'package:qimendunjia/model/gan_zhi_driven_qi_men_pan.dart';
 import 'package:qimendunjia/model/pan_arrange_settings.dart';
 import 'package:qimendunjia/model/shi_jia_qi_men.dart' as model;
 import '../datasources/calculator/qimen_calculator_data_source.dart';
+import '../models/mappers/each_gong_mapper.dart';
 import '../models/mappers/qimen_pan_mapper.dart';
 import '../models/mappers/shi_jia_ju_mapper.dart';
 
@@ -53,6 +58,7 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
         case QiMenJia.SHI:
           return _arrangeShiJiaPan(ju as ShiJiaJu, plateType, settings);
         case QiMenJia.YUE:
+          return _arrangeYueJiaPan(ju as YueJiaJu, plateType, settings);
         case QiMenJia.NIAN:
         case QiMenJia.RI:
           throw UnsupportedJiaArrangeException(ju.jia, settings.arrangeType);
@@ -81,6 +87,62 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
       settings: modelSettings,
     );
     return QiMenPanMapper.fromModel(modelPan);
+  }
+
+  /// 月家排盘：通过共享 GanZhiDrivenQiMenPan 完成，
+  /// 然后组装为 domain 层 QiMenPan。
+  ///
+  /// 月家 starSet 复用时家北斗九星（[NineStarsEnum]）。
+  QiMenPan _arrangeYueJiaPan(
+      YueJiaJu ju, PlateType plateType, PanSettings settings) {
+    final modelSettings = PanArrangeSettings(
+      arrangeType: settings.arrangeType,
+      jiGong: settings.jiGong,
+      starMonthTokenType: settings.starMonthTokenType,
+      starFourWeiGongType: settings.starFourWeiGongType,
+      doorFourWeiGongType: settings.doorFourWeiGongType,
+      godWithGongTypeEnum: settings.godWithGongType,
+      ganGongType: settings.ganGongType,
+    );
+
+    final starSet = NineStarsEnum.values.toList()
+      ..sort((a, b) => a.number.compareTo(b.number));
+
+    final pan = GanZhiDrivenQiMenPan(
+      ju: ju,
+      drivingGan: ju.monthGan,
+      drivingZhi: ju.monthZhi,
+      starSet: starSet,
+      qiJuGong: ju.qiJuGong,
+      settings: modelSettings,
+    );
+
+    // 转 entity 层 EachGong
+    final entityGongMapper = pan.gongMapper.map(
+      (gua, modelGong) => MapEntry(gua, EachGongMapper.fromModel(modelGong)),
+    );
+
+    return QiMenPan(
+      id: 'yuejia-${ju.panDateTime.millisecondsSinceEpoch}',
+      panDateTime: ju.panDateTime,
+      ju: ju,
+      plateType: plateType,
+      gongMapper: entityGongMapper,
+      zhiShiDoor: pan.zhiShiDoor,
+      zhiShiDoorAtGong: pan.zhiShiDoorAtGong,
+      zhiFuStar: pan.zhiFuStar,
+      zhiFuStarAtGong: pan.zhiFuStarAtGong,
+      // 月家不参与伏吟反吟判定（占位 false；具体规则待 P3-T1.1 评审）
+      isStarFuYin: false,
+      isStarFanYin: false,
+      isDoorFuYin: false,
+      isDoorFanYin: false,
+      isGanFuYin: false,
+      isGanFanYin: false,
+      // 驿马位：月家可由月支推得；占位用 ZI（待评审）
+      horseLocation: DiZhi.ZI,
+      panGeJuList: null,
+    );
   }
 }
 
