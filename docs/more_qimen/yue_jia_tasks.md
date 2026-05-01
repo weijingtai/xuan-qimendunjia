@@ -1,7 +1,16 @@
 # 月家奇门 — 详细任务清单
 
 > 配套：[`yue_jia_algorithm.md`](./yue_jia_algorithm.md)（算法事实清单）、[`extra_hour_tasks.md`](./extra_hour_tasks.md)（顶层 Phase 3 高层任务）
-> 版本：2026-04-30 初版
+>
+> **权威事实依据**：[`qimen_jia_comparison.md`](./qimen_jia_comparison.md)（用户 2026-04-30 提供的四家终极对照表）。
+>
+> **2026-04-30 对照表澄清的关键事实**：
+> - 月家是**飞盘**（不是转盘）
+> - **月家 = 年家完全同源**：星 / 门 / 神 / 排盘规则一致，唯一差异是驱动柱与起局机制 → P3-T5 `GanZhiDrivenQiMenPan` 是月年家共享的核心
+> - 复用 `NineStarsEnum`（北斗九星，与时家、年家相同）
+> - 只用阴遁、八门 / 九星 / 八神均逆飞
+>
+> 版本：2026-04-30
 > 状态：草稿，待领域人员评审 + 测试 fixture 补全
 
 ---

@@ -249,24 +249,8 @@
 - **新建**：`lib/domain/entities/nian_jia_ju.dart`
 - **核心字段**：`id, panDateTime, yinYangDun(恒为 YIN), juNumber(1/4/7), fourZhuEightChar, yearJiaZi, sanYuan(上/中/下)`。
 
-### P4-T2.5 新增 `ZiBaiStarEnum`
-- **新建**：`lib/enums/enum_zi_bai_stars.dart`
-- **内容**：
-  ```dart
-  enum ZiBaiStarEnum implements QiMenStar {
-    YI_BAI(1, "一白", "白"),
-    ER_HEI(2, "二黑", "黑"),
-    SAN_BI(3, "三碧", "碧"),
-    SI_LV(4, "四绿", "绿"),
-    WU_HUANG(5, "五黄", "黄"),
-    LIU_BAI(6, "六白", "白"),
-    QI_CHI(7, "七赤", "赤"),
-    BA_BAI(8, "八白", "白"),
-    JIU_ZI(9, "九紫", "紫");
-  }
-  ```
-- **新建**：紫白专属配色映射注入 `QiMenStarTheme`。注意 `singleCharName` 撞名（"白"出现 3 次），UI 应优先用全名。
-- **验收**：`ZiBaiStarEnum.YI_BAI is QiMenStar` 为真。
+### ~~P4-T2.5 新增 `ZiBaiStarEnum`~~（**已废弃 — 本期不做**）
+按 [`qimen_jia_comparison.md`](./qimen_jia_comparison.md) §二，年家正统主流用**北斗九星**（与时家、月家相同），紫白九星仅风水派 / 玄空派分支。本期年家直接复用 `NineStarsEnum`，无需新建星集。详见 `nian_jia_tasks.md` P4-T2.5 废弃说明。
 
 ### P4-T3 新建年家锚点常量
 - **新建**：`lib/utils/nian_jia_san_yuan_anchor.dart`
@@ -290,7 +274,7 @@
 
 ### P4-T5 新增年家 DataSource + 复用 `GanZhiDrivenQiMenPan`
 - **新增**：`NianJiaCalculatorDataSource`，`supportedJia => QiMenJia.NIAN`
-- **复用**：P3-T5 的 `GanZhiDrivenQiMenPan`，传入 `drivingJiaZi: yearJiaZi, starSet: ZiBaiStarEnum.values`。
+- **复用**：P3-T5 的 `GanZhiDrivenQiMenPan`，传入 `drivingGan/drivingZhi: yearGan/yearZhi, starSet: NineStarsEnum.values`（**北斗九星**，与月家相同）。
 - **验收**：年家盘输出符合文档 §6-§8 算法。
 
 ### P4-T6 Repository / DI 接入年家
@@ -348,8 +332,8 @@
 | Phase 1 | **1.5-2 人日** | 含新增 P1-T2.5（QiMenStar 接口 + retrofit）+ P1-T2.6（StarTheme 注册表骨架） |
 | Phase 2 | 2-3 人日 | 日家走独立 `RiJiaPanArranger`；含 `RiJiaStarEnum` 实现 + 配色 |
 | Phase 3 | 2 人日 | 月家**复用** `NineStarsEnum` 与新建的 `GanZhiDrivenQiMenPan` |
-| Phase 4 | 1.5-2 人日 | 年家在 Phase 3 的共享排盘器上**复用**；含 `ZiBaiStarEnum` + 锚点常量 |
+| Phase 4 | 1-1.5 人日 | 年家**纯参数差异 + 锚点常量**；ZiBaiStarEnum 废弃后大幅缩减 |
 | Phase 5 | 1 人日 | UI 接入家选择器 + brief 文案 |
-| **合计** | **8-10 人日** | 较原估算节省约 1 人日（月/年家共享 `GanZhiDrivenQiMenPan`） |
+| **合计** | **7.5-9.5 人日** | ZiBaiStarEnum 废弃 + 月年家完全同源，年家工作量再降 0.5-1 人日 |
 
 > 关键路径：算法事实清单已落地（`ri_jia_algorithm.md` / `yue_jia_algorithm.md` / `nian_jia_algorithm.md`），仅剩各家 5 个手算样例待补。建议在 Phase 1 期间并行收集样例，不阻塞 Phase 2-4 启动。

@@ -2,7 +2,10 @@
 
 > 文件作用：本文是**策略计划文档**。配套的执行清单在 `extra_hour_tasks.md`。
 > 范围：在保留时家奇门现有功能不退化的前提下，让代码可以承载「年家」「月家」「日家」三类奇门遁甲的起局与排盘。
-> 创建时间：2026-04-30
+>
+> **权威事实依据**：[`qimen_jia_comparison.md`](./qimen_jia_comparison.md)（用户 2026-04-30 提供的四家终极对照表）。本文与该表如有冲突以对照表为准。
+>
+> 创建时间：2026-04-30（关键修订：2026-04-30 — 按对照表对齐排盘机制、年家用星、月年家共享）
 
 ## 1. 背景与现状
 
@@ -78,22 +81,28 @@ DI 由 `Map<ArrangeType, X>` 升级为 `Map<QiMenJia, Map<ArrangeType, X>>`，�
 
 **关键决定**：保留 `ShiJiaJu` 类型不动，但抽出**最小公共接口** `BaseJu`（含 `id / panDateTime / yinYangDun / juNumber / fourZhuEightChar`）。`NianJiaJu / YueJiaJu / RiJiaJu` 各自实现，不强行复用 `ShiJiaJu` 字段（年家无节气三元，复用反而是污染）。
 
-### 4.3 排盘层：起符 / 起使的双驱动机制
+### 4.3 排盘机制：转盘 vs 飞盘 + 起符机制分组
 
-> 本节在 2026-04-30 重写：原版本以"单一驱动柱"概括四家，但根据 `ri_jia_algorithm.md` / `yue_jia_algorithm.md` / `nian_jia_algorithm.md` 的算法规范，**月家与年家是干 / 支双驱**，**日家是 day-count 驱动**（与 jiazi-driven 完全异构）。原"单一 drivingJiaZi"过弱。
+> **关键事实（对照表 §一、§五、§六）**：四家盘法分布是
+> - **时家**：转盘（排宫法）
+> - **日家、月家、年家**：均为飞盘（飞宫法）
+>
+> **关键事实（对照表 §10b 总结 §2）**：**月家 = 年家**，星 / 门 / 神 / 排盘规则**完全相同**，唯一差异是驱动柱与起局机制。
 
-| 家 | 值符（起符）来源 | 值使来源 | 备注 |
+| 家 | 盘法 | 起符 / 起使机制 | 实现路径 |
 | --- | --- | --- | --- |
-| 时家 | `timeJiaZi.gan` 走旬首 | `timeJiaZi.diZhi` | 现有实现，gan/zhi 已隐式分离 |
-| 日家 | **距甲子日天数 d** 顺飞太乙 | 由日柱阴阳 + 3 日同宫表得休门宫，再顺/逆布八门 | 不走"旬首-值符"机制，与时家结构不同 |
-| 月家 | `monthJiaZi.gan` 走旬首 | `monthJiaZi.diZhi` 决定值使逆数距 | 干 / 支双驱 |
-| 年家 | `yearJiaZi.gan` 走旬首 | `yearJiaZi.diZhi` 决定值使逆数距 | 干 / 支双驱 |
+| 时家 | 转盘 | 时干→旬首→值符；时支→值使 | **既有 `ShiJiaQiMen`**（保持不动） |
+| 日家 | 飞盘 | **距甲子日天数顺飞 + 休门为纲**（无值符值使） | **`RiJiaPanArranger` 独立实现**（机制完全不同） |
+| 月家 | 飞盘 | 月干寻旬首→值符（逆飞）；月支→值使（逆飞） | **`GanZhiDrivenQiMenPan` 共享** |
+| 年家 | 飞盘 | 年干寻旬首→值符（逆飞）；年支→值使（逆飞） | **`GanZhiDrivenQiMenPan` 共享**（与月家同类，仅参数不同） |
 
 **关键决定（修订）**：
 
-1. **不试图把日家塞进时家的"旬首-值符"模板**。日家用 `RiJiaPanArranger` 独立实现，因为算法机制（day-count 顺飞）与其它三家本质不同。
-2. **时 / 月 / 年三家可共享一套抽象**：`GanZhiDrivenPanArranger`，参数化为 `(符干, 使支)` 二元组。`ShiJiaQiMen` 暂不动，新建 `MonthYearJiaPanArranger` 共服月家与年家；时家在 Phase 6 再考虑迁移。
-3. 共享层最大公约数 = `布地盘三奇六仪 + 由旬首落宫得值符值使 + 天盘九星飞布 + 人盘八门飞布 + 神盘八神逆排`。九星集合（`QiMenStar`）作为参数注入（见 §4.6）。
+1. **排盘抽象按"家间是否同源"分两组实现**：
+   - **`GanZhiDrivenQiMenPan`**：服务月家 + 年家。仅参数化 `(drivingGan, drivingZhi, qiJuGong, sanYuanType)`；星集和八门 / 八神排布逻辑两家完全一致（都是飞盘 + 阴遁逆飞 + 北斗九星 + 八神）。
+   - **`RiJiaPanArranger`**：服务日家。day-count 顺飞机制 + 不布三奇六仪 + 不用八神 + 无值符值使，与上面三家不同构。
+2. **不试图把日家塞进月年家的"旬首-值符"模板**。
+3. **不为时家做迁移**：时家的转盘排法 (`ShiJiaQiMen`) 与飞盘三家不兼容；保持现状不动，未来如需统一是 Phase 6+ 的事。
 
 ### 4.4 实体层：保守策略
 
@@ -109,24 +118,29 @@ DI 由 `Map<ArrangeType, X>` 升级为 `Map<QiMenJia, Map<ArrangeType, X>>`，�
 
 ### 4.6 星体多态设计（QiMenStar 接口）
 
-> 由用户算法规范确认：日家用**日家九星**（太乙/摄提/轩辕/招摇/天符/青龙/咸池/太阴/天乙），年家用**紫白九星**（一白/二黑/.../九紫），均与时家 `NineStarsEnum`（蓬/任/冲/辅/英/芮/柱/心/禽）名称、五行属性、原宫语义都不同。月家**复用**时家九星。
+> **关键事实（对照表 §二）**：
+> - **时家、月家、年家（正统主流）**：均用**北斗九星**（天蓬等），共用 `NineStarsEnum`
+> - **日家**：用**专属九星**（太乙等），需新建 `RiJiaStarEnum`
+> - 紫白九星仅"风水派 / 玄空派"年家使用，**主流不需要**，工程上**本期不实现**
 
-#### 4.6.1 必须做接口抽象
+#### 4.6.1 仅日家需要新星集
 
-`lib/enums/enum_nine_stars.dart:6-34` 的 `NineStarsEnum` 当前被 27 个文件直接引用（domain 实体、UI 主题、AI serializer 全链路）。日 / 年家无法借壳复用 `NineStarsEnum`，必须引入接口：
+`lib/enums/enum_nine_stars.dart:6-34` 的 `NineStarsEnum` 当前被 27 个文件直接引用（domain 实体、UI 主题、AI serializer 全链路）。月家 / 年家**直接复用**该枚举，无需任何新建；**仅日家**需要独立星集（太乙九星名称、五行属性、原宫语义都与时家不同）。
+
+引入接口：
 
 ```dart
 // lib/domain/entities/qi_men_star.dart（新建）
 abstract class QiMenStar {
-  String get name;          // 显示名（"天蓬" / "太乙" / "一白"）
-  String get singleCharName;// 单字简写（"蓬" / "乙" / "白"）
+  String get name;          // 显示名（"天蓬" / "太乙"）
+  String get singleCharName;// 单字简写（"蓬" / "乙"）
   int get number;           // 1-9 序号
-  FiveXing? get fiveXing;   // 五行属性，紫白星可空
+  FiveXing? get fiveXing;   // 五行属性
   HouTianGua? get originalGong; // 原宫，日家 day-count 体系下可空
 }
 ```
 
-时家 `NineStarsEnum implements QiMenStar`（retrofit，无破坏性变更）；日家新建 `RiJiaStarEnum`、年家新建 `ZiBaiStarEnum`。
+时家 `NineStarsEnum implements QiMenStar`（retrofit，无破坏性变更）；日家新建 `RiJiaStarEnum`。
 
 #### 4.6.2 受影响的入口
 
@@ -147,13 +161,14 @@ class QiMenStarTheme {
 }
 ```
 
-每家在 `service_locator` 注册自己的 ColorMap。**该注册表本期可只支持时家配色，日 / 年家在对应 Phase 内补**。
+日家在 P2-T2.5 内注册自己的 ColorMap。**月家 / 年家不需要新颜色**（复用时家配色）。
 
 #### 4.6.4 工作量影响
 
-- Phase 1 增加 0.5 人日（接口 + retrofit + 主题注册表骨架）。
-- Phase 2（日家）+ Phase 4（年家）各增加 0.5 人日（专属星集枚举 + 配色映射）。
-- Phase 3（月家）**不增加**，复用 `NineStarsEnum`。
+- Phase 1 增加 0.5 人日（接口 + retrofit + 主题注册表骨架）—— **已完成**
+- Phase 2（日家）增加 0.5 人日（`RiJiaStarEnum` 实现 + 配色）
+- Phase 3（月家）**0 增量**，复用 `NineStarsEnum`
+- Phase 4（年家）**0 增量**，复用 `NineStarsEnum`（紫白派被排除出本期范围）
 
 ## 5. 分阶段实施
 
@@ -177,10 +192,10 @@ class QiMenStarTheme {
 
 ### Phase 4: 年家
 - 算法依据：[`nian_jia_algorithm.md`](./nian_jia_algorithm.md)。
-- **新增 `ZiBaiStarEnum`**（一白/二黑/.../九紫），实现 `QiMenStar`。
+- **复用 `NineStarsEnum`**（与月家、时家相同的北斗九星 — **对照表 §二澄清**）；紫白九星派别在本期**不做**。
+- **复用 `GanZhiDrivenQiMenPan`**（Phase 3 落地）：仅传不同驱动柱（`yearGan` / `yearZhi`）和不同三元映射即可。
 - 仅用阴遁；起局机制 = 60×3=180 年三元 + 三元局（上元 1 局 / 中元 4 局 / 下元 7 局）。
-- 干 / 支双驱：值符随年干、值使随年支。
-- 复用 Phase 3 的 `MonthYearJiaPanArranger`。
+- 干 / 支双驱：值符随年干、年支决定值使位置。
 - **必需固化"上元起算锚点"为常量**（参考 1864 / 1924 / 1984），不同书籍可能差 60 年。
 
 ### Phase 5: UI 接入
@@ -208,12 +223,14 @@ class QiMenStarTheme {
 
 - **D1**: "家" 与 "起局法" 是两个独立的轴 — 不合并为一个 `enum`。理由：起局法（拆补/置润/茅山/阴盘）在时家内部本就有 4 种，组合到家轴会成 16 项扁平枚举，难维护。
 - **D2**: 不在本期重命名 `ShiJiaQiMen / ShiJiaJu`。理由：影响 `lib/pages/`、`lib/ai/`、`test/`、`docs/`、`redesign_ui/` 数十处；与本期目标解耦。
-- **D3（修订 2026-04-30）**: 排盘抽象按"机制是否同构"分两组：
-  - **GanZhiDrivenPanArranger**（时家 + 月家 + 年家共享）：旬首-值符机制相同，参数化 `(符干源, 使支源)` 二元组。
-  - **RiJiaPanArranger**（日家独立）：day-count 顺飞机制与上面三家不同构。
-  - 不试图为四家做统一父类。理由：日家与其它三家差异过大，强行抽象只会让公共父类变成 untyped bag。
+- **D3（修订 2026-04-30）**: 排盘抽象按"家间是否同源"分两组：
+  - **`GanZhiDrivenQiMenPan`**（月家 + 年家共享）：飞盘 + 阴遁逆飞 + 旬首-值符 + 北斗九星 + 八神，参数化 `(drivingGan, drivingZhi, qiJuGong, sanYuanType)`。
+  - **`RiJiaPanArranger`**（日家独立）：飞盘 + 顺飞日家九星 + day-count 起符 + 不布三奇六仪 + 无值符值使 + 不用八神。
+  - 时家保持既有 `ShiJiaQiMen`（转盘）不动。
+  - 不试图为四家做统一父类；时家与飞盘三家盘法不同。
 - **D4**: Phase 1 不引入新 UI；先打通后端管线。理由：在算法未实现前接 UI 容易让 ViewModel 状态变得难以回退。
-- **D5（新增 2026-04-30）**: 必须引入 `QiMenStar` 接口而非保留 `NineStarsEnum`。理由：日家（太乙等九星）与年家（紫白九星）名称、五行、原宫语义都与时家不同，无法借壳；月家虽可复用 `NineStarsEnum`，但单为月家保留单态会阻塞 Phase 2/4。Retrofit `NineStarsEnum implements QiMenStar` 在 Phase 1 内一次性完成，避免后续返工。
+- **D5（修订 2026-04-30）**: 必须引入 `QiMenStar` 接口；**仅日家**需要新建 `RiJiaStarEnum`。理由：对照表 §二澄清，**年家正统主流亦用北斗九星**（与时家、月家相同），紫白九星仅"风水派"使用，本期不实现 `ZiBaiStarEnum`。月家 / 年家直接复用 `NineStarsEnum`。
+- **D6（新增 2026-04-30）**: **月家 = 年家结构性同源**。两家共用同一排盘器 `GanZhiDrivenQiMenPan` + 同一星集 `NineStarsEnum` + 同一八神排布逻辑；唯一参数差异：驱动柱（月柱 / 年柱）、三元映射（孟仲季 / 60 年三元）、起局宫（坎1兑7巽4 / 坎1巽4兑7）。理由：对照表"一句话总结" §2 明确"月家=年家：星、门、神、排盘规则完全一样，只时间尺度不同"。Phase 4 因此从原先的"独立家"降级为"Phase 3 的薄壳适配 + 锚点常量"。
 
 ## 8. 验收标准
 
@@ -225,9 +242,10 @@ class QiMenStarTheme {
 
 ## 9. 参考
 
-- 算法事实清单（本期权威依据）：
+- **权威对照表**：[`qimen_jia_comparison.md`](./qimen_jia_comparison.md) — 用户 2026-04-30 提供的四家终极对照表（source of truth）
+- 算法事实清单：
   - [`ri_jia_algorithm.md`](./ri_jia_algorithm.md) — 日家奇门
   - [`yue_jia_algorithm.md`](./yue_jia_algorithm.md) — 月家奇门
   - [`nian_jia_algorithm.md`](./nian_jia_algorithm.md) — 年家奇门
 - 既有架构：`ARCHITECTURE.md`、`docs/REFACTORING_PLAN.md`。
-- 后续待补：《奇门遁甲秘笈大全》《奇门法窍》《奇门旨归》对应篇目页码（评审时落地到三个 algorithm 文档的 §11/§12 参考节）。
+- 后续待补：《奇门遁甲秘笈大全》《奇门法窍》《奇门旨归》对应篇目页码。
