@@ -1047,13 +1047,15 @@ class BriefPalaceLayout extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    child: _buildAnimateQimenText(
-                      data.godEnum.name,
-                      data.godEnum.singleCharName,
-                      config.showSimpleLayout,
-                      jiStyle.copyWith(
-                          color: theme.secondaryTextColor.withOpacity(0.8)),
-                    ),
+                    child: data.showGod
+                        ? _buildAnimateQimenText(
+                            data.godEnum.name,
+                            data.godEnum.singleCharName,
+                            config.showSimpleLayout,
+                            jiStyle.copyWith(
+                                color: theme.secondaryTextColor.withOpacity(0.8)),
+                          )
+                        : const SizedBox.shrink(),
                   ),
                 ],
               ),
@@ -1130,12 +1132,14 @@ class BriefPalaceLayout extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          _buildAnimateQimenText(
-                            data.doorEnum.name,
-                            data.doorEnum.singleCharName,
-                            config.showSimpleLayout,
-                            style,
-                          ),
+                          data.showDoor
+                              ? _buildAnimateQimenText(
+                                  data.doorEnum.name,
+                                  data.doorEnum.singleCharName,
+                                  config.showSimpleLayout,
+                                  style,
+                                )
+                              : const SizedBox.shrink(),
                         ],
                       ),
                       AnimatedPositioned(

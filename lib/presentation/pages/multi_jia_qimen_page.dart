@@ -254,8 +254,12 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
   }
 
   Widget _buildGrid(QiMenPan pan) {
+    // 月家 / 年家：中5寄坤2，且"只寄星不寄门"——中5 不渲染门和神
+    final isYueOrNian = pan.ju.jia == QiMenJia.YUE || pan.ju.jia == QiMenJia.NIAN;
+
     final palaceData = _gridOrderedGuas.map((gua) {
       final gong = pan.gongMapper[gua];
+      final hideDoorGod = isYueOrNian && gua == HouTianGua.Center;
       // GanZhiDrivenQiMenPan 与 ShiJiaQiMen 都已为 9 宫提供 EachGong（中5寄坤2）
       return PalaceData.fromEachGong(
         gong!,
@@ -266,6 +270,8 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
           if (pan.zhiShiDoorAtGong == gua) '值使',
         ],
         xunHeaderGan: TianGan.JIA, // 月年家无旬首；用 JIA 占位
+        showDoor: !hideDoorGod,
+        showGod: !hideDoorGod,
       );
     }).toList();
 

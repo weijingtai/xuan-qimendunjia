@@ -260,6 +260,17 @@ class PalaceData {
   final bool isTianJiGanJiXing; // 天盘寄干是击刑
   final bool isDiJiGanJiXing; // 地盘寄干是击刑
 
+  /// 是否在该宫位渲染八门
+  ///
+  /// 月家 / 年家中 5 寄坤 2，只寄星不寄门 — UI 上中 5 不渲染门。
+  /// 时家盘默认 true 不受影响。
+  final bool showDoor;
+
+  /// 是否在该宫位渲染八神
+  ///
+  /// 月家 / 年家飞盘八神飞 8 非中宫，中 5 无神 — UI 上中 5 不渲染神。
+  final bool showGod;
+
   // --- 为了 UI 层的平滑过渡，提供字符串 Getter ---
   String get name => gongEnum.name;
   String get star => starEnum.singleCharName;
@@ -304,6 +315,8 @@ class PalaceData {
     this.isDiPanJiXing = false,
     this.isTianJiGanJiXing = false,
     this.isDiJiGanJiXing = false,
+    this.showDoor = true,
+    this.showGod = true,
   });
 
   /// 核心转换工厂方法：从领域实体转换到 UI 数据
@@ -311,7 +324,9 @@ class PalaceData {
       {bool isYangDun = true,
       List<String> geJu = const [],
       List<String> marks = const [],
-      TianGan? xunHeaderGan}) {
+      TianGan? xunHeaderGan,
+      bool showDoor = true,
+      bool showGod = true}) {
     return PalaceData(
       gongEnum: domain.gongGua,
       number: domain.gongNumber.toString(),
@@ -353,6 +368,8 @@ class PalaceData {
       isDiJiGanJiXing: xunHeaderGan != null &&
           domain.diPanJiGan == xunHeaderGan &&
           SixJia.getSixJiaByGan(xunHeaderGan).isSixJiXing(domain.gongGua),
+      showDoor: showDoor,
+      showGod: showGod,
     );
   }
 
