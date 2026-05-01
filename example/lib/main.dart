@@ -173,6 +173,22 @@ class SelectionPage extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
+                Navigator.of(context).pushNamed('/qimendunjia/multi_jia');
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                textStyle: const TextStyle(fontSize: 18),
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('多家奇门 (时/月/年家)'),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
                 Navigator.of(context).pushNamed('/redesign_ui/smart_grid_demo');
               },
               style: ElevatedButton.styleFrom(
