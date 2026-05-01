@@ -1,5 +1,6 @@
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
+import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/model/shi_jia_qi_men.dart';
 import '../entities/qimen_pan.dart';
 import '../entities/shi_jia_ju.dart';
@@ -11,13 +12,17 @@ abstract class QiMenCalculatorRepository {
   /// 计算局数
   ///
   /// [dateTime] 起盘时间
+  /// [jia] 家维度（时/日/月/年）
   /// [arrangeType] 起盘方式（拆补/置润/茅山/阴盘）
   ///
-  /// 返回计算好的局信息
+  /// 返回计算好的局信息。Phase 1 仅时家可用，返回类型仍为 [ShiJiaJu]；
+  /// 进入 Phase 2 后会泛化为 `BaseJu`。
   ///
   /// 抛出 [QiMenCalculationException] 当计算失败时
+  /// 抛出 [UnsupportedJiaArrangeException] 当 (jia, arrangeType) 组合未注册时
   Future<ShiJiaJu> calculateJu({
     required DateTime dateTime,
+    required QiMenJia jia,
     required ArrangeType arrangeType,
   });
 
@@ -92,5 +97,14 @@ class QiMenCalculationException implements Exception {
 
   @override
   String toString() => 'QiMenCalculationException: $message';
+}
+
+/// 不支持的家×起局法组合异常
+class UnsupportedJiaArrangeException extends QiMenCalculationException {
+  final QiMenJia jia;
+  final ArrangeType arrangeType;
+
+  UnsupportedJiaArrangeException(this.jia, this.arrangeType)
+      : super('不支持的家×起局法组合: ${jia.name} / ${arrangeType.name}');
 }
 

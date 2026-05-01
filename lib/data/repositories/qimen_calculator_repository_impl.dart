@@ -2,6 +2,7 @@ import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/model/pan_arrange_settings.dart';
 import 'package:qimendunjia/model/shi_jia_qi_men.dart' as model;
 import '../datasources/calculator/qimen_calculator_data_source.dart';
@@ -10,20 +11,24 @@ import '../models/mappers/shi_jia_ju_mapper.dart';
 
 /// 奇门计算器仓储实现
 ///
-/// 负责调用计算器进行局数计算和排盘
+/// 接受双维 `Map<QiMenJia, Map<ArrangeType, QiMenCalculatorDataSource>>`，
+/// 按 (jia, arrangeType) 复合键查找具体计算器；未注册组合抛
+/// [UnsupportedJiaArrangeException]。
 class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
-  final Map<ArrangeType, QiMenCalculatorDataSource> _calculators;
+  final Map<QiMenJia, Map<ArrangeType, QiMenCalculatorDataSource>> _calculators;
 
   QiMenCalculatorRepositoryImpl(this._calculators);
 
   @override
   Future<ShiJiaJu> calculateJu({
     required DateTime dateTime,
+    required QiMenJia jia,
     required ArrangeType arrangeType,
   }) async {
-    final calculator = _calculators[arrangeType];
+    final familyMap = _calculators[jia];
+    final calculator = familyMap?[arrangeType];
     if (calculator == null) {
-      throw QiMenCalculationException('不支持的起盘方式: $arrangeType');
+      throw UnsupportedJiaArrangeException(jia, arrangeType);
     }
 
     try {
@@ -33,6 +38,7 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
       // 转换为 Entity
       return ShiJiaJuMapper.fromModel(modelJu);
     } catch (e) {
+      if (e is UnsupportedJiaArrangeException) rethrow;
       throw QiMenCalculationException('计算局数失败: $e');
     }
   }
@@ -58,7 +64,7 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
         ganGongType: settings.ganGongType,
       );
 
-      // 调用排盘逻辑
+      // 调用排盘逻辑（Phase 1 仅时家；Phase 2/3/4 在此按 ju.jia 派发）
       final modelPan = model.ShiJiaQiMen(
         plateType: plateType,
         shiJiaJu: modelJu,

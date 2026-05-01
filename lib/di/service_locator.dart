@@ -9,6 +9,7 @@ import 'package:qimendunjia/domain/usecases/arrange_pan_usecase.dart';
 import 'package:qimendunjia/domain/usecases/calculate_ju_usecase.dart';
 import 'package:qimendunjia/domain/usecases/select_gong_usecase.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/redesign_ui/core/qi_men_star_theme.dart';
 
@@ -49,12 +50,15 @@ class ServiceLocator {
     // 缓存数据源（单例）
     _services[CacheDataSource] = CacheDataSource();
 
-    // 计算器数据源（每种算法一个实例）
-    _services[Map<ArrangeType, QiMenCalculatorDataSource>] = {
-      ArrangeType.CHAI_BU: ChaiBuCalculatorDataSource(),
-      ArrangeType.ZHI_RUN: ZhiRunCalculatorDataSource(),
-      ArrangeType.MAO_SHAN: MaoShanCalculatorDataSource(),
-      ArrangeType.YIN_PAN: YinPanCalculatorDataSource(),
+    // 计算器数据源（双维 Map：家 × 起局法）
+    // Phase 1 仅注册时家；Phase 2/3/4 各家在此追加自己的 DataSource。
+    _services[Map<QiMenJia, Map<ArrangeType, QiMenCalculatorDataSource>>] = {
+      QiMenJia.SHI: {
+        ArrangeType.CHAI_BU: ChaiBuCalculatorDataSource(),
+        ArrangeType.ZHI_RUN: ZhiRunCalculatorDataSource(),
+        ArrangeType.MAO_SHAN: MaoShanCalculatorDataSource(),
+        ArrangeType.YIN_PAN: YinPanCalculatorDataSource(),
+      },
     };
 
     // 九星主题（家级配色注册表）
@@ -72,7 +76,7 @@ class ServiceLocator {
 
     // 奇门计算器仓储
     _services[QiMenCalculatorRepository] = QiMenCalculatorRepositoryImpl(
-      get<Map<ArrangeType, QiMenCalculatorDataSource>>(),
+      get<Map<QiMenJia, Map<ArrangeType, QiMenCalculatorDataSource>>>(),
     );
   }
 

@@ -11,6 +11,7 @@ import 'package:qimendunjia/domain/usecases/arrange_pan_usecase.dart';
 import 'package:qimendunjia/domain/usecases/calculate_ju_usecase.dart';
 import 'package:qimendunjia/domain/usecases/select_gong_usecase.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
 
 /// 奇门遁甲视图状态
@@ -122,10 +123,12 @@ class QiMenViewModel extends ChangeNotifier {
   /// 计算并排盘
   ///
   /// [dateTime] 起盘时间
+  /// [jia] 家维度（默认时家；日/月/年家在 Phase 2/3/4 接入后才可用）
   /// [arrangeType] 起盘方式
   /// [plateType] 盘类型
   Future<void> calculateAndArrangePan({
     required DateTime dateTime,
+    QiMenJia jia = QiMenJia.SHI,
     required ArrangeType arrangeType,
     required PlateType plateType,
   }) async {
@@ -138,6 +141,7 @@ class QiMenViewModel extends ChangeNotifier {
       final ju = await _calculateJuUseCase.execute(
         CalculateJuParams(
           dateTime: dateTime,
+          jia: jia,
           arrangeType: arrangeType,
         ),
       );
