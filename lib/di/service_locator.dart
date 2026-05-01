@@ -51,13 +51,17 @@ class ServiceLocator {
     _services[CacheDataSource] = CacheDataSource();
 
     // 计算器数据源（双维 Map：家 × 起局法）
-    // Phase 1 仅注册时家；Phase 2/3/4 各家在此追加自己的 DataSource。
+    // 月/年家不分起局法，所有 ArrangeType 同映射到家级 DataSource。
+    // Phase 2/4 各家在此追加自己的 family map。
     _services[Map<QiMenJia, Map<ArrangeType, QiMenCalculatorDataSource>>] = {
       QiMenJia.SHI: {
         ArrangeType.CHAI_BU: ChaiBuCalculatorDataSource(),
         ArrangeType.ZHI_RUN: ZhiRunCalculatorDataSource(),
         ArrangeType.MAO_SHAN: MaoShanCalculatorDataSource(),
         ArrangeType.YIN_PAN: YinPanCalculatorDataSource(),
+      },
+      QiMenJia.YUE: {
+        for (final type in ArrangeType.values) type: YueJiaCalculatorDataSource(),
       },
     };
 

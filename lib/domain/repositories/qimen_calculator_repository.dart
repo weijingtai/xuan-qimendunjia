@@ -1,3 +1,4 @@
+import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
@@ -13,14 +14,14 @@ abstract class QiMenCalculatorRepository {
   ///
   /// [dateTime] 起盘时间
   /// [jia] 家维度（时/日/月/年）
-  /// [arrangeType] 起盘方式（拆补/置润/茅山/阴盘）
+  /// [arrangeType] 起盘方式（拆补/置润/茅山/阴盘；非时家可忽略此参数）
   ///
-  /// 返回计算好的局信息。Phase 1 仅时家可用，返回类型仍为 [ShiJiaJu]；
-  /// 进入 Phase 2 后会泛化为 `BaseJu`。
+  /// 返回 domain 层 [BaseJu]：时家返回 [ShiJiaJu]，月家返回 `YueJiaJu`，
+  /// 调用方按 `ju.jia` 或 `ju is XxxJu` 类型守卫处理。
   ///
-  /// 抛出 [QiMenCalculationException] 当计算失败时
   /// 抛出 [UnsupportedJiaArrangeException] 当 (jia, arrangeType) 组合未注册时
-  Future<ShiJiaJu> calculateJu({
+  /// 抛出 [QiMenCalculationException] 当计算失败时
+  Future<BaseJu> calculateJu({
     required DateTime dateTime,
     required QiMenJia jia,
     required ArrangeType arrangeType,
@@ -28,15 +29,16 @@ abstract class QiMenCalculatorRepository {
 
   /// 排盘
   ///
-  /// [ju] 局信息
+  /// [ju] 局信息（[BaseJu] 任意子类型，按 [ju.jia] 派发）
   /// [plateType] 盘类型（转盘/飞盘）
   /// [settings] 排盘设置
   ///
   /// 返回完整的奇门盘
   ///
   /// 抛出 [QiMenCalculationException] 当排盘失败时
+  /// 抛出 [UnsupportedJiaArrangeException] 当对应家排盘器未实现时
   Future<QiMenPan> arrangePan({
-    required ShiJiaJu ju,
+    required BaseJu ju,
     required PlateType plateType,
     required PanSettings settings,
   });

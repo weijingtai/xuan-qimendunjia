@@ -1,12 +1,12 @@
 import '../../enums/enum_arrange_plate_type.dart';
+import '../entities/base_ju.dart';
 import '../entities/qimen_pan.dart';
-import '../entities/shi_jia_ju.dart';
 import '../repositories/qimen_calculator_repository.dart';
 import 'base_usecase.dart';
 
 /// 排盘用例参数
 class ArrangePanParams {
-  final ShiJiaJu ju;
+  final BaseJu ju;
   final PlateType plateType;
   final PanSettings settings;
 

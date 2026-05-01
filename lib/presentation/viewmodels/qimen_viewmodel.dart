@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
+import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/each_gong.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart';
@@ -52,7 +53,7 @@ class QiMenViewModel extends ChangeNotifier {
   String? _errorMessage;
 
   // 数据
-  ShiJiaJu? _currentJu;
+  BaseJu? _currentJu;
   QiMenPan? _currentPan;
   EachGong? _selectedGong;
   GongDetailInfo? _gongDetailInfo;
@@ -70,7 +71,11 @@ class QiMenViewModel extends ChangeNotifier {
   // Getters
   QiMenViewState get state => _state;
   String? get errorMessage => _errorMessage;
-  ShiJiaJu? get currentJu => _currentJu;
+  ShiJiaJu? get currentJu =>
+      _currentJu is ShiJiaJu ? _currentJu as ShiJiaJu : null;
+
+  /// 当前局（任意家）。新代码优先使用此 getter，按 `ju.jia` 判断。
+  BaseJu? get currentBaseJu => _currentJu;
   QiMenPan? get currentPan => _currentPan;
   EachGong? get selectedGong => _selectedGong;
   GongDetailInfo? get gongDetailInfo => _gongDetailInfo;

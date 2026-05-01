@@ -1,3 +1,4 @@
+import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
@@ -20,7 +21,7 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
   QiMenCalculatorRepositoryImpl(this._calculators);
 
   @override
-  Future<ShiJiaJu> calculateJu({
+  Future<BaseJu> calculateJu({
     required DateTime dateTime,
     required QiMenJia jia,
     required ArrangeType arrangeType,
@@ -32,11 +33,8 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
     }
 
     try {
-      // 调用计算器计算
-      final modelJu = await calculator.calculate(dateTime);
-
-      // 转换为 Entity
-      return ShiJiaJuMapper.fromModel(modelJu);
+      // DataSource 直接返回 domain 层 BaseJu（时家协变返回 ShiJiaJu）
+      return await calculator.calculate(dateTime);
     } catch (e) {
       if (e is UnsupportedJiaArrangeException) rethrow;
       throw QiMenCalculationException('计算局数失败: $e');
@@ -45,37 +43,44 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
 
   @override
   Future<QiMenPan> arrangePan({
-    required ShiJiaJu ju,
+    required BaseJu ju,
     required PlateType plateType,
     required PanSettings settings,
   }) async {
     try {
-      // 将 Entity 转换为 Model
-      final modelJu = ShiJiaJuMapper.toModel(ju);
-
-      // 转换 PanSettings 为 PanArrangeSettings
-      final modelSettings = PanArrangeSettings(
-        arrangeType: settings.arrangeType,
-        jiGong: settings.jiGong,
-        starMonthTokenType: settings.starMonthTokenType,
-        starFourWeiGongType: settings.starFourWeiGongType,
-        doorFourWeiGongType: settings.doorFourWeiGongType,
-        godWithGongTypeEnum: settings.godWithGongType,
-        ganGongType: settings.ganGongType,
-      );
-
-      // 调用排盘逻辑（Phase 1 仅时家；Phase 2/3/4 在此按 ju.jia 派发）
-      final modelPan = model.ShiJiaQiMen(
-        plateType: plateType,
-        shiJiaJu: modelJu,
-        settings: modelSettings,
-      );
-
-      // 转换为 Entity
-      return QiMenPanMapper.fromModel(modelPan);
+      // 按家派发到具体排盘器
+      switch (ju.jia) {
+        case QiMenJia.SHI:
+          return _arrangeShiJiaPan(ju as ShiJiaJu, plateType, settings);
+        case QiMenJia.YUE:
+        case QiMenJia.NIAN:
+        case QiMenJia.RI:
+          throw UnsupportedJiaArrangeException(ju.jia, settings.arrangeType);
+      }
     } catch (e) {
+      if (e is UnsupportedJiaArrangeException) rethrow;
       throw QiMenCalculationException('排盘失败: $e');
     }
+  }
+
+  QiMenPan _arrangeShiJiaPan(
+      ShiJiaJu ju, PlateType plateType, PanSettings settings) {
+    final modelJu = ShiJiaJuMapper.toModel(ju);
+    final modelSettings = PanArrangeSettings(
+      arrangeType: settings.arrangeType,
+      jiGong: settings.jiGong,
+      starMonthTokenType: settings.starMonthTokenType,
+      starFourWeiGongType: settings.starFourWeiGongType,
+      doorFourWeiGongType: settings.doorFourWeiGongType,
+      godWithGongTypeEnum: settings.godWithGongType,
+      ganGongType: settings.ganGongType,
+    );
+    final modelPan = model.ShiJiaQiMen(
+      plateType: plateType,
+      shiJiaJu: modelJu,
+      settings: modelSettings,
+    );
+    return QiMenPanMapper.fromModel(modelPan);
   }
 }
 
