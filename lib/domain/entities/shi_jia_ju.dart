@@ -1,24 +1,32 @@
 import 'package:common/enums.dart';
+import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/enums/enum_three_yuan.dart';
 import 'base_entity.dart';
+import 'base_ju.dart';
 
 /// 时家局实体（纯业务对象）
 ///
 /// 表示奇门遁甲的局数计算结果，包含完整的起局信息
-class ShiJiaJu extends Equatable implements Entity {
+class ShiJiaJu extends Equatable implements Entity, BaseJu {
+  @override
+  QiMenJia get jia => QiMenJia.SHI;
+
   @override
   final String id;
 
   /// 起盘时间
+  @override
   final DateTime panDateTime;
 
   /// 局数 (1-9)
+  @override
   final int juNumber;
 
   /// 符头甲子
   final JiaZi fuTouJiaZi;
 
   /// 阴阳遁
+  @override
   final YinYang yinYangDun;
 
   /// 当前节气
@@ -37,6 +45,7 @@ class ShiJiaJu extends Equatable implements Entity {
   final EnumThreeYuan atThreeYuan;
 
   /// 四柱八字
+  @override
   final String fourZhuEightChar;
 
   /// 盘局节气（置润法专用）
