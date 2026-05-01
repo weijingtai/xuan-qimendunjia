@@ -1,9 +1,11 @@
 import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/model/shi_jia_ju.dart';
+import 'package:qimendunjia/utils/nian_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/yue_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/data/models/mappers/shi_jia_ju_mapper.dart';
+import 'package:qimendunjia/domain/entities/nian_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart' as entity;
 
@@ -107,4 +109,20 @@ class YueJiaCalculatorDataSource implements QiMenCalculatorDataSource {
 
   @override
   QiMenJia get supportedJia => QiMenJia.YUE;
+}
+
+/// 年家奇门计算器数据源
+///
+/// 年家不分拆补/置润；所有 ArrangeType 同映射到此 DataSource。
+class NianJiaCalculatorDataSource implements QiMenCalculatorDataSource {
+  @override
+  Future<NianJiaJu> calculate(DateTime dateTime) async {
+    return NianJiaQiMenJuCalculator(dateTime: dateTime).calculate();
+  }
+
+  @override
+  String get name => '年家奇门';
+
+  @override
+  QiMenJia get supportedJia => QiMenJia.NIAN;
 }

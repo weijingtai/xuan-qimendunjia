@@ -1,5 +1,6 @@
 import 'package:common/enums.dart';
 import 'package:qimendunjia/domain/entities/base_ju.dart';
+import 'package:qimendunjia/domain/entities/nian_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
@@ -60,6 +61,7 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
         case QiMenJia.YUE:
           return _arrangeYueJiaPan(ju as YueJiaJu, plateType, settings);
         case QiMenJia.NIAN:
+          return _arrangeNianJiaPan(ju as NianJiaJu, plateType, settings);
         case QiMenJia.RI:
           throw UnsupportedJiaArrangeException(ju.jia, settings.arrangeType);
       }
@@ -140,6 +142,62 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
       isGanFuYin: false,
       isGanFanYin: false,
       // 驿马位：月家可由月支推得；占位用 ZI（待评审）
+      horseLocation: DiZhi.ZI,
+      panGeJuList: null,
+    );
+  }
+
+  /// 年家排盘：与月家共享 GanZhiDrivenQiMenPan，仅驱动柱与起局机制不同。
+  ///
+  /// 算法依据：docs/more_qimen/nian_jia_algorithm.md
+  /// - 驱动柱 = 年柱（年干→值符 / 年支→值使）
+  /// - 起局宫由 NianJiaSanYuanAnchor.sanYuanToQiJuGong 决定（与月家映射不同）
+  /// - 星集复用 NineStarsEnum（北斗九星，与时家、月家相同）
+  QiMenPan _arrangeNianJiaPan(
+      NianJiaJu ju, PlateType plateType, PanSettings settings) {
+    final modelSettings = PanArrangeSettings(
+      arrangeType: settings.arrangeType,
+      jiGong: settings.jiGong,
+      starMonthTokenType: settings.starMonthTokenType,
+      starFourWeiGongType: settings.starFourWeiGongType,
+      doorFourWeiGongType: settings.doorFourWeiGongType,
+      godWithGongTypeEnum: settings.godWithGongType,
+      ganGongType: settings.ganGongType,
+    );
+
+    final starSet = NineStarsEnum.values.toList()
+      ..sort((a, b) => a.number.compareTo(b.number));
+
+    final pan = GanZhiDrivenQiMenPan(
+      ju: ju,
+      drivingGan: ju.yearGan,
+      drivingZhi: ju.yearZhi,
+      starSet: starSet,
+      qiJuGong: ju.qiJuGong,
+      settings: modelSettings,
+    );
+
+    final entityGongMapper = pan.gongMapper.map(
+      (gua, modelGong) => MapEntry(gua, EachGongMapper.fromModel(modelGong)),
+    );
+
+    return QiMenPan(
+      id: 'nianjia-${ju.panDateTime.millisecondsSinceEpoch}',
+      panDateTime: ju.panDateTime,
+      ju: ju,
+      plateType: plateType,
+      gongMapper: entityGongMapper,
+      zhiShiDoor: pan.zhiShiDoor,
+      zhiShiDoorAtGong: pan.zhiShiDoorAtGong,
+      zhiFuStar: pan.zhiFuStar,
+      zhiFuStarAtGong: pan.zhiFuStarAtGong,
+      // 年家不参与伏吟反吟（与月家相同；占位 false 待评审）
+      isStarFuYin: false,
+      isStarFanYin: false,
+      isDoorFuYin: false,
+      isDoorFanYin: false,
+      isGanFuYin: false,
+      isGanFanYin: false,
       horseLocation: DiZhi.ZI,
       panGeJuList: null,
     );
