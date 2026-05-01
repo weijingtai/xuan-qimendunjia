@@ -3,6 +3,7 @@ import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/qi_men_star.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_eight_gods.dart';
+import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/enums/enum_six_jia.dart';
 import 'package:qimendunjia/model/each_gong.dart';
 import 'package:qimendunjia/model/pan_arrange_settings.dart';
@@ -70,9 +71,24 @@ class GanZhiDrivenQiMenPan {
 
   // ============== 常量序列 ==============
 
-  /// 阴遁九宫逆飞路径（按后天八卦逆向圆周序）
-  /// 1坎 → 9离 → 8艮 → 7兑 → 6乾 → 5中 → 4巽 → 3震 → 2坤
-  static const List<int> _yinDunGongSeq = [1, 9, 8, 7, 6, 5, 4, 3, 2];
+  /// 阴遁九宫飞布路径（**逆时针**，含中5，9 元素）
+  ///
+  /// 按奇门遁甲飞布规则：[1,2,7,6,5,4,3,8,9]
+  /// 验证（年家下元戊起兑7）：从 index=2 (gong=7) 起 9 步：
+  ///   7戊 → 6己 → 5庚 → 4辛 → 3壬 → 8癸 → 9丁 → 1丙 → 2乙 ✓
+  static const List<int> _yinDunGongSeq = [1, 2, 7, 6, 5, 4, 3, 8, 9];
+
+  /// 阴遁逆时针 + 跳中 5（用于八神，8 元素）
+  static const List<int> _yinDunGongSeqSkip5 = [1, 2, 7, 6, 4, 3, 8, 9];
+
+  /// 阴遁九宫飞布路径（**顺时针**，含中5，9 元素）
+  ///
+  /// = 逆时针路径反向 = [9,8,3,4,5,6,7,2,1]
+  /// 用于天盘九星顺时针布列（用户最新规范）。
+  static const List<int> _yinDunGongSeqClockwise = [9, 8, 3, 4, 5, 6, 7, 2, 1];
+
+  /// 阴遁顺时针 + 跳中 5（用于八门顺布，8 元素）
+  static const List<int> _yinDunGongSeqClockwiseSkip5 = [9, 8, 3, 4, 6, 7, 2, 1];
 
   /// 三奇六仪戊起序列（无论阴阳遁，干的相对顺序固定为戊→己→庚→辛→壬→癸→丁→丙→乙）
   static const List<TianGan> _ganSeq = [
@@ -85,6 +101,60 @@ class GanZhiDrivenQiMenPan {
     TianGan.DING, // 丁
     TianGan.BING, // 丙
     TianGan.YI,  // 乙
+  ];
+
+  /// 北斗九星固定顺序（用户最新规范）：
+  /// 天蓬、天芮、天冲、天辅、天英、天禽、天柱、天任、天心
+  ///
+  /// 用于布列天盘九星：从值符在该 list 中的索引起，沿 [_yinDunGongSeqClockwise]
+  /// 顺时针填入。
+  static const List<NineStarsEnum> _beiDouFixedOrder = [
+    NineStarsEnum.PENG,   // 天蓬 (idx 0)
+    NineStarsEnum.RUI,    // 天芮 (idx 1)
+    NineStarsEnum.CHONG,  // 天冲 (idx 2)
+    NineStarsEnum.FU,     // 天辅 (idx 3)
+    NineStarsEnum.YING,   // 天英 (idx 4)
+    NineStarsEnum.QIN,    // 天禽 (idx 5) — 中5寄坤2
+    NineStarsEnum.ZHU,    // 天柱 (idx 6)
+    NineStarsEnum.REN,    // 天任 (idx 7)
+    NineStarsEnum.XIN,    // 天心 (idx 8)
+  ];
+
+  /// 宫号 → 本位北斗星（用于值符识别：旬首落宫的本位星）
+  static const Map<int, NineStarsEnum> _gongToStarBenWei = {
+    1: NineStarsEnum.PENG,   // 坎1·天蓬
+    2: NineStarsEnum.RUI,    // 坤2·天芮
+    3: NineStarsEnum.CHONG,  // 震3·天冲
+    4: NineStarsEnum.FU,     // 巽4·天辅
+    5: NineStarsEnum.QIN,    // 中5·天禽（寄坤2）
+    6: NineStarsEnum.XIN,    // 乾6·天心
+    7: NineStarsEnum.ZHU,    // 兑7·天柱
+    8: NineStarsEnum.REN,    // 艮8·天任
+    9: NineStarsEnum.YING,   // 离9·天英
+  };
+
+  /// 八门固定顺序（标准）：休、生、伤、杜、景、死、惊、开
+  static const List<EightDoorEnum> _eightDoorFixedOrder = [
+    EightDoorEnum.XIU,    // 休 (idx 0)
+    EightDoorEnum.SHENG,  // 生 (idx 1)
+    EightDoorEnum.SHANG,  // 伤 (idx 2)
+    EightDoorEnum.DU,     // 杜 (idx 3)
+    EightDoorEnum.JING_S, // 景 (idx 4)
+    EightDoorEnum.SI,     // 死 (idx 5)
+    EightDoorEnum.JING_W, // 惊 (idx 6)
+    EightDoorEnum.KAI,    // 开 (idx 7)
+  ];
+
+  /// 八神固定顺序（标准）：值符、腾蛇、太阴、六合、白虎、玄武、九地、九天
+  static const List<EightGodsEnum> _eightGodFixedOrder = [
+    EightGodsEnum.ZHI_FU,   // 值符
+    EightGodsEnum.TENG_SHE, // 腾蛇
+    EightGodsEnum.TAI_YIN,  // 太阴
+    EightGodsEnum.LIU_HE,   // 六合
+    EightGodsEnum.BAI_HU,   // 白虎
+    EightGodsEnum.XUAN_WU,  // 玄武
+    EightGodsEnum.JIU_DI,   // 九地
+    EightGodsEnum.JIU_TIAN, // 九天
   ];
 
   /// 宫号 → 本位八门（用于"值使门"判定）
@@ -130,53 +200,55 @@ class GanZhiDrivenQiMenPan {
   // ============== 排盘流程 ==============
 
   void _arrange() {
-    // 步骤 1：地盘三奇六仪（阴遁逆飞戊起）
+    // 步骤 1：地盘三奇六仪（阴遁逆时针戊起）
     diPanGanByGong = _placeDiPan();
 
-    // 步骤 2：旬首得值符值使
-    final drivingJiaZi =
-        JiaZi.getFromGanZhiEnum(drivingGan, drivingZhi);
+    // 步骤 2：识别值符 / 值使（北斗派旬首落宫本位）
+    final drivingJiaZi = JiaZi.getFromGanZhiEnum(drivingGan, drivingZhi);
     final xunHeaderJiaZi = drivingJiaZi.xunHeader;
     final xunHeaderTianGan = SixJia.getSixJiaByJiaZi(xunHeaderJiaZi).gan;
 
-    // 旬首在地盘的原始落宫（可能为 5）
+    // 旬首遁干在地盘的原始落宫（可能为 5）
     final xunHeaderGongRaw = diPanGanByGong.entries
         .firstWhere((e) => e.value == xunHeaderTianGan,
             orElse: () => throw StateError(
                 '旬首天干 $xunHeaderTianGan 未落入地盘'))
         .key;
-    // 值符星按原始落宫的本位星（中5 即天禽 = starSet[4]）
-    zhiFuStar = starSet[xunHeaderGongRaw - 1];
-    // 中5寄坤2：值使门 / 后续门-神路径都按坤2处理
-    final xunHeaderGongNumber =
+    // 中5 寄坤2：旬首落中5 时所有"本位查找"按坤2 处理
+    final xunHeaderGongAdj =
         xunHeaderGongRaw == 5 ? 2 : xunHeaderGongRaw;
-    zhiShiDoor = _gongNumberToDoorBenWei[xunHeaderGongNumber]!;
 
-    // drivingGan 在地盘的原始落宫（可能为 5）
+    // 值符星 = 旬首落宫的本位北斗星
+    final zhiFuStarBeiDou = _gongToStarBenWei[xunHeaderGongAdj]!;
+    zhiFuStar = zhiFuStarBeiDou; // 协变到 QiMenStar
+
+    // 值使门 = 旬首落宫的本位时家门
+    zhiShiDoor = _gongNumberToDoorBenWei[xunHeaderGongAdj]!;
+
+    // drivingGan 在地盘的落宫（值符飞至此宫）
     final drivingGanGongRaw = diPanGanByGong.entries
         .firstWhere((e) => e.value == drivingGan,
             orElse: () =>
                 throw StateError('drivingGan $drivingGan 未落入地盘'))
         .key;
-    // 中5寄坤2：值符星 / 神盘起算落宫都按坤2处理
-    final drivingGanGongNumber =
+    final drivingGanGongAdj =
         drivingGanGongRaw == 5 ? 2 : drivingGanGongRaw;
-    zhiFuStarAtGong = HouTianGua.getGua(drivingGanGongNumber);
+    zhiFuStarAtGong = HouTianGua.getGua(drivingGanGongAdj);
 
-    // 步骤 4：人盘八门（值使逆数到 drivingZhi 宫；地支不会落中5）
+    // drivingZhi → 后天八卦地支配宫（值使飞至此宫，地支永不落中5）
     final drivingZhiGongNumber = _diZhiToGongNumber(drivingZhi);
     zhiShiDoorAtGong = HouTianGua.getGua(drivingZhiGongNumber);
 
-    // 步骤 3：天盘九星 — 飞盘逆飞，值符跟 drivingGan 落宫（已寄坤2修正）
+    // 步骤 3：天盘九星 — 飞盘**顺时针**，固定顺序蓬芮冲辅英禽柱任心
     final tianPanStarByGong =
-        _arrangeTianPanStars(drivingGanGongNumber, xunHeaderGongRaw);
+        _arrangeTianPanStars(drivingGanGongAdj, zhiFuStarBeiDou);
 
-    // 步骤 4：人盘八门 — 飞盘逆飞，值使从 xunHeaderGong（寄2 后）飞至 drivingZhiGong
+    // 步骤 4：人盘八门 — 飞盘**顺时针**跳中5，固定顺序休生伤杜景死惊开
     final renPanDoorByGong =
-        _arrangeRenPanDoors(drivingZhiGongNumber, xunHeaderGongNumber);
+        _arrangeRenPanDoors(drivingZhiGongNumber, zhiShiDoor);
 
-    // 步骤 5：神盘八神 — 值符神跟天盘值符星落宫（寄2 后），其余逆排
-    final shenPanGodByGong = _arrangeShenPanGods(drivingGanGongNumber);
+    // 步骤 5：神盘八神 — 飞盘**逆时针**跳中5，固定顺序值符…九天
+    final shenPanGodByGong = _arrangeShenPanGods(drivingGanGongAdj);
 
     gongMapper = _assemble(
       diPan: diPanGanByGong,
@@ -186,12 +258,11 @@ class GanZhiDrivenQiMenPan {
     );
   }
 
-  /// 阴遁地盘三奇六仪：起局宫放戊，按九宫逆飞填入 9 个干。
-  /// 中5位置仍占座；上层若需"中5寄坤2"在 EachGong 组装时另行处理。
+  /// 阴遁地盘三奇六仪：起局宫放戊，按 [_yinDunGongSeq] 逆时针填入 9 个干。
   Map<int, TianGan> _placeDiPan() {
     final startIdx = _yinDunGongSeq.indexOf(qiJuGong.houTianOrder);
     if (startIdx < 0) {
-      throw StateError('起局宫 ${qiJuGong.name} 不在九宫逆飞序列中');
+      throw StateError('起局宫 ${qiJuGong.name} 不在九宫飞布序列中');
     }
     final result = <int, TianGan>{};
     for (int i = 0; i < 9; i++) {
@@ -201,101 +272,75 @@ class GanZhiDrivenQiMenPan {
     return result;
   }
 
-  /// 排天盘九星（飞盘 + 阴遁逆飞）
+  /// 排天盘九星 — 顺时针 + 北斗固定顺序
   ///
-  /// 算法（对照表 §五 + yue_jia_algorithm.md §7）：
-  /// - 值符星 = `starSet[xunHeaderGong - 1]`
-  /// - 值符星飞至 `targetGong`（即 drivingGanGong）
-  /// - 其余九星按 `starSet` 顺序，沿"九宫逆飞"路径依次填入
-  Map<int, QiMenStar> _arrangeTianPanStars(int targetGong, int xunHeaderGong) {
-    final pathStartIdx = _yinDunGongSeq.indexOf(targetGong);
+  /// 算法（用户最新规范）：
+  /// - 起：drivingGanGong（值符落宫）
+  /// - 走：[_yinDunGongSeqClockwise]（顺时针 9 步含中5）
+  /// - 序：从值符在 [_beiDouFixedOrder] 中的索引起 cyclic
+  Map<int, QiMenStar> _arrangeTianPanStars(
+      int targetGong, NineStarsEnum zhiFuStarBeiDou) {
+    final pathStartIdx = _yinDunGongSeqClockwise.indexOf(targetGong);
     if (pathStartIdx < 0) {
-      throw StateError('drivingGan 落入中5（路径外），暂不支持');
+      throw StateError(
+          'targetGong=$targetGong 不在顺时针路径中（中5寄2应已处理）');
     }
-    final starStartIdx = xunHeaderGong - 1;
+    final zhiFuIdx = _beiDouFixedOrder.indexOf(zhiFuStarBeiDou);
+    if (zhiFuIdx < 0) {
+      throw StateError('值符星 $zhiFuStarBeiDou 不在北斗固定顺序中');
+    }
     final result = <int, QiMenStar>{};
     for (int i = 0; i < 9; i++) {
-      final gongNum = _yinDunGongSeq[(pathStartIdx + i) % 9];
-      final starIdx = (starStartIdx + i) % 9;
-      result[gongNum] = starSet[starIdx];
+      final gongNum = _yinDunGongSeqClockwise[(pathStartIdx + i) % 9];
+      final star = _beiDouFixedOrder[(zhiFuIdx + i) % 9];
+      result[gongNum] = star;
     }
     return result;
   }
 
-  /// 排人盘八门（飞盘 + 阴遁逆飞，跳中5）
+  /// 排人盘八门 — 顺时针跳中5 + 标准固定顺序
   ///
-  /// 算法（对照表 §六 + yue_jia_algorithm.md §8）：
-  /// - 值使门 = xunHeaderGong 宫的本位门（中5 寄坤 2 已在调用前处理）
-  /// - 值使从其本宫起，逆数到 drivingZhiGong
-  /// - 其余八门按本位顺序逆飞
-  ///
-  /// 中5无门：8 个门飞布在 [1, 9, 8, 7, 6, 4, 3, 2] 八宫。
-  /// 调用方保证 xunHeaderGong ≠ 5，drivingZhiGong ≠ 5。
+  /// 算法（用户最新规范）：
+  /// - 起：drivingZhiGong（值使落宫）
+  /// - 走：[_yinDunGongSeqClockwiseSkip5]（顺时针 8 步跳中5）
+  /// - 序：从值使在 [_eightDoorFixedOrder] 中的索引起 cyclic
   Map<int, EightDoorEnum> _arrangeRenPanDoors(
-      int targetGong, int xunHeaderGong) {
-    // 八门按"宫号本位"展开（跳5）
-    const doorBenWeiOrdered = <EightDoorEnum>[
-      EightDoorEnum.XIU,    // 坎1
-      EightDoorEnum.SI,     // 坤2
-      EightDoorEnum.SHANG,  // 震3
-      EightDoorEnum.DU,     // 巽4
-      EightDoorEnum.KAI,    // 乾6
-      EightDoorEnum.JING_W, // 兑7
-      EightDoorEnum.SHENG,  // 艮8
-      EightDoorEnum.JING_S, // 离9
-    ];
-    const doorGongNumbers = [1, 2, 3, 4, 6, 7, 8, 9];
-    const doorPath = [1, 9, 8, 7, 6, 4, 3, 2]; // 阴遁逆飞跳中5
-
-    final doorStartIdx = doorGongNumbers.indexOf(xunHeaderGong);
-    if (doorStartIdx < 0) {
-      throw StateError(
-          '_arrangeRenPanDoors: xunHeaderGong=$xunHeaderGong 不应到达此处（'
-          '调用方应已对中5寄坤2做重定向）');
-    }
-    final pathStartIdx = doorPath.indexOf(targetGong);
+      int targetGong, EightDoorEnum zhiShiDoor) {
+    final pathStartIdx =
+        _yinDunGongSeqClockwiseSkip5.indexOf(targetGong);
     if (pathStartIdx < 0) {
-      throw StateError('drivingZhi 落入中5无门，路径不存在');
+      throw StateError(
+          'drivingZhiGong=$targetGong 不在顺时针跳5路径中（地支不应落中5）');
     }
-
+    final zhiShiIdx = _eightDoorFixedOrder.indexOf(zhiShiDoor);
+    if (zhiShiIdx < 0) {
+      throw StateError('值使门 $zhiShiDoor 不在八门固定顺序中');
+    }
     final result = <int, EightDoorEnum>{};
     for (int i = 0; i < 8; i++) {
-      final gongNum = doorPath[(pathStartIdx + i) % 8];
-      final doorIdx = (doorStartIdx + i) % 8;
-      result[gongNum] = doorBenWeiOrdered[doorIdx];
+      final gongNum =
+          _yinDunGongSeqClockwiseSkip5[(pathStartIdx + i) % 8];
+      result[gongNum] = _eightDoorFixedOrder[(zhiShiIdx + i) % 8];
     }
     return result;
   }
 
-  /// 排神盘八神（飞盘 + 阴遁逆飞，跳中5）
+  /// 排神盘八神 — 逆时针跳中5 + 标准固定顺序
   ///
-  /// 算法（对照表 §七 + yue_jia_algorithm.md §9）：
-  /// - 值符神跟天盘值符星，落于 zhiFuGongNumber（中5 寄坤2 已在调用前处理）
-  /// - 其余八神按"值符 → 螣蛇 → 太阴 → 六合 → 白虎 → 玄武 → 九地 → 九天"逆排
-  Map<int, EightGodsEnum> _arrangeShenPanGods(int zhiFuGongNumber) {
-    const godOrder = <EightGodsEnum>[
-      EightGodsEnum.ZHI_FU,
-      EightGodsEnum.TENG_SHE,
-      EightGodsEnum.TAI_YIN,
-      EightGodsEnum.LIU_HE,
-      EightGodsEnum.BAI_HU,
-      EightGodsEnum.XUAN_WU,
-      EightGodsEnum.JIU_DI,
-      EightGodsEnum.JIU_TIAN,
-    ];
-    const godPath = [1, 9, 8, 7, 6, 4, 3, 2]; // 跳中5
-
-    final pathStartIdx = godPath.indexOf(zhiFuGongNumber);
+  /// 算法（用户最新规范）：
+  /// - 起：drivingGanGong（值符落宫）
+  /// - 走：[_yinDunGongSeqSkip5]（逆时针 8 步跳中5）
+  /// - 序：[_eightGodFixedOrder]（值符神在索引 0，依次填入）
+  Map<int, EightGodsEnum> _arrangeShenPanGods(int zhiFuGongAdj) {
+    final pathStartIdx = _yinDunGongSeqSkip5.indexOf(zhiFuGongAdj);
     if (pathStartIdx < 0) {
       throw StateError(
-          '_arrangeShenPanGods: zhiFuGongNumber=$zhiFuGongNumber 不应到达此处（'
-          '调用方应已对中5寄坤2做重定向）');
+          'zhiFuGongAdj=$zhiFuGongAdj 不在逆时针跳5路径中（中5寄2应已处理）');
     }
-
     final result = <int, EightGodsEnum>{};
     for (int i = 0; i < 8; i++) {
-      final gongNum = godPath[(pathStartIdx + i) % 8];
-      result[gongNum] = godOrder[i];
+      final gongNum = _yinDunGongSeqSkip5[(pathStartIdx + i) % 8];
+      result[gongNum] = _eightGodFixedOrder[i];
     }
     return result;
   }

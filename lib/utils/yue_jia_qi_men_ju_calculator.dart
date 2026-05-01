@@ -16,31 +16,36 @@ class YueJiaQiMenJuCalculator {
 
   YueJiaQiMenJuCalculator({required this.dateTime});
 
-  /// 年支 → 三元映射（按孟仲季）
+  /// 年支 → 三元映射
   ///
-  /// 寅申巳亥 → 上元（孟）
-  /// 子午卯酉 → 中元（仲）
-  /// 辰戌丑未 → 下元（季）
+  /// 用户最新规范（2026-05-01 校准）：
+  /// - 子午卯酉 → 上元（七局，兑7 起）
+  /// - 寅申巳亥 → 中元（一局，坎1 起）
+  /// - 辰戌丑未 → 下元（四局，巽4 起）
   static SanYuanType yearZhiToSanYuan(DiZhi yearZhi) {
-    const meng = {DiZhi.YIN, DiZhi.SHEN, DiZhi.SI, DiZhi.HAI};
-    const zhong = {DiZhi.ZI, DiZhi.WU, DiZhi.MAO, DiZhi.YOU};
-    if (meng.contains(yearZhi)) return SanYuanType.SHANG;
+    const shang = {DiZhi.ZI, DiZhi.WU, DiZhi.MAO, DiZhi.YOU};
+    const zhong = {DiZhi.YIN, DiZhi.SHEN, DiZhi.SI, DiZhi.HAI};
+    if (shang.contains(yearZhi)) return SanYuanType.SHANG;
     if (zhong.contains(yearZhi)) return SanYuanType.ZHONG;
     return SanYuanType.XIA;
   }
 
   /// 月家三元 → 起局宫
   ///
+  /// 用户最新规范：
+  /// - 上元 → 兑7（阴七局）
+  /// - 中元 → 坎1（阴一局）
+  /// - 下元 → 巽4（阴四局）
+  ///
   /// **注意**：与年家映射不同，请勿混用。
-  /// 月家：上元坎1 / 中元兑7 / 下元巽4
   static HouTianGua sanYuanToQiJuGong(SanYuanType sy) {
     switch (sy) {
       case SanYuanType.SHANG:
-        return HouTianGua.Kan; // 1
+        return HouTianGua.Dui; // 7（上元 - 子午卯酉）
       case SanYuanType.ZHONG:
-        return HouTianGua.Dui; // 7
+        return HouTianGua.Kan; // 1（中元 - 寅申巳亥）
       case SanYuanType.XIA:
-        return HouTianGua.Xun; // 4
+        return HouTianGua.Xun; // 4（下元 - 辰戌丑未）
     }
   }
 
