@@ -9,6 +9,7 @@ import '../../enums/enum_eight_gods.dart';
 import '../../enums/enum_nine_stars.dart';
 import 'package:common/enums.dart';
 import '../../domain/entities/each_gong.dart';
+import '../../domain/entities/qi_men_star.dart';
 import '../../enums/enum_six_jia.dart';
 
 part '../components/palace/brief_palace_layout.dart';
@@ -232,7 +233,7 @@ class _SmartPalaceWidgetState extends State<SmartPalaceWidget>
 class PalaceData {
   final HouTianGua gongEnum; // 宫位卦象
   final String number; // 宫位数字
-  final NineStarsEnum starEnum; // 九星
+  final QiMenStar starEnum; // 九星
   final EightDoorEnum doorEnum; // 八门
   final EightGodsEnum godEnum; // 天盘八神
   final EightGodsEnum? diGodEnum; // 地盘八神
@@ -249,7 +250,7 @@ class PalaceData {
   final TianGan? renPanAnGanEnum; // 人盘暗干
   final TianGan? tianPanJiGanEnum; // 天盘寄宫干
   final TianGan? diPanJiGanEnum; // 地盘寄宫干
-  final NineStarsEnum? jiStarEnum; // 寄宫九星
+  final QiMenStar? jiStarEnum; // 寄宫九星
   final bool isTianPanDunjia; // 天盘干是遁甲
   final bool isDiPanDunjia; // 地盘干是遁甲
   final bool isTianJiGanDunjia; // 天盘寄干是遁甲
@@ -321,7 +322,10 @@ class PalaceData {
       tianPanGanEnum: domain.tianPan,
       diPanGanEnum: domain.diPan,
       diZhi: _getDiZhiByGong(domain.gongGua), // 映射地支
-      wangShuai: domain.star.checkWithGongGua(domain.gongGua).name, // 正确的方法名
+      // 旺衰判定使用时家九星专属方法；非时家盘暂返回占位"和"
+      wangShuai: (domain.star is NineStarsEnum)
+          ? (domain.star as NineStarsEnum).checkWithGongGua(domain.gongGua).name
+          : "和",
       jiXiong: "吉", // 待对接规则引擎
       geJu: geJu,
       marks: marks,

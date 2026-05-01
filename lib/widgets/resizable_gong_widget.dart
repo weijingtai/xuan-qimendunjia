@@ -147,7 +147,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                                   SizedBox(
                                       width: fontSize * 3,
                                       child: _stars(
-                                          gong.star,
+                                          gong.star as NineStarsEnum,
                                           fontSize,
                                           jiFontSize,
                                           hintFontSize,

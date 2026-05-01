@@ -1,9 +1,10 @@
 import 'package:common/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:qimendunjia/domain/entities/qi_men_star.dart';
 
 import 'enum_fu_fan_yin.dart';
 
-enum NineStarsEnum {
+enum NineStarsEnum implements QiMenStar {
   @JsonValue("天蓬")
   PENG(1, "天蓬", "蓬", FiveXing.SHUI, YinYang.YANG, HouTianGua.Kan),
   @JsonValue("天任")

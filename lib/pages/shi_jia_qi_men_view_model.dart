@@ -177,7 +177,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       var fixedList = [
         loadAllTenGanKeYingForCurrentGong(_uiPanMetaModel!.xunHeaderTianGan,
             gong.tianPan, gong.diPan, gong.tianPanJiGan, gong.diPanJiGan),
-        loadDoorStarKeYing(gong.door, gong.star),
+        loadDoorStarKeYing(gong.door, gong.star as NineStarsEnum),
         loadThreeQiRuGong(gong.gongGua, gong.tianPan),
         loadEightDoorGanKeYing(gong.door, gong.tianPan),
         loadTianPanGanRuGong(gong.gongGua, gong.tianPan),

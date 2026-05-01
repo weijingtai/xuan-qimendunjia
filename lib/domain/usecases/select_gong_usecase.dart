@@ -1,4 +1,5 @@
 import 'package:common/enums.dart';
+import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/model/door_star_ke_ying.dart';
 import 'package:qimendunjia/model/eight_door_ke_ying.dart';
 import 'package:qimendunjia/model/qi_yi_ru_gong.dart';
@@ -169,10 +170,13 @@ class SelectGongUseCase extends UseCase<GongDetailInfo, SelectGongParams> {
 
   /// 加载门星克应
   Future<DoorStarKeYing?> _loadDoorStarKeYing(EachGong gong) async {
+    // DoorStarKeYing 数据集仅覆盖时家九星；非时家盘暂不提供门星克应。
+    final star = gong.star;
+    if (star is! NineStarsEnum) return null;
     try {
       return await _dataRepository.getDoorStarKeYing(
         door: gong.door,
-        star: gong.star,
+        star: star,
       );
     } catch (e) {
       return null;

@@ -559,7 +559,7 @@ class _ScalableBeautifulPageState extends State<ScalableBeautifulPage>
                                   // margin: EdgeInsets.fromLTRB(0, 24, 0, 0),
                                   child: FutureBuilder(
                                     future: loadDoorStarKeYing(
-                                        gong.door, gong.star),
+                                        gong.door, gong.star as NineStarsEnum),
                                     builder: (context,
                                         AsyncSnapshot<DoorStarKeYing?>
                                             snapshot) {

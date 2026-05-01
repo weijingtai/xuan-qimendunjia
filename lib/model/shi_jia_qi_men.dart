@@ -623,17 +623,19 @@ class ShiJiaQiMen {
     bool isDiPanXunShou = each.diPan == xunHeaderTianGan;
     // 当天盘干为旬首天干时，需要使用“遁干甲”作为天盘干看待
     bool isTianPanXunShou = each.tianPan == xunHeaderTianGan;
+    // 时家排盘内九星恒为 NineStarsEnum；通过 cast 调用其专属判定方法。
+    final star = each.star as NineStarsEnum;
     return EachGongWangShuai(
       gongNumber: each.gongNumber,
 
-      starFuFanYin: each.star.checkFuFanYinByGong(gongGua),
+      starFuFanYin: star.checkFuFanYinByGong(gongGua),
       starMonthWangShuai: starMonthTokenType == MonthTokenTypeEnum.ZHU_QI_NA_GUA
-          ? each.star.checkWithMonthTokenNaGua(monthToken)
-          : each.star.checkWithMonthToken(monthToken),
+          ? star.checkWithMonthTokenNaGua(monthToken)
+          : star.checkWithMonthToken(monthToken),
       starMonthTokenType: starMonthTokenType,
       starGongWangShuai: starFourWeiGongType == GongTypeEnum.GONG_GUA
-          ? each.star.checkWithGongGua(gongGua)
-          : each.star.checkWithGongNeiDiZhi(
+          ? star.checkWithGongGua(gongGua)
+          : star.checkWithGongNeiDiZhi(
               gongGua, yinYangDun, timeJiaZi, starFourWeiGongType),
       starFourWeiGongType: starFourWeiGongType,
 

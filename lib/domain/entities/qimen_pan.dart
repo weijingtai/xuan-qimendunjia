@@ -2,9 +2,9 @@ import 'package:common/enums.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_most_popular_ge_ju.dart';
-import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'base_entity.dart';
 import 'each_gong.dart';
+import 'qi_men_star.dart';
 import 'shi_jia_ju.dart';
 
 /// 奇门盘实体
@@ -35,7 +35,7 @@ class QiMenPan extends Equatable implements Entity {
   final HouTianGua zhiShiDoorAtGong;
 
   /// 值符星
-  final NineStarsEnum zhiFuStar;
+  final QiMenStar zhiFuStar;
 
   /// 值符星所在宫
   final HouTianGua zhiFuStarAtGong;
@@ -174,7 +174,7 @@ class QiMenPan extends Equatable implements Entity {
     Map<HouTianGua, EachGong>? gongMapper,
     EightDoorEnum? zhiShiDoor,
     HouTianGua? zhiShiDoorAtGong,
-    NineStarsEnum? zhiFuStar,
+    QiMenStar? zhiFuStar,
     HouTianGua? zhiFuStarAtGong,
     bool? isStarFuYin,
     bool? isStarFanYin,
