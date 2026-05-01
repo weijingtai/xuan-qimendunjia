@@ -10,6 +10,7 @@ import 'package:qimendunjia/domain/usecases/calculate_ju_usecase.dart';
 import 'package:qimendunjia/domain/usecases/select_gong_usecase.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
+import 'package:qimendunjia/redesign_ui/core/qi_men_star_theme.dart';
 
 /// 服务定位器
 ///
@@ -55,6 +56,10 @@ class ServiceLocator {
       ArrangeType.MAO_SHAN: MaoShanCalculatorDataSource(),
       ArrangeType.YIN_PAN: YinPanCalculatorDataSource(),
     };
+
+    // 九星主题（家级配色注册表）
+    // Phase 2/4 各家在自己实现内调用 registerFamilyPalette 注入颜色。
+    _services[QiMenStarTheme] = DefaultQiMenStarTheme();
   }
 
   /// 注册仓储
