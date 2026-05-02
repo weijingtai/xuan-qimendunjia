@@ -70,25 +70,32 @@ class GanZhiDrivenQiMenPan {
   }
 
   // ============== 常量序列 ==============
+  //
+  // 按用户校准（2026-05-01）：地盘干、星、门、神的布列只走两条 path：
+  //   顺行（顺时针）= 数字升序 [1,2,3,4,5,6,7,8,9]
+  //   逆行（逆时针）= 数字降序 [9,8,7,6,5,4,3,2,1]
+  // 阴遁默认走逆行；星 / 门按用户规范 "顺时针" → 顺行；神按 "逆时针" → 逆行。
 
-  /// 阴遁九宫飞布路径（**逆时针**，含中5，9 元素）
+  /// 逆行（阴遁默认）含中5
   ///
-  /// 按奇门遁甲飞布规则：[1,2,7,6,5,4,3,8,9]
-  /// 验证（年家下元戊起兑7）：从 index=2 (gong=7) 起 9 步：
-  ///   7戊 → 6己 → 5庚 → 4辛 → 3壬 → 8癸 → 9丁 → 1丙 → 2乙 ✓
-  static const List<int> _yinDunGongSeq = [1, 2, 7, 6, 5, 4, 3, 8, 9];
+  /// 验证（年家下元戊起兑7）：从 index=2 (gong=7) 起 9 步循环
+  ///   7戊 → 6己 → 5庚 → 4辛 → 3壬 → 2癸 → 1丁 → 9丙 → 8乙
+  static const List<int> _gongSeqDescending = [9, 8, 7, 6, 5, 4, 3, 2, 1];
 
-  /// 阴遁逆时针 + 跳中 5（用于八神，8 元素）
-  static const List<int> _yinDunGongSeqSkip5 = [1, 2, 7, 6, 4, 3, 8, 9];
+  /// 逆行 + 跳中 5（神盘 8 元素）
+  static const List<int> _gongSeqDescendingSkip5 = [9, 8, 7, 6, 4, 3, 2, 1];
 
-  /// 阴遁九宫飞布路径（**顺时针**，含中5，9 元素）
-  ///
-  /// = 逆时针路径反向 = [9,8,3,4,5,6,7,2,1]
-  /// 用于天盘九星顺时针布列（用户最新规范）。
-  static const List<int> _yinDunGongSeqClockwise = [9, 8, 3, 4, 5, 6, 7, 2, 1];
+  /// 顺行（顺时针）含中5
+  static const List<int> _gongSeqAscending = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-  /// 阴遁顺时针 + 跳中 5（用于八门顺布，8 元素）
-  static const List<int> _yinDunGongSeqClockwiseSkip5 = [9, 8, 3, 4, 6, 7, 2, 1];
+  /// 顺行 + 跳中 5（门盘 8 元素）
+  static const List<int> _gongSeqAscendingSkip5 = [1, 2, 3, 4, 6, 7, 8, 9];
+
+  // 历史命名兼容（保留以减少替换面）
+  static const List<int> _yinDunGongSeq = _gongSeqDescending;
+  static const List<int> _yinDunGongSeqSkip5 = _gongSeqDescendingSkip5;
+  static const List<int> _yinDunGongSeqClockwise = _gongSeqAscending;
+  static const List<int> _yinDunGongSeqClockwiseSkip5 = _gongSeqAscendingSkip5;
 
   /// 三奇六仪戊起序列（无论阴阳遁，干的相对顺序固定为戊→己→庚→辛→壬→癸→丁→丙→乙）
   static const List<TianGan> _ganSeq = [
