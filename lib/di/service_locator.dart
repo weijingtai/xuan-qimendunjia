@@ -10,6 +10,7 @@ import 'package:qimendunjia/domain/usecases/calculate_ju_usecase.dart';
 import 'package:qimendunjia/domain/usecases/select_gong_usecase.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
+import 'package:qimendunjia/utils/yue_jia_qi_men_ju_calculator.dart' show YueJiaSanYuanStrategy;
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/redesign_ui/core/qi_men_star_theme.dart';
 
@@ -51,7 +52,8 @@ class ServiceLocator {
     _services[CacheDataSource] = CacheDataSource();
 
     // 计算器数据源（双维 Map：家 × 起局法）
-    // 月/年家不分起局法，所有 ArrangeType 同映射到家级 DataSource。
+    // 月家：CHAI_BU = 粗分（5年一局，默认）/ ZHI_RUN = 细分（10月一局）。
+    // 年家：所有 ArrangeType 同映射到一个 DataSource。
     // 日家 Phase 2 接入。
     _services[Map<QiMenJia, Map<ArrangeType, QiMenCalculatorDataSource>>] = {
       QiMenJia.SHI: {
@@ -61,7 +63,10 @@ class ServiceLocator {
         ArrangeType.YIN_PAN: YinPanCalculatorDataSource(),
       },
       QiMenJia.YUE: {
-        for (final type in ArrangeType.values) type: YueJiaCalculatorDataSource(),
+        ArrangeType.CHAI_BU: YueJiaCalculatorDataSource(
+            strategy: YueJiaSanYuanStrategy.COARSE),
+        ArrangeType.ZHI_RUN: YueJiaCalculatorDataSource(
+            strategy: YueJiaSanYuanStrategy.FINE),
       },
       QiMenJia.NIAN: {
         for (final type in ArrangeType.values) type: NianJiaCalculatorDataSource(),

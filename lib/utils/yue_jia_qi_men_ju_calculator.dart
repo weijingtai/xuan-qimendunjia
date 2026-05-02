@@ -3,6 +3,20 @@ import 'package:common/enums.dart';
 import 'package:qimendunjia/domain/entities/san_yuan_type.dart';
 import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
 
+/// 月家奇门三元定局策略
+///
+/// 用户规范："有两种说法"：
+/// - [COARSE]（方法 2，粗分）：每 5 年用一个固定局数（上元 7 / 中元 1 / 下元 4）
+/// - [FINE]（方法 1，细分）：5 年内每 10 个月切换一次局数，6 段递减
+///   （上元 7→6→5→4→3→2 / 中元 1→9→8→7→6→5 / 下元 4→3→2→1→9→8）
+enum YueJiaSanYuanStrategy {
+  /// 粗分：5 年一局（默认）
+  COARSE,
+
+  /// 细分：10 月一局，6 段递减
+  FINE,
+}
+
 /// 月家奇门局计算器
 ///
 /// 算法依据：docs/more_qimen/yue_jia_algorithm.md
@@ -11,11 +25,18 @@ import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
 /// 1. 取年柱、月柱（依赖 LunarAdapter，已含五虎遁推月干 + 节气分月支）
 /// 2. **符头年回溯**：年干非甲己时倒推到最近的甲或己年作为符头
 /// 3. 按符头年的年支孟仲季定三元
-/// 4. 三元 → 起局宫
+/// 4. 按 [strategy] 决定局数：
+///    - COARSE：局数 = 三元起局数（7/1/4）
+///    - FINE：按月柱在 60 月周期的 bucket（每 10 月一段）递减
+/// 5. 局数 → 起局宫
 class YueJiaQiMenJuCalculator {
   final DateTime dateTime;
+  final YueJiaSanYuanStrategy strategy;
 
-  YueJiaQiMenJuCalculator({required this.dateTime});
+  YueJiaQiMenJuCalculator({
+    required this.dateTime,
+    this.strategy = YueJiaSanYuanStrategy.COARSE,
+  });
 
   /// 找出年柱的"符头年"
   ///
@@ -54,23 +75,60 @@ class YueJiaQiMenJuCalculator {
     return SanYuanType.XIA;
   }
 
-  /// 月家三元 → 起局宫
+  /// 三元 → 起局数（COARSE 法用）
   ///
+  /// 上元 7 / 中元 1 / 下元 4
+  static int sanYuanToStartingJu(SanYuanType sy) {
+    switch (sy) {
+      case SanYuanType.SHANG:
+        return 7;
+      case SanYuanType.ZHONG:
+        return 1;
+      case SanYuanType.XIA:
+        return 4;
+    }
+  }
+
+  /// 局数 → 起局宫
+  ///
+  /// 1坎 / 2坤 / 3震 / 4巽 / 5中（寄坤2）/ 6乾 / 7兑 / 8艮 / 9离
+  static HouTianGua juNumberToQiJuGong(int juNumber) {
+    return HouTianGua.values
+        .firstWhere((g) => g.houTianOrder == juNumber);
+  }
+
+  /// 三元 → 起局宫（COARSE 法用，等价于 [juNumberToQiJuGong] of [sanYuanToStartingJu]）
+  ///
+  /// 保留作为向后兼容入口（既有测试 / 调用方使用此名）。
   /// 用户最新规范：
   /// - 上元 → 兑7（阴七局）
   /// - 中元 → 坎1（阴一局）
   /// - 下元 → 巽4（阴四局）
+  static HouTianGua sanYuanToQiJuGong(SanYuanType sy) =>
+      juNumberToQiJuGong(sanYuanToStartingJu(sy));
+
+  /// 月柱 + 三元 → 局数（FINE 法用）
   ///
-  /// **注意**：与年家映射不同，请勿混用。
-  static HouTianGua sanYuanToQiJuGong(SanYuanType sy) {
-    switch (sy) {
-      case SanYuanType.SHANG:
-        return HouTianGua.Dui; // 7（上元 - 子午卯酉）
-      case SanYuanType.ZHONG:
-        return HouTianGua.Kan; // 1（中元 - 寅申巳亥）
-      case SanYuanType.XIA:
-        return HouTianGua.Xun; // 4（下元 - 辰戌丑未）
-    }
+  /// 用户规范（方法 1）：5 年（60 月）内按月柱位置分 6 段（每段 10 月），
+  /// 局数从该三元起局数开始，每 10 月递减 1。
+  ///
+  /// 月柱周期：从符头年（甲或己年）的丙寅月（正月）开始的 60 月。
+  /// 60 甲子里 丙寅月 的 number = 3。所以：
+  ///   relIndex = (monthJiaZi.number - 3 + 60) % 60   ∈ [0, 59]
+  ///   bucket = relIndex ~/ 10                         ∈ [0, 5]
+  ///   juNumber = ((startingJu - bucket - 1) % 9 + 9) % 9 + 1
+  ///
+  /// 例：上元（startingJu=7）下：
+  ///   bucket 0 → 7局, 1 → 6, 2 → 5, 3 → 4, 4 → 3, 5 → 2 ✓
+  /// 中元（startingJu=1）下：
+  ///   bucket 0 → 1局, 1 → 9, 2 → 8, 3 → 7, 4 → 6, 5 → 5 ✓
+  /// 下元（startingJu=4）下：
+  ///   bucket 0 → 4局, 1 → 3, 2 → 2, 3 → 1, 4 → 9, 5 → 8 ✓
+  static int juNumberFromMonth(JiaZi monthJiaZi, SanYuanType sanYuan) {
+    final relIndex = (monthJiaZi.number - 3 + 60) % 60;
+    final bucket = relIndex ~/ 10;
+    final startingJu = sanYuanToStartingJu(sanYuan);
+    return ((startingJu - bucket - 1) % 9 + 9) % 9 + 1;
   }
 
   YueJiaJu calculate() {
@@ -81,7 +139,12 @@ class YueJiaQiMenJuCalculator {
     // 符头年回溯：非甲己年倒推到最近的甲或己年
     final fuTouYear = findFuTouYear(yearJiaZi);
     final sanYuan = yearZhiToSanYuan(fuTouYear.diZhi);
-    final qiJuGong = sanYuanToQiJuGong(sanYuan);
+
+    // 按策略决定局数：COARSE 用三元起局数（5 年固定）；FINE 按月柱细分
+    final juNumber = strategy == YueJiaSanYuanStrategy.FINE
+        ? juNumberFromMonth(monthJiaZi, sanYuan)
+        : sanYuanToStartingJu(sanYuan);
+    final qiJuGong = juNumberToQiJuGong(juNumber);
 
     final fourZhu = [
       lunar.getYearInGanZhi(),
@@ -90,7 +153,7 @@ class YueJiaQiMenJuCalculator {
       lunar.getTimeInGanZhi(),
     ].join(' ');
     return YueJiaJu(
-      id: 'yuejia-${dateTime.millisecondsSinceEpoch}',
+      id: 'yuejia-${strategy.name}-${dateTime.millisecondsSinceEpoch}',
       panDateTime: dateTime,
       yearJiaZi: yearJiaZi,
       monthJiaZi: monthJiaZi,

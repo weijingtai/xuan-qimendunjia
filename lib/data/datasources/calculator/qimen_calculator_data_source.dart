@@ -97,15 +97,33 @@ class YinPanCalculatorDataSource implements QiMenCalculatorDataSource {
 
 /// 月家奇门计算器数据源
 ///
-/// 月家不分拆补/置润；所有 ArrangeType 同映射到此 DataSource。
+/// 月家有两种三元定局策略（[YueJiaSanYuanStrategy]）：
+/// - COARSE（5 年一局，默认）→ 通常注册到 ArrangeType.CHAI_BU
+/// - FINE（10 月一局，细分循环）→ 通常注册到 ArrangeType.ZHI_RUN
 class YueJiaCalculatorDataSource implements QiMenCalculatorDataSource {
+  final YueJiaSanYuanStrategy strategy;
+
+  YueJiaCalculatorDataSource({
+    this.strategy = YueJiaSanYuanStrategy.COARSE,
+  });
+
   @override
   Future<YueJiaJu> calculate(DateTime dateTime) async {
-    return YueJiaQiMenJuCalculator(dateTime: dateTime).calculate();
+    return YueJiaQiMenJuCalculator(
+      dateTime: dateTime,
+      strategy: strategy,
+    ).calculate();
   }
 
   @override
-  String get name => '月家奇门';
+  String get name {
+    switch (strategy) {
+      case YueJiaSanYuanStrategy.COARSE:
+        return '月家奇门（粗分·5年一局）';
+      case YueJiaSanYuanStrategy.FINE:
+        return '月家奇门（细分·10月一局）';
+    }
+  }
 
   @override
   QiMenJia get supportedJia => QiMenJia.YUE;

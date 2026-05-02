@@ -137,10 +137,11 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
                     onSelectionChanged: (s) {
                       setState(() {
                         _jia = s.first;
-                        // 月/年家不分起局法；强制 CHAI_BU 占位
-                        if (_jia != QiMenJia.SHI) {
-                          _arrangeType = ArrangeType.CHAI_BU;
-                        }
+                        // 切换家时重置起局法到默认（CHAI_BU）
+                        // - 时家：CHAI_BU 即拆补法
+                        // - 月家：CHAI_BU 映射到粗分（5年一局）
+                        // - 年家：所有 ArrangeType 等价
+                        _arrangeType = ArrangeType.CHAI_BU;
                       });
                     },
                   ),
@@ -148,37 +149,28 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
               ],
             ),
             const SizedBox(height: 8),
-            // 起局法（仅时家可选）
+            // 起局法（时家 4 种 / 月家 2 种 / 年家无选择）
             if (_jia == QiMenJia.SHI)
-              Row(
-                children: [
-                  const Text('起局法：',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: ArrangeType.values
-                            .where((t) => t != ArrangeType.MANUALLY)
-                            .map((t) => Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 8),
-                                  child: ChoiceChip(
-                                    label: Text(t.name),
-                                    selected: _arrangeType == t,
-                                    onSelected: (s) {
-                                      if (s) {
-                                        setState(() => _arrangeType = t);
-                                      }
-                                    },
-                                  ),
-                                ))
-                            .toList(),
-                      ),
-                    ),
-                  ),
+              _buildArrangeTypeSelector(
+                label: '起局法',
+                options: const [
+                  ArrangeType.CHAI_BU,
+                  ArrangeType.ZHI_RUN,
+                  ArrangeType.MAO_SHAN,
+                  ArrangeType.YIN_PAN,
                 ],
+                labelOf: (t) => t.name,
+              ),
+            if (_jia == QiMenJia.YUE)
+              _buildArrangeTypeSelector(
+                label: '定局法',
+                options: const [
+                  ArrangeType.CHAI_BU,
+                  ArrangeType.ZHI_RUN,
+                ],
+                labelOf: (t) => t == ArrangeType.CHAI_BU
+                    ? '粗分（5年一局）'
+                    : '细分（10月一局）',
               ),
             const SizedBox(height: 8),
             // 时间 + 起盘
@@ -206,6 +198,41 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildArrangeTypeSelector({
+    required String label,
+    required List<ArrangeType> options,
+    required String Function(ArrangeType) labelOf,
+  }) {
+    return Row(
+      children: [
+        Text('$label：',
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(width: 8),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: options
+                  .map((t) => Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(labelOf(t)),
+                          selected: _arrangeType == t,
+                          onSelected: (s) {
+                            if (s) {
+                              setState(() => _arrangeType = t);
+                            }
+                          },
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -297,7 +324,7 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             Text('• 时家：转盘排宫，一时辰一局，阴阳遁均用；起局法可选拆补 / 置润 / 茅山 / 阴盘'),
-            Text('• 月家：飞盘逆飞，一月一局，恒阴遁；按年支孟仲季三元起局'),
+            Text('• 月家：飞盘逆飞，恒阴遁；定局法可选粗分（5年一局）/ 细分（10月一局）'),
             Text('• 年家：飞盘逆飞，一年一局，恒阴遁；180 年大三元（1864 起算）'),
             SizedBox(height: 8),
             Text('• 月家 = 年家排盘机制完全一致，仅时间尺度与起局映射不同',
