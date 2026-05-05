@@ -3,18 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
+import 'package:qimendunjia/domain/entities/ri_jia_ju.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
+import 'package:qimendunjia/redesign_ui/components/palace/brief_palace_config.dart';
 import 'package:qimendunjia/redesign_ui/layouts/smart_grid.dart';
 
 /// 多家奇门页面
 ///
-/// 在同一个页面下支持时家 / 月家 / 年家三种排盘，复用既有
-/// [QiMenViewModel]（家维度参数已在 P1-T7 接通）。
+/// 在同一个页面下支持四家排盘，复用既有 [QiMenViewModel]（家维度参数已在 P1-T7 接通）。
 ///
-/// 日家因排盘机制独立（飞盘 + day-count + 无值符值使 + 不用八神），
-/// 与上述三家展示路径差异较大，本页暂不接入；后续 Phase 2 单独成页。
+/// - 时家 / 月家 / 年家：同一组"值符 / 值使 / 三奇六仪 / 八神"语义
+/// - 日家：独立机制（飞盘 + day-count 顺飞 + 不布奇仪 + 不用八神 + 以休门为纲），
+///   UI 隐藏八神、中5 隐藏门；干字段当前用占位（戊），待后续黄道黑道喜神贵神 Phase
+///   接入后再做 UI 精修。
 class MultiJiaQiMenPage extends StatefulWidget {
   const MultiJiaQiMenPage({super.key});
 
@@ -130,6 +133,7 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
                   child: SegmentedButton<QiMenJia>(
                     segments: const [
                       ButtonSegment(value: QiMenJia.SHI, label: Text('时家')),
+                      ButtonSegment(value: QiMenJia.RI, label: Text('日家')),
                       ButtonSegment(value: QiMenJia.YUE, label: Text('月家')),
                       ButtonSegment(value: QiMenJia.NIAN, label: Text('年家')),
                     ],
@@ -140,7 +144,7 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
                         // 切换家时重置起局法到默认（CHAI_BU）
                         // - 时家：CHAI_BU 即拆补法
                         // - 月家：CHAI_BU 映射到粗分（5年一局）
-                        // - 年家：所有 ArrangeType 等价
+                        // - 年家 / 日家：所有 ArrangeType 等价
                         _arrangeType = ArrangeType.CHAI_BU;
                       });
                     },
@@ -238,6 +242,7 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
 
   Widget _buildPanInfoCard(QiMenPan pan) {
     final shiJia = pan.shiJiaJu; // 时家专用 nullable
+    final riJia = pan.ju is RiJiaJu ? pan.ju as RiJiaJu : null;
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Padding(
@@ -254,8 +259,21 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
               _kv('旬首', shiJia.fuTouJiaZi.name),
               _kv('节气', shiJia.jieQiAt.name),
             ],
-            _kv('值符', '${pan.zhiFuStar.name}@${pan.zhiFuStarAtGong.name}'),
-            _kv('值使', '${pan.zhiShiDoor.name}@${pan.zhiShiDoorAtGong.name}'),
+            if (riJia != null) ...[
+              // 日家专属：日柱 / 节气 / 休门宫 + 距甲子日天数
+              _kv('日柱', riJia.dayJiaZi.name),
+              _kv('节气', riJia.jieQiAt.name),
+              _kv('休门宫', '${riJia.xiuMenGong.name}${riJia.xiuMenGong.houTianOrder}'),
+              _kv('距甲子', 'd=${riJia.daysSinceJiaZi}'),
+            ],
+            if (riJia == null)
+              // 日家无值符 / 值使概念 — 仅在非日家时展示
+              _kv('值符', '${pan.zhiFuStar.name}@${pan.zhiFuStarAtGong.name}'),
+            if (riJia == null)
+              _kv('值使', '${pan.zhiShiDoor.name}@${pan.zhiShiDoorAtGong.name}'),
+            if (riJia != null)
+              // 日家：以太乙落点为"日主星"、休门为纲
+              _kv('日主星', '${pan.zhiFuStar.name}@${pan.zhiFuStarAtGong.name}'),
           ],
         ),
       ),
@@ -265,8 +283,10 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
   String _jiaJuDescription(QiMenPan pan) {
     final shiJia = pan.shiJiaJu;
     if (shiJia != null) return shiJia.juDescription;
+    final ju = pan.ju;
+    if (ju is RiJiaJu) return ju.juDescription;
     // 月家 / 年家：从 ju 的 fourZhuEightChar 提取家级简介
-    return '${pan.ju.jia.name}·${pan.ju.juNumber}局';
+    return '${ju.jia.name}·${ju.juNumber}局';
   }
 
   Widget _kv(String k, String v) {
@@ -283,22 +303,34 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
   Widget _buildGrid(QiMenPan pan) {
     // 月家 / 年家：中5寄坤2，且"只寄星不寄门"——中5 不渲染门和神
     final isYueOrNian = pan.ju.jia == QiMenJia.YUE || pan.ju.jia == QiMenJia.NIAN;
+    // 日家：不用八神（占位 ZHI_FU 是无意义的）— 全宫隐藏八神；中5 也无门
+    final isRiJia = pan.ju.jia == QiMenJia.RI;
+    // 飞盘家(日/月/年):中宫走"正常宫位渲染"路径(显示九星);
+    // 时家中宫保持"元数据 hub"展示(_buildCenterHub)
+    final isFeipan = isRiJia || isYueOrNian;
 
     final palaceData = _gridOrderedGuas.map((gua) {
       final gong = pan.gongMapper[gua];
-      final hideDoorGod = isYueOrNian && gua == HouTianGua.Center;
-      // GanZhiDrivenQiMenPan 与 ShiJiaQiMen 都已为 9 宫提供 EachGong（中5寄坤2）
+      final isCenter = gua == HouTianGua.Center;
+      // 月年家中5 不渲染门 / 神；日家中5 不渲染门
+      final hideDoor = (isYueOrNian && isCenter) || (isRiJia && isCenter);
+      // 月年家中5 不渲染神;日家全宫不渲染神（不用八神 → 占位无意义）
+      final hideGod = (isYueOrNian && isCenter) || isRiJia;
+      // GanZhiDrivenQiMenPan、ShiJiaQiMen、RiJiaQiMen 都为 9 宫提供 EachGong
       return PalaceData.fromEachGong(
         gong!,
         isYangDun: pan.ju.yinYangDun.isYang,
         geJu: const [],
         marks: [
-          if (pan.zhiFuStarAtGong == gua) '值符',
-          if (pan.zhiShiDoorAtGong == gua) '值使',
+          if (pan.zhiFuStarAtGong == gua)
+            isRiJia ? '日主' : '值符',
+          if (pan.zhiShiDoorAtGong == gua && !isRiJia) '值使',
+          // 日家以休门为纲，将休门宫单独标记
+          if (isRiJia && pan.zhiShiDoorAtGong == gua) '休门纲',
         ],
         xunHeaderGan: TianGan.JIA, // 月年家无旬首；用 JIA 占位
-        showDoor: !hideDoorGod,
-        showGod: !hideDoorGod,
+        showDoor: !hideDoor,
+        showGod: !hideGod,
       );
     }).toList();
 
@@ -307,6 +339,12 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
       child: SmartQiMenGrid(
         palaces: palaceData,
         onPalaceTap: (_) {},
+        // 飞盘家中宫走正常宫位渲染（显示九星）;时家保持元数据 hub
+        // 日家不布三奇六仪 → 干字段全为占位戊,UI 隐藏天地盘干列
+        briefConfig: BriefPalaceConfig(
+          isFeipan: isFeipan,
+          showGan: !isRiJia,
+        ),
       ),
     );
   }
@@ -324,13 +362,17 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             Text('• 时家：转盘排宫，一时辰一局，阴阳遁均用；起局法可选拆补 / 置润 / 茅山 / 阴盘'),
+            Text('• 日家：飞盘 day-count 顺飞，一日一星；以休门为纲、太乙为日主星；'
+                '阴阳遁均用；不布奇仪、不用八神（用黄道黑道喜神贵神，待后续 Phase）'),
             Text('• 月家：飞盘逆飞，恒阴遁；定局法可选粗分（5年一局）/ 细分（10月一局）'),
             Text('• 年家：飞盘逆飞，一年一局，恒阴遁；180 年大三元（1864 起算）'),
             SizedBox(height: 8),
             Text('• 月家 = 年家排盘机制完全一致，仅时间尺度与起局映射不同',
                 style: TextStyle(color: Colors.grey)),
-            Text('• 日家排盘机制独立（无值符值使、不布奇仪），暂未接入',
+            Text('• 日家中5 也填星（与月年家"中5寄坤2"不同）；中5 无门、全盘无八神',
                 style: TextStyle(color: Colors.grey)),
+            Text('• 日家干字段当前为占位（戊），UI 精修待黄道黑道喜神贵神 Phase',
+                style: TextStyle(color: Colors.orange)),
           ],
         ),
       ),

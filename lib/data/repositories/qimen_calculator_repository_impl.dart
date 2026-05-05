@@ -2,6 +2,7 @@ import 'package:common/enums.dart';
 import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/nian_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
+import 'package:qimendunjia/domain/entities/ri_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
@@ -10,6 +11,7 @@ import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/model/gan_zhi_driven_qi_men_pan.dart';
 import 'package:qimendunjia/model/pan_arrange_settings.dart';
+import 'package:qimendunjia/model/ri_jia_qi_men.dart';
 import 'package:qimendunjia/model/shi_jia_qi_men.dart' as model;
 import '../datasources/calculator/qimen_calculator_data_source.dart';
 import '../models/mappers/each_gong_mapper.dart';
@@ -63,7 +65,7 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
         case QiMenJia.NIAN:
           return _arrangeNianJiaPan(ju as NianJiaJu, plateType, settings);
         case QiMenJia.RI:
-          throw UnsupportedJiaArrangeException(ju.jia, settings.arrangeType);
+          return _arrangeRiJiaPan(ju as RiJiaJu, plateType, settings);
       }
     } catch (e) {
       if (e is UnsupportedJiaArrangeException) rethrow;
@@ -198,6 +200,55 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
       isDoorFanYin: false,
       isGanFuYin: false,
       isGanFanYin: false,
+      horseLocation: DiZhi.ZI,
+      panGeJuList: null,
+    );
+  }
+
+  /// 日家排盘：独立排盘器（飞盘 + day-count 顺飞 + 不布奇仪 + 不用八神）
+  ///
+  /// 算法依据：docs/more_qimen/ri_jia_algorithm.md
+  /// - 与时/月/年家结构性不同：不复用 GanZhiDrivenQiMenPan
+  /// - zhiFuStar 占位用太乙、zhiShiDoor 占位用休门（日家以休门为纲）
+  /// - 伏吟反吟语义不适用，全部 false
+  /// - 中5也填星（与时家"天禽寄坤"不同），故 gongMapper 含 9 个键
+  QiMenPan _arrangeRiJiaPan(
+      RiJiaJu ju, PlateType plateType, PanSettings settings) {
+    final modelSettings = PanArrangeSettings(
+      arrangeType: settings.arrangeType,
+      jiGong: settings.jiGong,
+      starMonthTokenType: settings.starMonthTokenType,
+      starFourWeiGongType: settings.starFourWeiGongType,
+      doorFourWeiGongType: settings.doorFourWeiGongType,
+      godWithGongTypeEnum: settings.godWithGongType,
+      ganGongType: settings.ganGongType,
+    );
+
+    final pan = RiJiaQiMen(ju: ju, settings: modelSettings);
+
+    final entityGongMapper = pan.gongMapper.map(
+      (gua, modelGong) => MapEntry(gua, EachGongMapper.fromModel(modelGong)),
+    );
+
+    return QiMenPan(
+      id: 'rijia-${ju.panDateTime.millisecondsSinceEpoch}',
+      panDateTime: ju.panDateTime,
+      ju: ju,
+      plateType: plateType,
+      gongMapper: entityGongMapper,
+      // 占位：日家无值符值使，以休门为纲、太乙为日主星
+      zhiShiDoor: pan.zhiShiDoor,
+      zhiShiDoorAtGong: pan.zhiShiDoorAtGong,
+      zhiFuStar: pan.zhiFuStar,
+      zhiFuStarAtGong: pan.zhiFuStarAtGong,
+      // 日家伏吟反吟语义不适用（无原宫、无三奇六仪）
+      isStarFuYin: false,
+      isStarFanYin: false,
+      isDoorFuYin: false,
+      isDoorFanYin: false,
+      isGanFuYin: false,
+      isGanFanYin: false,
+      // 驿马位：日家可由日支推得（保留时家逻辑可复用）；本期占位
       horseLocation: DiZhi.ZI,
       panGeJuList: null,
     );

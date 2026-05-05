@@ -3,9 +3,11 @@ import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/model/shi_jia_ju.dart';
 import 'package:qimendunjia/utils/nian_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/qi_men_ju_calculator.dart';
+import 'package:qimendunjia/utils/ri_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/yue_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/data/models/mappers/shi_jia_ju_mapper.dart';
 import 'package:qimendunjia/domain/entities/nian_jia_ju.dart';
+import 'package:qimendunjia/domain/entities/ri_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart' as entity;
 
@@ -143,4 +145,22 @@ class NianJiaCalculatorDataSource implements QiMenCalculatorDataSource {
 
   @override
   QiMenJia get supportedJia => QiMenJia.NIAN;
+}
+
+/// 日家奇门计算器数据源
+///
+/// 日家不分拆补/置润；所有 ArrangeType 同映射到此 DataSource。
+/// 日家以"日"为单位起盘，专司择吉用途（详见
+/// `docs/more_qimen/qimen_jia_comparison.md` §一）。
+class RiJiaCalculatorDataSource implements QiMenCalculatorDataSource {
+  @override
+  Future<RiJiaJu> calculate(DateTime dateTime) async {
+    return RiJiaQiMenJuCalculator(dateTime: dateTime).calculate();
+  }
+
+  @override
+  String get name => '日家奇门';
+
+  @override
+  QiMenJia get supportedJia => QiMenJia.RI;
 }

@@ -54,7 +54,7 @@ class ServiceLocator {
     // 计算器数据源（双维 Map：家 × 起局法）
     // 月家：CHAI_BU = 粗分（5年一局，默认）/ ZHI_RUN = 细分（10月一局）。
     // 年家：所有 ArrangeType 同映射到一个 DataSource。
-    // 日家 Phase 2 接入。
+    // 日家：所有 ArrangeType 同映射（不分拆补/置润；以休门为纲）。
     _services[Map<QiMenJia, Map<ArrangeType, QiMenCalculatorDataSource>>] = {
       QiMenJia.SHI: {
         ArrangeType.CHAI_BU: ChaiBuCalculatorDataSource(),
@@ -70,6 +70,9 @@ class ServiceLocator {
       },
       QiMenJia.NIAN: {
         for (final type in ArrangeType.values) type: NianJiaCalculatorDataSource(),
+      },
+      QiMenJia.RI: {
+        for (final type in ArrangeType.values) type: RiJiaCalculatorDataSource(),
       },
     };
 

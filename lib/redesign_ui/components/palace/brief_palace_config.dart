@@ -122,6 +122,13 @@ class BriefPalaceConfig {
   /// 是否是飞盘（默认 false, 即转盘）
   final bool isFeipan;
 
+  /// 是否显示天地盘干（默认 true）
+  ///
+  /// 日家不布三奇六仪，干字段全为占位（戊），UI 上隐藏更清爽。
+  /// 设为 false 时，右侧天地盘干列折叠（rightColWidth = 0），
+  /// 中间列（星 / 门 / 神）享有更多渲染空间。
+  final bool showGan;
+
   /// 宫位主题
   final BriefPalaceTheme theme;
 
@@ -133,6 +140,7 @@ class BriefPalaceConfig {
     this.showWangShuai = false,
     this.showSimpleLayout = false,
     this.isFeipan = false,
+    this.showGan = true,
     this.theme = const BriefPalaceTheme(),
   });
 }

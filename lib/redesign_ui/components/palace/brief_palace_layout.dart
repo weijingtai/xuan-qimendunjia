@@ -75,9 +75,11 @@ class BriefPalaceLayout extends StatelessWidget {
     // 当前宫位是否有寄宫的现象
     final bool withJi =
         data.tianPanJiGanEnum != null || data.diPanJiGanEnum != null;
-    // 右侧 天地盘干 列宽度，根据是否有寄宫而变化
-    double rightColWidth =
-        withJi ? wangShuaiWidgetWidth * 2 : wangShuaiWidgetWidth;
+    // 右侧 天地盘干 列宽度，根据是否有寄宫而变化；
+    // 当 config.showGan == false（如日家）时折叠为 0
+    double rightColWidth = !config.showGan
+        ? 0
+        : (withJi ? wangShuaiWidgetWidth * 2 : wangShuaiWidgetWidth);
     // rightColWidth += 6;
     final double starDoorGodTextBoxWidth = (primaryStyle.fontSize ?? 14) * 2 + 2;
 
