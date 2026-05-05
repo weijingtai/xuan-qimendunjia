@@ -3,6 +3,7 @@ import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 
 import 'base_entity.dart';
 import 'base_ju.dart';
+import 'ri_jia_day_analysis.dart';
 
 /// 日家局实体
 ///
@@ -59,6 +60,12 @@ class RiJiaJu extends Equatable implements Entity, BaseJu {
 
   /// 日干阴阳（决定八门排布方向：阳干顺、阴干逆）
   bool get isYangDayGan => dayJiaZi.gan.yinYang.isYang;
+
+  /// 日级辅助分析(喜神 / 天乙贵人 / 截路空亡 / 五不遇时 / 十二黑黄道)
+  ///
+  /// 算法依据:`docs/日家奇门.md` §3-§7
+  /// 由日柱派生,与排盘(九星 / 八门)分离作为独立的"时辰吉凶"维度。
+  RiJiaDayAnalysis get dayAnalysis => RiJiaDayAnalysis.fromJiaZi(dayJiaZi);
 
   RiJiaJu({
     required this.id,

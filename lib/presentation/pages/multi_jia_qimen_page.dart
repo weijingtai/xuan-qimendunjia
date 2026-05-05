@@ -247,37 +247,94 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Wrap(
-          spacing: 16,
-          runSpacing: 4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _kv('家', pan.ju.jia.name),
-            _kv('盘类型', pan.plateType.name),
-            _kv('局数', _jiaJuDescription(pan)),
-            _kv('阴阳遁', pan.ju.yinYangDun.isYang ? '阳遁' : '阴遁'),
-            if (shiJia != null) ...[
-              _kv('旬首', shiJia.fuTouJiaZi.name),
-              _kv('节气', shiJia.jieQiAt.name),
-            ],
+            Wrap(
+              spacing: 16,
+              runSpacing: 4,
+              children: [
+                _kv('家', pan.ju.jia.name),
+                _kv('盘类型', pan.plateType.name),
+                _kv('局数', _jiaJuDescription(pan)),
+                _kv('阴阳遁', pan.ju.yinYangDun.isYang ? '阳遁' : '阴遁'),
+                if (shiJia != null) ...[
+                  _kv('旬首', shiJia.fuTouJiaZi.name),
+                  _kv('节气', shiJia.jieQiAt.name),
+                ],
+                if (riJia != null) ...[
+                  // 日家专属：日柱 / 节气 / 休门宫 + 距甲子日天数
+                  _kv('日柱', riJia.dayJiaZi.name),
+                  _kv('节气', riJia.jieQiAt.name),
+                  _kv('休门宫',
+                      '${riJia.xiuMenGong.name}${riJia.xiuMenGong.houTianOrder}'),
+                  _kv('距甲子', 'd=${riJia.daysSinceJiaZi}'),
+                ],
+                if (riJia == null)
+                  // 日家无值符 / 值使概念 — 仅在非日家时展示
+                  _kv('值符', '${pan.zhiFuStar.name}@${pan.zhiFuStarAtGong.name}'),
+                if (riJia == null)
+                  _kv('值使',
+                      '${pan.zhiShiDoor.name}@${pan.zhiShiDoorAtGong.name}'),
+                if (riJia != null)
+                  // 日家：以太乙落点为"日主星"、休门为纲
+                  _kv('日主星',
+                      '${pan.zhiFuStar.name}@${pan.zhiFuStarAtGong.name}'),
+              ],
+            ),
+            // 日家神煞 / 时辰吉凶分析(§3-§7)
             if (riJia != null) ...[
-              // 日家专属：日柱 / 节气 / 休门宫 + 距甲子日天数
-              _kv('日柱', riJia.dayJiaZi.name),
-              _kv('节气', riJia.jieQiAt.name),
-              _kv('休门宫', '${riJia.xiuMenGong.name}${riJia.xiuMenGong.houTianOrder}'),
-              _kv('距甲子', 'd=${riJia.daysSinceJiaZi}'),
+              const Divider(height: 16),
+              _buildRiJiaAnalysisRow(riJia),
             ],
-            if (riJia == null)
-              // 日家无值符 / 值使概念 — 仅在非日家时展示
-              _kv('值符', '${pan.zhiFuStar.name}@${pan.zhiFuStarAtGong.name}'),
-            if (riJia == null)
-              _kv('值使', '${pan.zhiShiDoor.name}@${pan.zhiShiDoorAtGong.name}'),
-            if (riJia != null)
-              // 日家：以太乙落点为"日主星"、休门为纲
-              _kv('日主星', '${pan.zhiFuStar.name}@${pan.zhiFuStarAtGong.name}'),
           ],
         ),
       ),
     );
+  }
+
+  /// 日家神煞 / 时辰吉凶分析渲染
+  Widget _buildRiJiaAnalysisRow(RiJiaJu riJia) {
+    final analysis = riJia.dayAnalysis;
+    final xiShen = analysis.xiShenDirection;
+    final tianYi =
+        analysis.tianYiGuiRenZhi.map((z) => '${z.name}时').join('、');
+    final wuBuYu = analysis.wuBuYuShiZhi.map((z) => '${z.name}时').join('、');
+    final jieLu = analysis.jieLuKongWangZhi.map((z) => '${z.name}时').join('、');
+    return Wrap(
+      spacing: 16,
+      runSpacing: 4,
+      children: [
+        _kv('喜神方位', '${xiShen.name}${xiShen.houTianOrder} (${_directionOf(xiShen)})'),
+        _kv('天乙贵人', tianYi),
+        _kv('五不遇时', wuBuYu),
+        _kv('截路空亡', jieLu),
+      ],
+    );
+  }
+
+  /// 后天八卦 → 方位文字
+  String _directionOf(HouTianGua gua) {
+    switch (gua) {
+      case HouTianGua.Kan:
+        return '北';
+      case HouTianGua.Gen:
+        return '东北';
+      case HouTianGua.Zhen:
+        return '东';
+      case HouTianGua.Xun:
+        return '东南';
+      case HouTianGua.Li:
+        return '南';
+      case HouTianGua.Kun:
+        return '西南';
+      case HouTianGua.Dui:
+        return '西';
+      case HouTianGua.Qian:
+        return '西北';
+      case HouTianGua.Center:
+        return '中';
+    }
   }
 
   String _jiaJuDescription(QiMenPan pan) {
