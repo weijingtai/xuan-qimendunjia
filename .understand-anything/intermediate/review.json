@@ -1,0 +1,42 @@
+{
+  "issues": [],
+  "warnings": [
+    "Node 'file:cell-design.html' has no edges (orphan)",
+    "Node 'document:CHANGELOG.md' has no edges (orphan)",
+    "Node 'config:devtools_options.yaml' has no edges (orphan)",
+    "Node 'document:docs/previous_archived/日家伪时家.md' has no edges (orphan)",
+    "Node 'document:docs/previous_archived/日家奇门.md' has no edges (orphan)",
+    "Node 'pipeline:example/run_web.sh' has no edges (orphan)",
+    "Node 'file:index.html' has no edges (orphan)",
+    "Node 'config:test/data/ten_gan_ke_ying_final_v1.json' has no edges (orphan)",
+    "Node 'document:说明文档.md' has no edges (orphan)"
+  ],
+  "stats": {
+    "totalNodes": 1116,
+    "totalEdges": 3478,
+    "totalLayers": 12,
+    "tourSteps": 5,
+    "nodeTypes": {
+      "document": 49,
+      "config": 7,
+      "file": 151,
+      "class": 228,
+      "function": 680,
+      "pipeline": 1
+    },
+    "edgeTypes": {
+      "contains": 883,
+      "imports": 591,
+      "related": 1370,
+      "tested_by": 61,
+      "documents": 573
+    },
+    "fileCategories": {
+      "docs": 49,
+      "config": 7,
+      "code": 151,
+      "script": 1
+    },
+    "filesAnalyzed": 208
+  }
+}

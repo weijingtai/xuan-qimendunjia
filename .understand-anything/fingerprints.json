@@ -1,0 +1,834 @@
+{
+  "AI_README.md": {
+    "hash": "80b681ae48d1160a193ffe77a20d6f6964014e2749addc46675c907a34f9e64e",
+    "language": "markdown"
+  },
+  "analysis_options.yaml": {
+    "hash": "df692318073ecc5f3b8a759a1f9338eb21995900d3c2bc1fbcd2c7780a1c7c6e",
+    "language": "yaml"
+  },
+  "ARCHITECTURE.md": {
+    "hash": "d45b90fc2382dbef7813b7556ab711adcd3d333889736a06edf549baf91aa448",
+    "language": "markdown"
+  },
+  "build.yaml": {
+    "hash": "53f5b2402e269fd599f0b035c9e00536a39b6a5bdc6e6ef424c334c029f64363",
+    "language": "yaml"
+  },
+  "cell-design.html": {
+    "hash": "7943c6adc6f008f30eeaead45f1503bd7c4c6e9fefe4ffa740e2922cb20e41ab",
+    "language": "html"
+  },
+  "CHANGELOG.md": {
+    "hash": "3790c391cc0632af71ae53941e38940072042e23a8649eee2898e939804a918a",
+    "language": "markdown"
+  },
+  "devtools_options.yaml": {
+    "hash": "e8ba6877169885107d577db47d3e9eb10b32b7aded5959dfc52cae8022a5de84",
+    "language": "yaml"
+  },
+  "docs/ai/board-protocol.md": {
+    "hash": "590e4e640792d935378a196dd8c45828a8e31081af98d9b502db3bc4eaed19b0",
+    "language": "markdown"
+  },
+  "docs/ai/code-style.md": {
+    "hash": "f394142f57bc768835f84ddb0c65e3c0e61b270cbee3159255fdd46b47d85636",
+    "language": "markdown"
+  },
+  "docs/ai/CONSTITUTION.md": {
+    "hash": "15a14e9716c22afe7ba41062658275cac86b19e7c50b1714d2e6b6baede242bb",
+    "language": "markdown"
+  },
+  "docs/ai/delivery-pipeline.md": {
+    "hash": "ed7e11220bd88352b7312feb4b61e650507408345ba4852749570b22efd55436",
+    "language": "markdown"
+  },
+  "docs/ai/directory-structure.md": {
+    "hash": "6f41515476fb4c4a417d2fbfa292679a519b69acfd0425940d2b11195eb06120",
+    "language": "markdown"
+  },
+  "docs/ai/doc-standards.md": {
+    "hash": "e85e403f5bffca5f1796d824781c4f56110451eedfbfef8824cacdff831505c4",
+    "language": "markdown"
+  },
+  "docs/ai/git-rules.md": {
+    "hash": "5db3da9b04d936f14aa74fec83bafd21c91fddc44d83b7d973695f69aacc2c85",
+    "language": "markdown"
+  },
+  "docs/ai/glossary.md": {
+    "hash": "094a56d940bf2ca540397239c41a419b7701de3bc4ea3820ae281e509508c67b",
+    "language": "markdown"
+  },
+  "docs/ai/phases.md": {
+    "hash": "3e1db247b3982d556a12b846735a2118d2a11711a14c4b0d7a76f6e3aa964535",
+    "language": "markdown"
+  },
+  "docs/ai/principles.md": {
+    "hash": "efb0627f67cf4dbaf2b10a9a8bc836e25e080a7418fca67348d939044c1d3cab",
+    "language": "markdown"
+  },
+  "docs/ai/project-context-guide.md": {
+    "hash": "6dbd20a8af9469a49181e7040426a661f6be2b922cf7ad738b14ad16b4cf1dfd",
+    "language": "markdown"
+  },
+  "docs/ai/toolchain.md": {
+    "hash": "58c796e7f0ed8048269614b5415ddf28246fa217ea33eebeb3a581ea8fea55d0",
+    "language": "markdown"
+  },
+  "docs/board/PROGRESS.md": {
+    "hash": "a8b1c75867c0fbeec8add1c3f9b2f4ba4e4a111467f0470de4f796c2337b1aac",
+    "language": "markdown"
+  },
+  "docs/board/TASKS.md": {
+    "hash": "87b491751e51acabcf94dffe56d571c15a58d3b07efab9f2898794fa2f12f061",
+    "language": "markdown"
+  },
+  "docs/ONBOARDING.md": {
+    "hash": "f174d7f7fdb35d8a5ea29d4802eddc46d5bf36728d82c0f5a923bd7b34993a6a",
+    "language": "markdown"
+  },
+  "docs/Plans.md": {
+    "hash": "3089c64e7aea7a0d351a74058064a49aeb1e1738b6ef7e9b78c33ebafedde99b",
+    "language": "markdown"
+  },
+  "docs/previous_archived/claude/code_review.md": {
+    "hash": "aeb29ccd761c5c2aaa239d843495b97b00f530624bf8da901404637f43e23b0f",
+    "language": "markdown"
+  },
+  "docs/previous_archived/IMPLEMENTATION_COMPLETE.md": {
+    "hash": "f17d8a3955a845316cf23715e3029a63dbdfa0506ce38fb8294cdf820c040b1e",
+    "language": "markdown"
+  },
+  "docs/previous_archived/IMPLEMENTATION_GUIDE.md": {
+    "hash": "f4e59b775133fe770134a2cd56018bc6d1fea9115a08b27c4d7ffecabc008639",
+    "language": "markdown"
+  },
+  "docs/previous_archived/IMPLEMENTATION_PROGRESS.md": {
+    "hash": "04772e2ca6403ea6ae8562289ad096749fbd545e5f7f5de21dfe3f6e5b4ff7a0",
+    "language": "markdown"
+  },
+  "docs/previous_archived/integrate_ai/PRDs_v1.md": {
+    "hash": "5192696fcc196e134ed5bbe1391fe10a601e426969eca5a19efd2d90c7e30a09",
+    "language": "markdown"
+  },
+  "docs/previous_archived/integrate_ai/tasks_v1.md": {
+    "hash": "7dcfa4c144016fa0cb3d36cbaf3b01e358467ad837810e6e507651ae728f1982",
+    "language": "markdown"
+  },
+  "docs/previous_archived/more_qimen/extra_hour_plans.md": {
+    "hash": "0e49851d60b85a969fe2a70bc0f0edd959702b916e805817e8a02689cc696ceb",
+    "language": "markdown"
+  },
+  "docs/previous_archived/more_qimen/extra_hour_tasks.md": {
+    "hash": "3ddf13f71178a075aecc1bdbced31cbf47d67f2c1009917ae48e2e2b50f499ed",
+    "language": "markdown"
+  },
+  "docs/previous_archived/more_qimen/nian_jia_algorithm.md": {
+    "hash": "cbad7058ae69b8e687c953dbc60756d96306cb22945ffd9905264fb8566e5915",
+    "language": "markdown"
+  },
+  "docs/previous_archived/more_qimen/nian_jia_tasks.md": {
+    "hash": "7c06011633c276fe183145d0bfb8d3548efc17a57979f5cd9aa2c7362cf14960",
+    "language": "markdown"
+  },
+  "docs/previous_archived/more_qimen/qimen_jia_comparison.md": {
+    "hash": "e6a1edd82b8e65c16fbbabce4fdb5596ffc609fc036d76e7e1b3d39c9d5cdcc9",
+    "language": "markdown"
+  },
+  "docs/previous_archived/more_qimen/ri_jia_algorithm.md": {
+    "hash": "02249e743fc68093a8cce137287d4a62980ffb807bf1c4cc1e69a6565a5f9998",
+    "language": "markdown"
+  },
+  "docs/previous_archived/more_qimen/ri_jia_tasks.md": {
+    "hash": "2e30699f5a2d92b9d663d30fd6d0a9c9b7303e90a88a87d2c574e2cda0a3028b",
+    "language": "markdown"
+  },
+  "docs/previous_archived/more_qimen/yue_jia_algorithm.md": {
+    "hash": "51809eff6ec68e1ab7d39bdb46a640b852cb34291daf2a9d3946f4a41170cbc7",
+    "language": "markdown"
+  },
+  "docs/previous_archived/more_qimen/yue_jia_tasks.md": {
+    "hash": "4a3bd049b2626e210aedadafc60378f3c3ba13d261a63b67e4515d786bf7aa06",
+    "language": "markdown"
+  },
+  "docs/previous_archived/old_ui_layout/layout_report.md": {
+    "hash": "54c68a8bec2e1e7bf3c66191e79982f58d5329c8f8ca3203fa1eac5738ca00a9",
+    "language": "markdown"
+  },
+  "docs/previous_archived/PRDs.md": {
+    "hash": "573176faeef35e59d5bc1c8eb04827f16a4b966991515dc6fd62d15d88ee8d2d",
+    "language": "markdown"
+  },
+  "docs/previous_archived/REFACTORING_PLAN.md": {
+    "hash": "d019c9bca89abae04c81edfa5f6ef712e76e39478c1b28b4b8f1d80dfce92bea",
+    "language": "markdown"
+  },
+  "docs/previous_archived/REFACTORING_SUMMARY.md": {
+    "hash": "5427330ffab2de280ac2b55d2fbeedcf83727571fafe907fe302fd700ba0e26e",
+    "language": "markdown"
+  },
+  "docs/previous_archived/日家伪时家.md": {
+    "hash": "1a97167c009c9cbe34052cb492607fa154faa33492b18ef80d3ac177fd873ead",
+    "language": "markdown"
+  },
+  "docs/previous_archived/日家奇门.md": {
+    "hash": "63d0d3253ba6bfc688969b8b737590436aa94df3f5beb390903186092f96a4d4",
+    "language": "markdown"
+  },
+  "docs/project/README.md": {
+    "hash": "0bb11c0fdde06d976245ffde08d46cdb80d7fd0974d2035ddee3f1828af38f10",
+    "language": "markdown"
+  },
+  "docs/README_zh.md": {
+    "hash": "2ee3b2ca1f6a15d54fb805615355a7a8eb4411ecb880a287bb776e3c041e1d88",
+    "language": "markdown"
+  },
+  "docs/README.md": {
+    "hash": "6cb87db8780d8ab2c4079fdfef51e7066c56a9228b6517883ddf31431b61e2c7",
+    "language": "markdown"
+  },
+  "docs/superpowers/plans/2026-05-08-ai-readme-implementation.md": {
+    "hash": "07f23b4b405868cd9d214258d96266b9260ae63158945a7e4ca3a6f536a56ecb",
+    "language": "markdown"
+  },
+  "docs/superpowers/specs/2026-05-08-ai-governance-v2-design.md": {
+    "hash": "6a1c3469433f41aa53ec8648da362eb7ff75151125769153c46ed9c4b39f6caa",
+    "language": "markdown"
+  },
+  "docs/superpowers/specs/2026-05-08-ai-readme-design.md": {
+    "hash": "f58e8aa45661037203d67334d939eeff0efaa7dc6107d44ed48d3ebf9f52efc3",
+    "language": "markdown"
+  },
+  "example/analysis_options.yaml": {
+    "hash": "e0ea485cfdbc3e12b93efb8679a5ea73ebfe20ea4ca0c473dc594fc2fb274ed5",
+    "language": "yaml"
+  },
+  "example/lib/main.dart": {
+    "hash": "02f9cc91e2bd93c35e21b47d18efbbb79eebd1030bd07c5663d1432ee9f81d54",
+    "language": "dart"
+  },
+  "example/lib/redesign_ui/components/palace/brief_palace_layout.dart": {
+    "hash": "2d4621b097af689761942ef587991cda72ffd176b8bda15f90430b67a24bcebc",
+    "language": "dart"
+  },
+  "example/lib/redesign_ui/core/design_system.dart": {
+    "hash": "6ecc9220559a916b74da45e67bd88bcd4e1a46ed26dee249f9396687f5682aad",
+    "language": "dart"
+  },
+  "example/lib/redesign_ui/demo/smart_grid_demo.dart": {
+    "hash": "b9156cdf7566b3c2f5d9e33ce3a88a22296bff04d2dc0f10ee2c8fcffca4f219",
+    "language": "dart"
+  },
+  "example/lib/redesign_ui/layouts/smart_grid.dart": {
+    "hash": "2d9fabd04e6ef7c617ff739f3b0e2ff330e0b0cc25b95d84bd705210ac6304f7",
+    "language": "dart"
+  },
+  "example/pubspec.yaml": {
+    "hash": "3fcdfdfdea6ffd62d13a08383063dd6d7f9fb120785613550a0412ad0491532a",
+    "language": "yaml"
+  },
+  "example/README.md": {
+    "hash": "7984a21ff0af8c0b53c7b55c05f31ab264e5e1437c087bee6666074d91282ca9",
+    "language": "markdown"
+  },
+  "example/run_web.sh": {
+    "hash": "73b53729f7bc58b4204b9f46d073120581db13ca5f556565feacbcb57ace82bb",
+    "language": "shell"
+  },
+  "index.html": {
+    "hash": "20b2971b630ec58d3662a429af6d0fe65437cac555ce57ab8a2392368eb90c34",
+    "language": "html"
+  },
+  "lib/ai/pan_display_config.dart": {
+    "hash": "c538cb159d1aa9c690a2eb333dc95702c5443fadba1ced0eae9febbf0b2fce8b",
+    "language": "dart"
+  },
+  "lib/ai/pan_serializer.dart": {
+    "hash": "ea5dfc33408e0950d5eecbec73538075946b2a84338509cc4ecf29ddba4311f7",
+    "language": "dart"
+  },
+  "lib/ai/qimen_agent_tool.dart": {
+    "hash": "c6fc7eddffecf8b7c06909b314a945b2f7fa914e0c3393699436840fc850171f",
+    "language": "dart"
+  },
+  "lib/ai/qimen_ai_action.dart": {
+    "hash": "827c1a0567696d903e7133311c1205bd2d877de9caedcc8f0974052f69fa8c19",
+    "language": "dart"
+  },
+  "lib/ai/qimen_ai_integration.dart": {
+    "hash": "0145c7145d8a23282b6cd1630077c3bcf4f73b840327e70d1e1fe6c48c80367e",
+    "language": "dart"
+  },
+  "lib/data.dart": {
+    "hash": "47ea7f854be899d6e48f6404ebf376585256e0c3e7629ad8f8d6b7909bfec324",
+    "language": "dart"
+  },
+  "lib/data/datasources/cache_data_source.dart": {
+    "hash": "4c2ee897a6b6455847cf9b8740a2e0d00e4314ee872681cbf264a5029ddd0a40",
+    "language": "dart"
+  },
+  "lib/data/datasources/calculator/qimen_calculator_data_source.dart": {
+    "hash": "b0bfc471e244ba6b95a63633d6a4bae23f86436aabd7ad0efcf8250d2e267382",
+    "language": "dart"
+  },
+  "lib/data/datasources/json_data_source.dart": {
+    "hash": "a647f13c579163da5af292efd9757d8ba721399cb6fce2517ee8a94b54d6f761",
+    "language": "dart"
+  },
+  "lib/data/models/mappers/each_gong_mapper.dart": {
+    "hash": "289f99370e1744122cb9eeab579bea8119632505fc091188efbab746ae7a6e07",
+    "language": "dart"
+  },
+  "lib/data/models/mappers/qimen_pan_mapper.dart": {
+    "hash": "aaa570d2f6bf6cc992c9339f323d2099d7bf7ded97063546bb15b0f40b0aab1a",
+    "language": "dart"
+  },
+  "lib/data/models/mappers/shi_jia_ju_mapper.dart": {
+    "hash": "6c9ea8de048dd04a706c02540ee0f352bed0873e0ffe442632ada815dfbc193d",
+    "language": "dart"
+  },
+  "lib/data/repositories/qimen_calculator_repository_impl.dart": {
+    "hash": "d0026d04fe1a388c081d609a373e8c7e20c3bbf5289461f870d07bbadbd63dd0",
+    "language": "dart"
+  },
+  "lib/data/repositories/qimen_data_repository_impl.dart": {
+    "hash": "3e24f5977b1404d7ec69bd88aac8f0ce2a946867fb397c73b64cc8e77dae1458",
+    "language": "dart"
+  },
+  "lib/di/service_locator.dart": {
+    "hash": "a924b9fec7874a219dfc01a6800058bd0b857bc2ba439f961550c037143048cc",
+    "language": "dart"
+  },
+  "lib/domain/entities/base_entity.dart": {
+    "hash": "e4e5d1a6ad8d7dabaf166f9fe596422866dcb367b56da49bccd2677dfc6af5c9",
+    "language": "dart"
+  },
+  "lib/domain/entities/base_ju.dart": {
+    "hash": "ed56919554482ab19474f5a609652e0a5d6d84791949857ee0b2d596a4bd88b1",
+    "language": "dart"
+  },
+  "lib/domain/entities/each_gong.dart": {
+    "hash": "322475feeef67912e1aa90add19e09ea78304b88a4007e4f96f8a76013f40195",
+    "language": "dart"
+  },
+  "lib/domain/entities/ke_jia_ju.dart": {
+    "hash": "c6f89a90fbc324bb0530a3dc6ca2a1c8ff6cee4a4eec8359d167bcc4f044105f",
+    "language": "dart"
+  },
+  "lib/domain/entities/nian_jia_ju.dart": {
+    "hash": "9e54b856b4e9a42ce11bd3839d04688dbee95cafcf0086e536ff15f71a2ffb3d",
+    "language": "dart"
+  },
+  "lib/domain/entities/qi_men_star.dart": {
+    "hash": "0d26200a7f9cfc10c286fb1628225b1e60731f5d412b76c641a44edc7dac0bd2",
+    "language": "dart"
+  },
+  "lib/domain/entities/qimen_pan.dart": {
+    "hash": "ab5e53805240642c318bea4ed769852cbc08c6c11f4a3281469e2ec3c7bc40d5",
+    "language": "dart"
+  },
+  "lib/domain/entities/ri_jia_day_analysis.dart": {
+    "hash": "faa1450927a76bc8a0fa4e7ae5eb450ef9db87fff00f50edf84e8d3c14b4f9cb",
+    "language": "dart"
+  },
+  "lib/domain/entities/ri_jia_ju.dart": {
+    "hash": "e8901e6bffa1245d4ed98984a984692d128d2174f3f440eeaacb8f517b92d2fe",
+    "language": "dart"
+  },
+  "lib/domain/entities/san_yuan_type.dart": {
+    "hash": "faed4410f8cb04d1e4e690564c6c51027d31dd60b000dcf34a78ecce719091e8",
+    "language": "dart"
+  },
+  "lib/domain/entities/shi_jia_ju.dart": {
+    "hash": "a6a989d42ea48b647976825f1840719f769d564052b28a659337eb1ba86ec931",
+    "language": "dart"
+  },
+  "lib/domain/entities/yue_jia_ju.dart": {
+    "hash": "fbb0e2bfeb3f374330b94c796e84d20ef6fd0cf9a8280a1f661755797e62d796",
+    "language": "dart"
+  },
+  "lib/domain/repositories/qimen_calculator_repository.dart": {
+    "hash": "bd0d6395ca00986a7d1ff48166db00107683acd3963e2fee2575f190a06fa929",
+    "language": "dart"
+  },
+  "lib/domain/repositories/qimen_data_repository.dart": {
+    "hash": "006826e3e9a42ee14239d955c0b4c462e062e67a99a0a5ae9d0d6f3d29f5b465",
+    "language": "dart"
+  },
+  "lib/domain/usecases/arrange_pan_usecase.dart": {
+    "hash": "2e43cc1a6f904be796df059c775b93b2827141287e1437d1bb06760b872951df",
+    "language": "dart"
+  },
+  "lib/domain/usecases/base_usecase.dart": {
+    "hash": "908fbacb7b11c91feaac967f8588a08434d750d576046e86f82e280993239831",
+    "language": "dart"
+  },
+  "lib/domain/usecases/calculate_ju_usecase.dart": {
+    "hash": "2b6dd60ef7d7ef5ba13b0bad120238d3675c3e44af5dcc97cae1d2b9684971d4",
+    "language": "dart"
+  },
+  "lib/domain/usecases/select_gong_usecase.dart": {
+    "hash": "ded6384545a839ce44f68cc6f88fd2dfb597dd5b675608f10ee6468f44e1cf9c",
+    "language": "dart"
+  },
+  "lib/enums/enum_arrange_plate_type.dart": {
+    "hash": "9566a425d3966f601dea1fd356a001c059c2f6b6cd1b8da5319fe5309aa02c47",
+    "language": "dart"
+  },
+  "lib/enums/enum_eight_door.dart": {
+    "hash": "39a028af042794f5a7ac4c9996ea2843659a07ffc5dad0282de1d4a69e7aba7f",
+    "language": "dart"
+  },
+  "lib/enums/enum_eight_gods.dart": {
+    "hash": "e54364abf53a28ef9dfd348eb096499bde570af4dd70b5694045ce18c6b0c1e7",
+    "language": "dart"
+  },
+  "lib/enums/enum_fu_fan_yin.dart": {
+    "hash": "6dff4a2bb434f136efc5c273548ff51769cc216835564552ad309609d07f52ed",
+    "language": "dart"
+  },
+  "lib/enums/enum_fu_tou_scheme.dart": {
+    "hash": "a7a47144f9bd7e344f51cadd17746624aa0b7c19e6a02d1dcf08512b24da23a9",
+    "language": "dart"
+  },
+  "lib/enums/enum_ke_scheme.dart": {
+    "hash": "6162cf34e23f3741724878e9852fc13c6ab83a6a3a7e8702de7a509b492c4560",
+    "language": "dart"
+  },
+  "lib/enums/enum_most_popular_ge_ju.dart": {
+    "hash": "a080186c152b5bcaf02a79d3dda0bd28264ce8021a516a0f9e934b89016a22d2",
+    "language": "dart"
+  },
+  "lib/enums/enum_nine_stars.dart": {
+    "hash": "2da21d6193ad3feff10b7b6c18bbab60d162682ac43e0906b0d3a02e5fe245c7",
+    "language": "dart"
+  },
+  "lib/enums/enum_qi_men_jia.dart": {
+    "hash": "95f141dc6cd93612e9d7a9fe215ab04594083cc2030d7e29ce319c02de03ac13",
+    "language": "dart"
+  },
+  "lib/enums/enum_ri_jia_huang_dao.dart": {
+    "hash": "2e8903156e8056be534f1f603b10cd3b8c33095e9d979d4d3a3e1242121ee623",
+    "language": "dart"
+  },
+  "lib/enums/enum_ri_jia_stars.dart": {
+    "hash": "618686d1e31279a6cc67dad0a52de41d62574b1feb31888d055c10761ad952cf",
+    "language": "dart"
+  },
+  "lib/enums/enum_san_zha_wu_jia.dart": {
+    "hash": "0da96783272b1df3cbefa06de248d93ec76e3b7f29722121455a09eb645d232c",
+    "language": "dart"
+  },
+  "lib/enums/enum_six_bing_ge_ju.dart": {
+    "hash": "41abe47014643e33b727f4cdba2080f725cc3c3199a8f74977ea51d0dd5b5cbd",
+    "language": "dart"
+  },
+  "lib/enums/enum_six_geng_ge_ju.dart": {
+    "hash": "40355a06c060d7553aa8e88613515464cc66b8eb6250361403c7317945ef4ee5",
+    "language": "dart"
+  },
+  "lib/enums/enum_six_jia.dart": {
+    "hash": "b9eafee2eadab63611978ba58ad3493be964f72670cffc121154cbf534d5dc19",
+    "language": "dart"
+  },
+  "lib/enums/enum_three_yuan.dart": {
+    "hash": "6f8797294197ec8f2f2cda943951cfebbc4131e0124da6493170cd7ae023463d",
+    "language": "dart"
+  },
+  "lib/enums/enum_zhi_run_type.dart": {
+    "hash": "c2fa5e9be89e49cfd0bc9979f4b74c308f2c13eb45e7565f220debc302c90fae",
+    "language": "dart"
+  },
+  "lib/enums/nine_dun.dart": {
+    "hash": "e2d348d4bc40c90fe5dca6df18e4f98949fa1073dd2e414d5311850033684e9f",
+    "language": "dart"
+  },
+  "lib/main.dart": {
+    "hash": "db37a290ca4e366fec14440cb66b65ac91654342ef61914eee21a9c8882dd12d",
+    "language": "dart"
+  },
+  "lib/model/base_ten_gan_ke_ying.dart": {
+    "hash": "f40ff309b215acdd49e515f1e6b9857a3940e2aa680ed9c1f53f97feeb727a5a",
+    "language": "dart"
+  },
+  "lib/model/base_ten_gan_ke_ying.g.dart": {
+    "hash": "ee30fafbff4e21cdfb19343f8912f87e42eb2aea04e0ef85656e03054d91996a",
+    "language": "dart"
+  },
+  "lib/model/ConstantQiMenNineGongDataClass.dart": {
+    "hash": "eb5791770f468181c2200c6232fbf4a039a4467621e21d21f9f12a3335ac3767",
+    "language": "dart"
+  },
+  "lib/model/door_star_ke_ying.dart": {
+    "hash": "bcfdb0b85a3fa48895c125b0a1eb7f28e7f242dc21380cf6ba93c619ec316ced",
+    "language": "dart"
+  },
+  "lib/model/door_star_ke_ying.g.dart": {
+    "hash": "360b36d836ef5d2bc14b30f63bba8459d59ca23baad181679ffded8d222823a6",
+    "language": "dart"
+  },
+  "lib/model/each_gong_explain.dart": {
+    "hash": "22ba453bfd50f788bef726ee5207f4dfcb8ad3d470a9f20d260eef2eebb9b0e0",
+    "language": "dart"
+  },
+  "lib/model/each_gong_ge_ju.dart": {
+    "hash": "0e5fc9d8cc9706a6e8cf905d188ea0d4356b4bcf7a7b06ecccd0dcc5051f3c18",
+    "language": "dart"
+  },
+  "lib/model/each_gong_wang_shuai.dart": {
+    "hash": "61bbffe4806819ad615e3a51363b7f7e246bedd196ee6c25d14808b630079415",
+    "language": "dart"
+  },
+  "lib/model/each_gong.dart": {
+    "hash": "6f9d9a4a528c076461497ca7bdbb076565664de4ced29fcc237adf08fe2cd13d",
+    "language": "dart"
+  },
+  "lib/model/eight_door_ke_ying.dart": {
+    "hash": "0f48621c048b994533906ad708628367c7b91da98a977acb2c6c16a901243def",
+    "language": "dart"
+  },
+  "lib/model/eight_door_ke_ying.g.dart": {
+    "hash": "cdb049235cc8905137f8f9ccaf3ac2941574a126c003cc26d7c49d7fb930aaec",
+    "language": "dart"
+  },
+  "lib/model/gan_zhi_driven_qi_men_pan.dart": {
+    "hash": "cf8316076df8b11eac62ff563781cba5ab57f89cbf323085ed90f9608f275559",
+    "language": "dart"
+  },
+  "lib/model/ke_jia_qi_men_pan.dart": {
+    "hash": "e2fcd42e07b8706fe95222117a49b0340d7acd692b0552fdfe75067616c0a7c0",
+    "language": "dart"
+  },
+  "lib/model/pan_arrange_settings.dart": {
+    "hash": "05b200eacea523af19d9b6508816431c34585fc9cb100ca76488e828263d82ce",
+    "language": "dart"
+  },
+  "lib/model/qi_yi_ru_gong.dart": {
+    "hash": "51b8da9e244dc1c60828fa6c2828cfe87b3636e584a7e24823e360f8db8d8e58",
+    "language": "dart"
+  },
+  "lib/model/qi_yi_ru_gong.g.dart": {
+    "hash": "f79591b8ad2eeea16043cf5fa573ef7807cd36f5c01ee24e240c9bc5bad8056f",
+    "language": "dart"
+  },
+  "lib/model/ri_jia_qi_men.dart": {
+    "hash": "7d465f440d4321ba0c75eb8c9716501e4b10a76c0c83552184f80ff65a87956b",
+    "language": "dart"
+  },
+  "lib/model/shen_ke_qi_men_pan.dart": {
+    "hash": "491b070ac752dee3bef4fff65ff30b45d38c7448773d429ec2c1bce5348e7f73",
+    "language": "dart"
+  },
+  "lib/model/shi_jia_ju.dart": {
+    "hash": "0958957cd126e09221d58fb7c1035fb36c9aabc4931dea3b47a00726dc6c970f",
+    "language": "dart"
+  },
+  "lib/model/shi_jia_qi_men.dart": {
+    "hash": "a2e6ad3dfb0e9f00d2e3cdd653c3582f52f307026bc930e6f2fe6a52e9b900d0",
+    "language": "dart"
+  },
+  "lib/model/ten_gan_ke_ying_ge_ju.dart": {
+    "hash": "06910a6a2fb38263cacfd2af45cd5fedf5708246dc951f8865e2ae369b0ace99",
+    "language": "dart"
+  },
+  "lib/model/ten_gan_ke_ying_ge_ju.g.dart": {
+    "hash": "f0c9a3d540ccc0d962a16d9039b8e9ba9ee5d982f27fabb3667a62610b243d20",
+    "language": "dart"
+  },
+  "lib/model/ten_gan_ke_ying_zhu.dart": {
+    "hash": "9a595b064f54497831c67be598d6c1eb97242cdd933e13dcc9869cc1908717a1",
+    "language": "dart"
+  },
+  "lib/model/ten_gan_ke_ying_zhu.g.dart": {
+    "hash": "9569caf17f3d78b97cbe8f2bb4473f8511a5fb71d35df3cd069cc92b3c257151",
+    "language": "dart"
+  },
+  "lib/model/ten_gan_ke_ying.dart": {
+    "hash": "902acc4e6c45d2859089f91904b947c57e51d54c003f807514211de9138ff2e6",
+    "language": "dart"
+  },
+  "lib/model/ten_gan_ke_ying.g.dart": {
+    "hash": "59808ace8a413603c77c8faa16857dbd9e584c29345086fe42d864a37ce1e22b",
+    "language": "dart"
+  },
+  "lib/navigator.dart": {
+    "hash": "4cbb80582a90162476a6eb2da99349ffb48634e956f9a0207639f3615e94ea8c",
+    "language": "dart"
+  },
+  "lib/pages/beatiful_page.dart": {
+    "hash": "a301c3b19444feab6233532a428934953b66fe9c30bb85170ceaf1a67e4af1e6",
+    "language": "dart"
+  },
+  "lib/pages/primary_page.bak.dart": {
+    "hash": "db259bd2a5459fe5296591ff06c10aca9beb6371afecc79331bac6ab8282315e",
+    "language": "dart"
+  },
+  "lib/pages/primary_page.dart": {
+    "hash": "970c6afc705b976d96c6d2b67b55cec06fce810df48fd888d873aa88ca0c9f09",
+    "language": "dart"
+  },
+  "lib/pages/scalable_beatiful_page.dart": {
+    "hash": "16c0dddc999dd0eafb025839fa37db8ab8dc74d654c4a04ee10e76b013c8e672",
+    "language": "dart"
+  },
+  "lib/pages/scalable_shi_jia_qi_men_view_page.dart": {
+    "hash": "09e55ab4a89ad838be39b802acfe4d64ddb8ee9799ffbd0a8c543ead9321ee4a",
+    "language": "dart"
+  },
+  "lib/pages/shi_jia_qi_men_view_model.dart": {
+    "hash": "2a69bab04894401a578e87b2ecb646b87d7e4ef7058701dba23f41cc692ae012",
+    "language": "dart"
+  },
+  "lib/pages/shi_jia_qi_men_view_page.dart": {
+    "hash": "66d752e91cdbcb4d238cddb6df4983b359e858fe8e04a05599cc4f73f5a5e1e7",
+    "language": "dart"
+  },
+  "lib/presentation/pages/multi_jia_qimen_page.dart": {
+    "hash": "6c7b76fe0ce02673d568c7ade367350e171600c5b3623b81c7cc89a66f2f749b",
+    "language": "dart"
+  },
+  "lib/presentation/pages/qimen_mvvm_page.dart": {
+    "hash": "2740c4efaffd451354134bc0845cc0f4372b514c9978d1b9dcce4b84c30df08e",
+    "language": "dart"
+  },
+  "lib/presentation/viewmodels/qimen_viewmodel.dart": {
+    "hash": "12d5168a8c599789ca22a7eb22b09b1fea16764d3a3c09c828d3479d85894c5d",
+    "language": "dart"
+  },
+  "lib/qimendunjia.dart": {
+    "hash": "8fb3453bd8efa3485145885488303656d22da4b86460e42bcf2328590f446369",
+    "language": "dart"
+  },
+  "lib/redesign_ui/components/palace/brief_palace_config.dart": {
+    "hash": "080c29d21b22cf25633bf164794418872a05dadaef5bb425e5b77034a76f10ba",
+    "language": "dart"
+  },
+  "lib/redesign_ui/components/palace/brief_palace_layout.dart": {
+    "hash": "39b8259410f635cd800ebdc6a5e611f9867b40ac265d9bf037ac28c48d570ba7",
+    "language": "dart"
+  },
+  "lib/redesign_ui/core/design_system.dart": {
+    "hash": "6ecc9220559a916b74da45e67bd88bcd4e1a46ed26dee249f9396687f5682aad",
+    "language": "dart"
+  },
+  "lib/redesign_ui/core/qi_men_star_theme.dart": {
+    "hash": "fa460ff415a769023791fcb6a46f7b7ab00dc24e8a7b83bc0a07f8df69ec1fc8",
+    "language": "dart"
+  },
+  "lib/redesign_ui/demo/smart_grid_demo.dart": {
+    "hash": "a07cdebefe3362a0cfff3a9dcedd09fbf2b59b56f6250c6d5df0ef76b468be7e",
+    "language": "dart"
+  },
+  "lib/redesign_ui/layouts/smart_grid.dart": {
+    "hash": "cae1703f127be52e9807b903c0ccc2e22825c79d10eb82a555e52ba869fcd7a0",
+    "language": "dart"
+  },
+  "lib/ui_models/ui_each_gong_model.dart": {
+    "hash": "1795998d36de90f3b5bf51de58bc2b8cea81da4aa9dff6fa5b9e3e11e64c2eca",
+    "language": "dart"
+  },
+  "lib/ui_models/ui_pan_meta_model.dart": {
+    "hash": "9460e83e2570c089e77fdd283e9156ac8440b7459f19fedb020dad93bdd5194a",
+    "language": "dart"
+  },
+  "lib/ui_models/ui_ten_gan_key_ying_ge_ju.dart": {
+    "hash": "eefc5c04f6b05dca65edfaad7e328b9ef749975843597209f2bf18901f20aa9c",
+    "language": "dart"
+  },
+  "lib/utils/arrange_plate_utils.dart": {
+    "hash": "23ccfdf370f6d373623622678e456823670cc83398f28e5b8653d873b21e0a5c",
+    "language": "dart"
+  },
+  "lib/utils/change_sequence_utils.dart": {
+    "hash": "bc6dc60f7af50fd520a034255d44953a41b6623be2b552f160f1a4f59711b9d2",
+    "language": "dart"
+  },
+  "lib/utils/constant_resources_of_qi_men.dart": {
+    "hash": "c8e8fadd00f4a5746ad6925cf8b8f575c61c053535c77ec6838977a141fe1d30",
+    "language": "dart"
+  },
+  "lib/utils/constant_ui_resources_of_qi_men.dart": {
+    "hash": "e10ed4a950ea9c32b956fc5e3b31ec4c24231bfbf98fc9d6c67d2e370eb54542",
+    "language": "dart"
+  },
+  "lib/utils/datetime_jie_qi.dart": {
+    "hash": "0de09e3c9de3ae391098a49e21f694c6fbca0de7f33d33cc8029b59350263aa9",
+    "language": "dart"
+  },
+  "lib/utils/ke_jia_qi_men_ju_calculator.dart": {
+    "hash": "3986275ea5c75d955af99d0ba63f813e65d3b1290c07e7e20e29d8602d8a0cfa",
+    "language": "dart"
+  },
+  "lib/utils/nian_jia_qi_men_ju_calculator.dart": {
+    "hash": "182baf32c4438b375a59fc0a26c79b2b2252926b882088463b1c7fca62b1a014",
+    "language": "dart"
+  },
+  "lib/utils/nian_jia_san_yuan_anchor.dart": {
+    "hash": "a91b4699d516e177a7e34335399691a1a05fc9ff4a4b1a7246871d97922ff6c2",
+    "language": "dart"
+  },
+  "lib/utils/nine_yi_utils.dart": {
+    "hash": "c724cdcea04b9d0310dca5c6c39263bd023d216e94a0b47e6930512c1ea41f08",
+    "language": "dart"
+  },
+  "lib/utils/qi_men_ju_calculator.dart": {
+    "hash": "31b80cfcba54004d8379ae207aa50de19a760129cffb365ae0e42aa603d7ab20",
+    "language": "dart"
+  },
+  "lib/utils/read_data_utils.dart": {
+    "hash": "672002680bb9d804c97bf2dacb055e0571c07f38beccac9de3b3366c9d495565",
+    "language": "dart"
+  },
+  "lib/utils/ri_jia_qi_men_ju_calculator.dart": {
+    "hash": "837c0f418c4e4a6a7a4b305715d724c5ed9477ca7c04020cc58dc572cf518932",
+    "language": "dart"
+  },
+  "lib/utils/yue_jia_qi_men_ju_calculator.dart": {
+    "hash": "bcb7850c38a8a8f891d124d63e6f8df0177b52f39ee9c577774c266a94ba63cf",
+    "language": "dart"
+  },
+  "lib/utils/zheng_shou_dong_zhi_list.dart": {
+    "hash": "eebbf388d4914018755db113368383953fbb6bdce2da985c6fd952a94495c039",
+    "language": "dart"
+  },
+  "lib/widgets/BounceDialog.dart": {
+    "hash": "f66f7d668fdd7238816084a385abf4d9c4a599356969d4d95e2aae4d1c6d0e55",
+    "language": "dart"
+  },
+  "lib/widgets/each_gong_widget.dart": {
+    "hash": "d91cb0f704a912d823a2a9a06f4a9339d30423067d6d0ca1d3ecad3e19c867ee",
+    "language": "dart"
+  },
+  "lib/widgets/flowing_text.dart": {
+    "hash": "6462d211b1217309e0c446f082fd72837908e83bb79fe5aa059054bad5111a5b",
+    "language": "dart"
+  },
+  "lib/widgets/gong_widget.dart": {
+    "hash": "a3a69b201f8fd5fb18235b4148f0f343057b5c90cc40a37f855f96df22a97833",
+    "language": "dart"
+  },
+  "lib/widgets/new_each_gong_widget.dart": {
+    "hash": "efd69cecc0fa47101f05824f6ae9dbaf8ed563f6b66878b92ecf77558bd26c44",
+    "language": "dart"
+  },
+  "lib/widgets/OctagonPainter.dart": {
+    "hash": "2791c238806b31eb5ef4daedc28bb733d8520cec16baa62f235924d238d9dcc6",
+    "language": "dart"
+  },
+  "lib/widgets/qi_yi_wang_shuai.dart": {
+    "hash": "8661d91d26db75a5ef55df8fd5d49bde9d53e900bc0f205606781e8d55717383",
+    "language": "dart"
+  },
+  "lib/widgets/QiMenGongContentBackground.dart": {
+    "hash": "3694f193bb958f1e378557092d5c37693d4c57a62716d8a1f8d040dc419b268a",
+    "language": "dart"
+  },
+  "lib/widgets/resizable_gong_widget.dart": {
+    "hash": "e864869e2bc7b57265a22052c025e7bf82dbf204974dcc77eb87da0756543cdb",
+    "language": "dart"
+  },
+  "lib/widgets/season_24_tag.dart": {
+    "hash": "652c5e06d784f6577fa0f82458a15c1a988c37882d749f8b69db011283ca47f3",
+    "language": "dart"
+  },
+  "lib/widgets/ten_gan_ke_ying_ge_ju_detail.dart": {
+    "hash": "a6790738ad7a3d4030b750ff0b5de4a322a7002879159f1e0fd1e4b314dba185",
+    "language": "dart"
+  },
+  "lib/widgets/ten_gan_ke_ying_yin_zhang.dart": {
+    "hash": "9633eb8977fdbeaffc1aef9569419af2084df4c2fa87e1e375290fbe0ffca91b",
+    "language": "dart"
+  },
+  "lib/widgets/wang_shuai_hint_top_down.dart": {
+    "hash": "403c43a069514b1f7e5e7db9bdfa5a7c0123cfd0275e971632bbdf6290bed5c7",
+    "language": "dart"
+  },
+  "lib/widgets/wang_shuai_hint.dart": {
+    "hash": "d4e657e56164b3350abde815d5cf88b76e66c116731fb088aecc28fa7f1d6e82",
+    "language": "dart"
+  },
+  "pubspec.yaml": {
+    "hash": "f14dffd1ef3194d2869a318787f30dc39f78a29764da39270a9c847b7e67e992",
+    "language": "yaml"
+  },
+  "README.md": {
+    "hash": "371b059cc83f3a9c55c6b5702c0105f41b892a581a946b5a1605d33a2a21fce3",
+    "language": "markdown"
+  },
+  "test/data/ten_gan_ke_ying_final_v1.json": {
+    "hash": "3bcc19e10363c46d50b6ea7db4f9e05c0f9af411aefd0a984a78044906230b42",
+    "language": "json"
+  },
+  "test/debug_ke_jia_repro.dart": {
+    "hash": "9d418596ade7e3010a5354381637896876be32bf5801facfa578ef045dc442ca",
+    "language": "dart"
+  },
+  "test/handle_json_data.dart": {
+    "hash": "f7495f87b4d2fa163f7614b2eca7c9eb81c94e2510e3a16aca1c550ed5a2dd96",
+    "language": "dart"
+  },
+  "test/handle_zheng_shou.dart": {
+    "hash": "c116bb874b8773ada8e7803e0755fc6e53f2cfd07749a527c0346c8686a3bf0c",
+    "language": "dart"
+  },
+  "test/qimendunjia_test.dart": {
+    "hash": "31e7a23af1e8ab1280aa9374cca1145649e7d248aea395d979907c9595a6aa9f",
+    "language": "dart"
+  },
+  "test/test_eight_doors_exhaustion.dart": {
+    "hash": "b2e03d496094bd6516a048b9ea6fc8ca26fe91aff38381e4545c0f45e859b4b3",
+    "language": "dart"
+  },
+  "test/test_eight_doors.dart": {
+    "hash": "c5782d900d8be0d3db3b377b23a3ab4016e9fa7430c12c42e279a3dc7d1a2f68",
+    "language": "dart"
+  },
+  "test/test_eight_gods.dart": {
+    "hash": "8722f574c1ed4bb71cb37a846ee6189988ab1bafa511819c7d832a466ef27401",
+    "language": "dart"
+  },
+  "test/test_ke_jia_qi_men.dart": {
+    "hash": "801331c3d097104d0ee6038c1f5a254db552b657aeba7396bf85506b4948a750",
+    "language": "dart"
+  },
+  "test/test_nine_stars.dart": {
+    "hash": "268e0f51ff25123f78447c583250540c195bf6494f3efc1fe85f2a45546d7e46",
+    "language": "dart"
+  },
+  "test/test_nine_yi.dart": {
+    "hash": "b2114ca237c16343e791cb780abdaf2503910f2707839de781797b22fde1437c",
+    "language": "dart"
+  },
+  "test/test_qi_men_ju_calculator.dart": {
+    "hash": "3bf9be656e7f88cc9c60c56885d3dd998245a34627f693cd354478a6aae8af95",
+    "language": "dart"
+  },
+  "test/test_ri_jia_day_analysis.dart": {
+    "hash": "078e09fa4cf146ac5fe0fdef0bfc5f3c3c7fc1b0b42a3e5e65c6b370fc2b5737",
+    "language": "dart"
+  },
+  "test/test_ri_jia_qi_men.dart": {
+    "hash": "12d9fa96a5506d164932f6d6d1385377b01b7c764e0f3d97adfe4b53f0e204dc",
+    "language": "dart"
+  },
+  "test/test_shi_jia_zhuan_pan_qi_men.dart": {
+    "hash": "215005f2a1eb3d1ea7a545ace76eedf87577675450eb9126e9391baf1546f1f9",
+    "language": "dart"
+  },
+  "test/test_yue_jia_qi_men.dart": {
+    "hash": "ea01f75f4c64ea10050bee2dcdea0b8fe5a41ddd16ec68f62df4eb9aedec1e1c",
+    "language": "dart"
+  },
+  "test/utils/test_data.dart": {
+    "hash": "a0277f8e930ba94a2b5c009b9db739e9668451ebb5224ee3bd9356ab432e7fdb",
+    "language": "dart"
+  },
+  "test/utils/test_datetime_jie_qi.dart": {
+    "hash": "f26537564c63cd6bbcd81dcab136878060d8d5b464767434baa163b5c2f2f23e",
+    "language": "dart"
+  },
+  "说明文档.md": {
+    "hash": "22671931868a63b6eb5fc7be90187dafcecb20416d5ec89ef0eac4974d5ff70c",
+    "language": "markdown"
+  }
+}
