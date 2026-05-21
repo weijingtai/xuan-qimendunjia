@@ -1,5 +1,7 @@
 import 'package:common/enums.dart';
 import 'package:qimendunjia/domain/entities/base_ju.dart';
+import 'package:qimendunjia/domain/entities/each_gong.dart' as entity;
+import 'package:qimendunjia/domain/entities/ke_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/nian_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/ri_jia_ju.dart';
@@ -7,11 +9,15 @@ import 'package:qimendunjia/domain/entities/shi_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
+import 'package:qimendunjia/enums/enum_ke_scheme.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/model/gan_zhi_driven_qi_men_pan.dart';
+import 'package:qimendunjia/model/ke_jia_qi_men_pan.dart';
 import 'package:qimendunjia/model/pan_arrange_settings.dart';
 import 'package:qimendunjia/model/ri_jia_qi_men.dart';
+import 'package:qimendunjia/model/shen_ke_qi_men_pan.dart';
 import 'package:qimendunjia/model/shi_jia_qi_men.dart' as model;
 import '../datasources/calculator/qimen_calculator_data_source.dart';
 import '../models/mappers/each_gong_mapper.dart';
@@ -33,6 +39,8 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
     required DateTime dateTime,
     required QiMenJia jia,
     required ArrangeType arrangeType,
+    KeSchemeType? keScheme,
+    FuTouSchemeType? fuTouScheme,
   }) async {
     final familyMap = _calculators[jia];
     final calculator = familyMap?[arrangeType];
@@ -41,6 +49,14 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
     }
 
     try {
+      // 刻家专属：透传 keScheme + fuTouScheme 到 KeJiaCalculatorDataSource
+      if (jia == QiMenJia.KE && calculator is KeJiaCalculatorDataSource) {
+        return await calculator.calculateWithScheme(
+          dateTime,
+          keScheme ?? KeSchemeType.TEN_KE_WU_ZI_JIAN_YUAN,
+          fuTouScheme: fuTouScheme ?? FuTouSchemeType.JIA_JI_FU_TOU,
+        );
+      }
       // DataSource 直接返回 domain 层 BaseJu（时家协变返回 ShiJiaJu）
       return await calculator.calculate(dateTime);
     } catch (e) {
@@ -66,10 +82,13 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
           return _arrangeNianJiaPan(ju as NianJiaJu, plateType, settings);
         case QiMenJia.RI:
           return _arrangeRiJiaPan(ju as RiJiaJu, plateType, settings);
+        case QiMenJia.KE:
+          return _arrangeKeJiaPan(ju as KeJiaJu, plateType, settings);
       }
-    } catch (e) {
+    } catch (e, st) {
       if (e is UnsupportedJiaArrangeException) rethrow;
-      throw QiMenCalculationException('排盘失败: $e');
+      // 透传完整 stack trace 便于排查（特别是非时家路径下的间接异常）
+      throw QiMenCalculationException('排盘失败: $e\n$st');
     }
   }
 
@@ -253,5 +272,95 @@ class QiMenCalculatorRepositoryImpl implements QiMenCalculatorRepository {
       panGeJuList: null,
     );
   }
-}
 
+  /// 刻家排盘：使用独立的 KeJiaQiMenPan 排盘器
+  ///
+  /// 算法依据：
+  /// - 一时辰内分多刻起局；刻制由 `KeJiaJu.keScheme` 决定
+  ///   （十刻五子建元 / 八刻五马遁，UI 可切换）
+  /// - 局数推移：初局 = 时家局；阳顺阴逆（在 KeJiaQiMenJuCalculator 上游已完成）
+  /// - **yinYangDun = 刻干阴阳**
+  /// - 旬首识别：刻干支所属六甲旬
+  ///   * 值符星 = 旬首落宫的本位星
+  ///   * 值使门 = 旬首落宫的本位门
+  ///   * 值符飞至宫 = 刻干在地盘的落宫（刻干 = 甲时改用旬首遁干）
+  ///   * **值使飞至宫 = 刻支后天八卦配宫**（不是时家步距）
+  /// - **八门 path direction**：阳干刻顺时针、阴干刻逆时针
+  /// - 九星 / 八神 / 三奇六仪 行进方向均由 yinYangDun 决定
+  ///
+  /// **神刻方案例外**：当 `ju.keScheme == SHEN_KE_2MIN` 时改走
+  /// [ShenKeQiMenPan]（含中5的1→2→3顺数路径、白虎玄武标准八神序、
+  /// yinYangDun 取自时家节气）。
+  QiMenPan _arrangeKeJiaPan(
+      KeJiaJu ju, PlateType plateType, PanSettings settings) {
+    final modelSettings = PanArrangeSettings(
+      arrangeType: settings.arrangeType,
+      jiGong: settings.jiGong,
+      starMonthTokenType: settings.starMonthTokenType,
+      starFourWeiGongType: settings.starFourWeiGongType,
+      doorFourWeiGongType: settings.doorFourWeiGongType,
+      godWithGongTypeEnum: settings.godWithGongType,
+      ganGongType: settings.ganGongType,
+    );
+
+    final starSet = NineStarsEnum.values.toList()
+      ..sort((a, b) => a.number.compareTo(b.number));
+
+    // 神刻方案走独立排盘器
+    final isShenKe = ju.keScheme == KeSchemeType.SHEN_KE_2MIN;
+    final Map<HouTianGua, entity.EachGong> entityGongMapper;
+    final dynamic zhiShiDoor;
+    final dynamic zhiShiDoorAtGong;
+    final dynamic zhiFuStar;
+    final dynamic zhiFuStarAtGong;
+
+    if (isShenKe) {
+      final pan = ShenKeQiMenPan(
+        ju: ju,
+        starSet: starSet,
+        settings: modelSettings,
+      );
+      entityGongMapper = pan.gongMapper.map(
+        (gua, modelGong) => MapEntry(gua, EachGongMapper.fromModel(modelGong)),
+      );
+      zhiShiDoor = pan.zhiShiDoor;
+      zhiShiDoorAtGong = pan.zhiShiDoorAtGong;
+      zhiFuStar = pan.zhiFuStar;
+      zhiFuStarAtGong = pan.zhiFuStarAtGong;
+    } else {
+      final pan = KeJiaQiMenPan(
+        ju: ju,
+        starSet: starSet,
+        settings: modelSettings,
+      );
+      entityGongMapper = pan.gongMapper.map(
+        (gua, modelGong) => MapEntry(gua, EachGongMapper.fromModel(modelGong)),
+      );
+      zhiShiDoor = pan.zhiShiDoor;
+      zhiShiDoorAtGong = pan.zhiShiDoorAtGong;
+      zhiFuStar = pan.zhiFuStar;
+      zhiFuStarAtGong = pan.zhiFuStarAtGong;
+    }
+
+    return QiMenPan(
+      id: '${isShenKe ? "shenke" : "kejia"}-${ju.panDateTime.millisecondsSinceEpoch}',
+      panDateTime: ju.panDateTime,
+      ju: ju,
+      plateType: plateType,
+      gongMapper: entityGongMapper,
+      zhiShiDoor: zhiShiDoor,
+      zhiShiDoorAtGong: zhiShiDoorAtGong,
+      zhiFuStar: zhiFuStar,
+      zhiFuStarAtGong: zhiFuStarAtGong,
+      // 刻家伏吟反吟判定占位（依赖完整 wangShuai 评估，待评审）
+      isStarFuYin: false,
+      isStarFanYin: false,
+      isDoorFuYin: false,
+      isDoorFanYin: false,
+      isGanFuYin: false,
+      isGanFanYin: false,
+      horseLocation: DiZhi.ZI,
+      panGeJuList: null,
+    );
+  }
+}

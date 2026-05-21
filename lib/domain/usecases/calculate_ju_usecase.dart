@@ -1,4 +1,6 @@
 import '../../enums/enum_arrange_plate_type.dart';
+import '../../enums/enum_fu_tou_scheme.dart';
+import '../../enums/enum_ke_scheme.dart';
 import '../../enums/enum_qi_men_jia.dart';
 import '../entities/base_ju.dart';
 import '../repositories/qimen_calculator_repository.dart';
@@ -10,10 +12,18 @@ class CalculateJuParams {
   final QiMenJia jia;
   final ArrangeType arrangeType;
 
+  /// 刻家专用：刻制方案（仅 [QiMenJia.KE] 生效）
+  final KeSchemeType? keScheme;
+
+  /// 刻家专用：拆补法符头派别（仅 [QiMenJia.KE] 生效）
+  final FuTouSchemeType? fuTouScheme;
+
   const CalculateJuParams({
     required this.dateTime,
     this.jia = QiMenJia.SHI,
     required this.arrangeType,
+    this.keScheme,
+    this.fuTouScheme,
   });
 }
 
@@ -35,6 +45,8 @@ class CalculateJuUseCase extends UseCase<BaseJu, CalculateJuParams> {
         dateTime: params.dateTime,
         jia: params.jia,
         arrangeType: params.arrangeType,
+        keScheme: params.keScheme,
+        fuTouScheme: params.fuTouScheme,
       );
     } catch (e) {
       if (e is QiMenCalculationException) rethrow;

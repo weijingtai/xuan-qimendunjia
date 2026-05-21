@@ -74,6 +74,9 @@ class ServiceLocator {
       QiMenJia.RI: {
         for (final type in ArrangeType.values) type: RiJiaCalculatorDataSource(),
       },
+      QiMenJia.KE: {
+        for (final type in ArrangeType.values) type: KeJiaCalculatorDataSource(),
+      },
     };
 
     // 九星主题（家级配色注册表）

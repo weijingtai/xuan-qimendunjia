@@ -27,8 +27,13 @@ dependencies:
   aura_box: ^1.0.2
 
   provider: ^6.1.5+1
-  common:
-    path: ../xuan-common
+  xuan_common:
+
+    git:
+
+      url: http://xuan:wjt19951215@192.168.0.165:3000/xuan/xuan-common.git
+
+      ref: main
 
   dotlottie_loader: ^0.0.5
   auto_size_text: ^3.0.0

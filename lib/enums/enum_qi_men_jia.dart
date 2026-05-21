@@ -6,7 +6,8 @@ enum QiMenJia {
   NIAN("年家"),
   YUE("月家"),
   RI("日家"),
-  SHI("时家");
+  SHI("时家"),
+  KE("刻家");
 
   final String name;
   const QiMenJia(this.name);

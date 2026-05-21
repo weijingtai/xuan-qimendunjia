@@ -2,9 +2,13 @@ import 'package:common/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:qimendunjia/domain/entities/each_gong.dart';
+import 'package:qimendunjia/domain/entities/ke_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/ri_jia_ju.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
+import 'package:qimendunjia/enums/enum_ke_scheme.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/redesign_ui/components/palace/brief_palace_config.dart';
@@ -28,6 +32,8 @@ class MultiJiaQiMenPage extends StatefulWidget {
 class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
   QiMenJia _jia = QiMenJia.SHI;
   ArrangeType _arrangeType = ArrangeType.CHAI_BU;
+  KeSchemeType _keScheme = KeSchemeType.TEN_KE_WU_ZI_JIAN_YUAN;
+  FuTouSchemeType _fuTouScheme = FuTouSchemeType.JIA_JI_FU_TOU;
   final PlateType _plateType = PlateType.ZHUAN_PAN;
   DateTime _selectedDateTime = DateTime.now();
 
@@ -51,6 +57,8 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
           jia: _jia,
           arrangeType: _arrangeType,
           plateType: _plateType,
+          keScheme: _jia == QiMenJia.KE ? _keScheme : null,
+          fuTouScheme: _jia == QiMenJia.KE ? _fuTouScheme : null,
         );
   }
 
@@ -130,24 +138,29 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
                 const Text('家：', style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: SegmentedButton<QiMenJia>(
-                    segments: const [
-                      ButtonSegment(value: QiMenJia.SHI, label: Text('时家')),
-                      ButtonSegment(value: QiMenJia.RI, label: Text('日家')),
-                      ButtonSegment(value: QiMenJia.YUE, label: Text('月家')),
-                      ButtonSegment(value: QiMenJia.NIAN, label: Text('年家')),
-                    ],
-                    selected: {_jia},
-                    onSelectionChanged: (s) {
-                      setState(() {
-                        _jia = s.first;
-                        // 切换家时重置起局法到默认（CHAI_BU）
-                        // - 时家：CHAI_BU 即拆补法
-                        // - 月家：CHAI_BU 映射到粗分（5年一局）
-                        // - 年家 / 日家：所有 ArrangeType 等价
-                        _arrangeType = ArrangeType.CHAI_BU;
-                      });
-                    },
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SegmentedButton<QiMenJia>(
+                      segments: const [
+                        ButtonSegment(value: QiMenJia.SHI, label: Text('时家')),
+                        ButtonSegment(value: QiMenJia.KE, label: Text('刻家')),
+                        ButtonSegment(value: QiMenJia.RI, label: Text('日家')),
+                        ButtonSegment(value: QiMenJia.YUE, label: Text('月家')),
+                        ButtonSegment(value: QiMenJia.NIAN, label: Text('年家')),
+                      ],
+                      selected: {_jia},
+                      onSelectionChanged: (s) {
+                        setState(() {
+                          _jia = s.first;
+                          // 切换家时重置起局法到默认（CHAI_BU）
+                          // - 时家：CHAI_BU 即拆补法
+                          // - 刻家：所有 ArrangeType 等价（内部固定用拆补法起本时辰初局）
+                          // - 月家：CHAI_BU 映射到粗分（5年一局）
+                          // - 年家 / 日家：所有 ArrangeType 等价
+                          _arrangeType = ArrangeType.CHAI_BU;
+                        });
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -176,6 +189,8 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
                     ? '粗分（5年一局）'
                     : '细分（10月一局）',
               ),
+            if (_jia == QiMenJia.KE) _buildKeSchemeSelector(),
+            if (_jia == QiMenJia.KE) _buildFuTouSchemeSelector(),
             const SizedBox(height: 8),
             // 时间 + 起盘
             Row(
@@ -240,9 +255,72 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
     );
   }
 
+  Widget _buildKeSchemeSelector() {
+    return Row(
+      children: [
+        const Text('刻制：',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(width: 8),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: KeSchemeType.values
+                  .map((s) => Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(s.name),
+                          selected: _keScheme == s,
+                          onSelected: (selected) {
+                            if (selected) {
+                              setState(() => _keScheme = s);
+                            }
+                          },
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFuTouSchemeSelector() {
+    return Row(
+      children: [
+        const Text('符头：',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(width: 8),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: FuTouSchemeType.values
+                  .map((s) => Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(s.name),
+                          selected: _fuTouScheme == s,
+                          onSelected: (selected) {
+                            if (selected) {
+                              setState(() => _fuTouScheme = s);
+                            }
+                          },
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildPanInfoCard(QiMenPan pan) {
     final shiJia = pan.shiJiaJu; // 时家专用 nullable
     final riJia = pan.ju is RiJiaJu ? pan.ju as RiJiaJu : null;
+    final keJia = pan.ju is KeJiaJu ? pan.ju as KeJiaJu : null;
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Padding(
@@ -261,6 +339,17 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
                 if (shiJia != null) ...[
                   _kv('旬首', shiJia.fuTouJiaZi.name),
                   _kv('节气', shiJia.jieQiAt.name),
+                ],
+                if (keJia != null) ...[
+                  // 刻家专属：刻干支 / 刻局序号 / 时辰初局 / 节气 / 符头三元
+                  _kv('时柱', keJia.shiJiaZi.name),
+                  _kv('刻柱', keJia.keJiaZi.name),
+                  _kv('刻制', keJia.keScheme.name),
+                  _kv('刻序', '第${keJia.keIndex}刻 / ${keJia.totalKeCount}'),
+                  _kv('初局', '${keJia.initJuNumber}局'),
+                  _kv('旬首', keJia.fuTouJiaZi.name),
+                  _kv('三元', keJia.atThreeYuan.name),
+                  _kv('节气', keJia.jieQiAt.name),
                 ],
                 if (riJia != null) ...[
                   // 日家专属：日柱 / 节气 / 休门宫 + 距甲子日天数
@@ -341,6 +430,7 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
     final shiJia = pan.shiJiaJu;
     if (shiJia != null) return shiJia.juDescription;
     final ju = pan.ju;
+    if (ju is KeJiaJu) return ju.juDescription;
     if (ju is RiJiaJu) return ju.juDescription;
     // 月家 / 年家：从 ju 的 fourZhuEightChar 提取家级简介
     return '${ju.jia.name}·${ju.juNumber}局';
@@ -357,6 +447,21 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
     );
   }
 
+  /// 构造时家 / 刻家中5的占位 EachGong
+  ///
+  /// ShiJiaQiMen 排盘内部跳过中5 EachGong（中5只通过寄宫处理），
+  /// 故 [QiMenPan.gongMapper] 在中5位置为 null。
+  /// redesign UI 的 `brief_palace_layout` 在 `isCenter && !isFeipan` 时走
+  /// `_buildCenterHub` 元数据 hub 渲染（仅读 gongEnum / marks / geJu），
+  /// 不读星/门/干/神字段，故全部从已有宫位复用是安全的。
+  EachGong _placeholderCenterGong(QiMenPan pan) {
+    final any = pan.gongMapper.values.first;
+    return any.copyWith(
+      gongNumber: 5,
+      gongGua: HouTianGua.Center,
+    );
+  }
+
   Widget _buildGrid(QiMenPan pan) {
     // 月家 / 年家：中5寄坤2，且"只寄星不寄门"——中5 不渲染门和神
     final isYueOrNian = pan.ju.jia == QiMenJia.YUE || pan.ju.jia == QiMenJia.NIAN;
@@ -367,15 +472,19 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
     final isFeipan = isRiJia || isYueOrNian;
 
     final palaceData = _gridOrderedGuas.map((gua) {
-      final gong = pan.gongMapper[gua];
       final isCenter = gua == HouTianGua.Center;
       // 月年家中5 不渲染门 / 神；日家中5 不渲染门
       final hideDoor = (isYueOrNian && isCenter) || (isRiJia && isCenter);
       // 月年家中5 不渲染神;日家全宫不渲染神（不用八神 → 占位无意义）
       final hideGod = (isYueOrNian && isCenter) || isRiJia;
-      // GanZhiDrivenQiMenPan、ShiJiaQiMen、RiJiaQiMen 都为 9 宫提供 EachGong
+
+      // 时家 / 刻家：ShiJiaQiMen 内部跳过中5 EachGong 生成，仅用 settleCenterGongJiGong
+      // 把中宫干寄到坤2/艮8。redesign UI 在 isCenter && !isFeipan 时走 _buildCenterHub
+      // 元数据 hub 渲染（不读 PalaceData 的星/门/干/神字段），故占位安全。
+      final gong = pan.gongMapper[gua] ?? _placeholderCenterGong(pan);
+
       return PalaceData.fromEachGong(
-        gong!,
+        gong,
         isYangDun: pan.ju.yinYangDun.isYang,
         geJu: const [],
         marks: [
@@ -419,6 +528,10 @@ class _MultiJiaQiMenPageState extends State<MultiJiaQiMenPage> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             Text('• 时家：转盘排宫，一时辰一局，阴阳遁均用；起局法可选拆补 / 置润 / 茅山 / 阴盘'),
+            Text('• 刻家：时家细分；可选两种刻制——'
+                '十刻五子建元（10刻×12分）/ 八刻五马遁（8刻×15分）；'
+                '初局沿用本时辰时家局，二局起阳顺阴逆推移；'
+                '用刻干支替代时干支推值符 / 值使，刻干阴阳决定八门顺逆'),
             Text('• 日家：飞盘 day-count 顺飞，一日一星；以休门为纲、太乙为日主星；'
                 '阴阳遁均用；不布奇仪、不用八神（用黄道黑道喜神贵神，待后续 Phase）'),
             Text('• 月家：飞盘逆飞，恒阴遁；定局法可选粗分（5年一局）/ 细分（10月一局）'),

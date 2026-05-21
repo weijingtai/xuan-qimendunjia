@@ -1,11 +1,15 @@
 import 'package:qimendunjia/domain/entities/base_ju.dart';
+import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
+import 'package:qimendunjia/enums/enum_ke_scheme.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/model/shi_jia_ju.dart';
+import 'package:qimendunjia/utils/ke_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/nian_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/ri_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/yue_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/data/models/mappers/shi_jia_ju_mapper.dart';
+import 'package:qimendunjia/domain/entities/ke_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/nian_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/ri_jia_ju.dart';
 import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
@@ -163,4 +167,40 @@ class RiJiaCalculatorDataSource implements QiMenCalculatorDataSource {
 
   @override
   QiMenJia get supportedJia => QiMenJia.RI;
+}
+
+/// 刻家奇门计算器数据源
+///
+/// 刻家奇门是时家奇门的细分扩展。两种刻制方案：
+/// - 十刻五子建元：一时辰 10 刻、每刻 12 分钟（默认）
+/// - 八刻五马遁：一时辰 8 刻、每刻 15 分钟
+/// 所有 ArrangeType 同映射到此 DataSource —— 内部固定用拆补法
+/// 起本时辰时家初局，再按刻干支推移。
+class KeJiaCalculatorDataSource implements QiMenCalculatorDataSource {
+  /// [QiMenCalculatorDataSource.calculate] 默认入口，使用十刻方案。
+  ///
+  /// 如需指定刻制，调用 [calculateWithScheme]。
+  @override
+  Future<KeJiaJu> calculate(DateTime dateTime) async {
+    return KeJiaQiMenJuCalculator(dateTime: dateTime).calculate();
+  }
+
+  /// 按指定刻制方案与符头派别计算
+  Future<KeJiaJu> calculateWithScheme(
+    DateTime dateTime,
+    KeSchemeType keScheme, {
+    FuTouSchemeType fuTouScheme = FuTouSchemeType.JIA_JI_FU_TOU,
+  }) async {
+    return KeJiaQiMenJuCalculator(
+      dateTime: dateTime,
+      keScheme: keScheme,
+      fuTouScheme: fuTouScheme,
+    ).calculate();
+  }
+
+  @override
+  String get name => '刻家奇门';
+
+  @override
+  QiMenJia get supportedJia => QiMenJia.KE;
 }

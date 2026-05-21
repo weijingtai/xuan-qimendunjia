@@ -157,10 +157,10 @@ enum GongAndDoorRelationship {
     EightDoorEnum.XIU: ["大吉", "伏吟", "受制", "小吉", "入墓", "反吟", "受制", "大吉"],
     EightDoorEnum.SHENG: ["小吉", "门迫", "伏吟", "受制", "入墓", "大吉", "反吟", "小吉"],
     EightDoorEnum.SHANG: ["受制", "大凶", "门迫", "伏吟", "小凶", "泄气", "入墓", "反吟"],
-    EightDoorEnum.DU: ["反吟", "受生", "门迫", "比和", "伏吟", "泄气", "入墓", "受制"],
-    EightDoorEnum.JING_S: ["入墓", "反吟", "生宫", "生旺", "生旺", "伏吟", "生宫", "门迫"],
-    EightDoorEnum.SI: ["生宫", "门迫", "反吟", "受制", "入墓", "大凶", "伏吟", "生宫"],
-    EightDoorEnum.JING_W: ["比和", "泄气", "入墓", "反吟", "门迫", "受制", "受生", "伏吟"],
+    EightDoorEnum.DU: ["反吟", "宫生门", "门迫", "比和", "伏吟", "泄气", "入墓", "受制"],
+    EightDoorEnum.JING_S: ["入墓", "反吟", "门生宫", "生旺", "生旺", "伏吟", "门生宫", "门迫"],
+    EightDoorEnum.SI: ["门生宫", "门迫", "反吟", "受制", "入墓", "大凶", "伏吟", "门生宫"],
+    EightDoorEnum.JING_W: ["比和", "泄气", "入墓", "反吟", "门迫", "受制", "宫生门", "伏吟"],
   };
 
   static List<HouTianGua> _gongOrderedList = [
@@ -174,9 +174,13 @@ enum GongAndDoorRelationship {
     HouTianGua.Dui,
   ];
 
-  // 根据name返回
-  static GongAndDoorRelationship fromName(String name) =>
-      values.firstWhere((e) => e.name == name);
+  // 根据name返回；找不到时返回 null（防御性，避免 _mapper 数据漏字时崩 No element）
+  static GongAndDoorRelationship? fromName(String name) {
+    for (final v in values) {
+      if (v.name == name) return v;
+    }
+    return null;
+  }
 
   static GongAndDoorRelationship? getRelationship(
       EightDoorEnum door, HouTianGua gong) {

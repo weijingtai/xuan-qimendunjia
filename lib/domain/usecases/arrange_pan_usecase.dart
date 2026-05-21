@@ -46,8 +46,10 @@ class ArrangePanUseCase extends UseCase<QiMenPan, ArrangePanParams> {
       );
 
       return pan;
-    } catch (e) {
-      throw QiMenCalculationException('排盘失败: $e');
+    } catch (e, st) {
+      // 已经是 QiMenCalculationException 时直接 rethrow，避免双层包装吞掉堆栈
+      if (e is QiMenCalculationException) rethrow;
+      throw QiMenCalculationException('排盘失败: $e\n$st');
     }
   }
 }

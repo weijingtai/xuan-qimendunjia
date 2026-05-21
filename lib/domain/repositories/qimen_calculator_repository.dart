@@ -1,5 +1,7 @@
 import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
+import 'package:qimendunjia/enums/enum_ke_scheme.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/model/shi_jia_qi_men.dart';
@@ -13,8 +15,10 @@ abstract class QiMenCalculatorRepository {
   /// 计算局数
   ///
   /// [dateTime] 起盘时间
-  /// [jia] 家维度（时/日/月/年）
+  /// [jia] 家维度（时/日/月/年/刻）
   /// [arrangeType] 起盘方式（拆补/置润/茅山/阴盘；非时家可忽略此参数）
+  /// [keScheme] 刻家专用：刻制方案（仅 [QiMenJia.KE] 时生效；其它家忽略）
+  /// [fuTouScheme] 刻家专用：拆补法符头派别（仅 [QiMenJia.KE] 时生效）
   ///
   /// 返回 domain 层 [BaseJu]：时家返回 [ShiJiaJu]，月家返回 `YueJiaJu`，
   /// 调用方按 `ju.jia` 或 `ju is XxxJu` 类型守卫处理。
@@ -25,6 +29,8 @@ abstract class QiMenCalculatorRepository {
     required DateTime dateTime,
     required QiMenJia jia,
     required ArrangeType arrangeType,
+    KeSchemeType? keScheme,
+    FuTouSchemeType? fuTouScheme,
   });
 
   /// 排盘
@@ -67,6 +73,12 @@ class PanSettings {
   /// 干宫类型
   final GanGongTypeEnum ganGongType;
 
+  /// 刻家奇门刻制方案（仅刻家生效）
+  final KeSchemeType keScheme;
+
+  /// 刻家奇门拆补法符头派别（仅刻家生效）
+  final FuTouSchemeType fuTouScheme;
+
   const PanSettings({
     required this.arrangeType,
     required this.jiGong,
@@ -75,6 +87,8 @@ class PanSettings {
     required this.doorFourWeiGongType,
     required this.godWithGongType,
     required this.ganGongType,
+    this.keScheme = KeSchemeType.TEN_KE_WU_ZI_JIAN_YUAN,
+    this.fuTouScheme = FuTouSchemeType.JIA_JI_FU_TOU,
   });
 
   /// 默认设置
@@ -87,6 +101,8 @@ class PanSettings {
       doorFourWeiGongType: GongTypeEnum.GONG_GUA,
       godWithGongType: GodWithGongTypeEnum.GONG_GUA_ONLY,
       ganGongType: GanGongTypeEnum.WANG_MU,
+      keScheme: KeSchemeType.TEN_KE_WU_ZI_JIAN_YUAN,
+      fuTouScheme: FuTouSchemeType.JIA_JI_FU_TOU,
     );
   }
 }
