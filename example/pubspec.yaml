@@ -37,11 +37,11 @@ dependency_overrides:
   google_fonts: ^8.0.0
   xuan_common:
     path: ../../xuan-common
-  four_zhu_card:
+  xuan_four_zhu_card:
     path: ../../xuan-four-zhu-card
-  four_zhu_host:
+  xuan_four_zhu_host:
     path: ../../xuan-four-zhu-host
-  four_zhu_templates:
+  xuan_four_zhu_templates:
     path: ../../xuan-four-zhu-templates
   qimendunjia:
     path: ../
