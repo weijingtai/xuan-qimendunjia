@@ -18,7 +18,7 @@ import 'package:flutter_shakemywidget/flutter_shakemywidget.dart';
 import 'package:flutter_sliding_toast/flutter_sliding_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:xuan_common/adapters/lunar_adapter.dart';
+import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 import 'package:provider/provider.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/nine_dun.dart';

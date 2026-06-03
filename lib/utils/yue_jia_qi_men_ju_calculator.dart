@@ -1,4 +1,4 @@
-import 'package:xuan_common/adapters/lunar_adapter.dart';
+import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/domain/entities/san_yuan_type.dart';
 import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
