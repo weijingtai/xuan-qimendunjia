@@ -26,7 +26,7 @@ dependencies:
   meta: ^1.17.0
   collection: ^1.19.1
   logging: ^1.3.0
-  google_fonts: ^8.0.1
+  google_fonts: ^6.2.1
   lottie: ^3.3.2
   board_datetime_picker: 2.8.5
   sliding_switch: ^1.1.0
@@ -71,6 +71,14 @@ dependency_overrides:
     path: ../xuan-four-zhu-host
   xuan_four_zhu_templates:
     path: ../xuan-four-zhu-templates
+  persistence_core:
+    path: ../xuan-storage/core
+  metaphysics_core:
+    path: ../xuan-metaphysics-core
+  persistence_domain:
+    path: ../xuan-domain
+  xuan_time_location:
+    path: ../xuan-time-location
 
 # The following section is specific to Flutter packages.
 flutter:

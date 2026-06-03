@@ -1,7 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:metaphysics_core/enums.dart';
 import 'package:metaphysics_core/models/twelve_zhang_sheng.dart';
-import 'package:xuan_common/module.dart';
+import 'package:theme/const_resources_mapper.dart';
+import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_xiong_1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
