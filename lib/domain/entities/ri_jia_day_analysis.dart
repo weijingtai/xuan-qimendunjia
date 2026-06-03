@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/enums/enum_ri_jia_huang_dao.dart';
 
 import 'base_entity.dart';

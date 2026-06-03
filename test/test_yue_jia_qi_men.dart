@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:qimendunjia/domain/entities/san_yuan_type.dart';
 import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';

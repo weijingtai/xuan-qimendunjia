@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 
 enum EightGodsEnum {
   ZHI_FU(1, "值符", "值", FiveXing.MU, HouTianGua.Kun),

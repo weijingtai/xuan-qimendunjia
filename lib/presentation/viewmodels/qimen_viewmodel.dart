@@ -1,5 +1,5 @@
-import 'package:common/domain/ai/ai_context.dart';
-import 'package:common/domain/ai/ai_entity.dart';
+import 'package:ai_core/ai/ai_context.dart';
+import 'package:ai_core/ai/ai_entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';

@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:common/domain/ai/ai_chat_event.dart';
-import 'package:common/services/ai_service.dart';
-import 'package:common/domain/ai/ai_persona.dart';
+import 'package:ai_core/ai/ai_chat_event.dart';
+import 'package:xuan_common/services/ai_service.dart';
+import 'package:ai_core/ai/ai_persona.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';

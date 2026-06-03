@@ -1,6 +1,6 @@
-import 'package:common/common_logger.dart';
-import 'package:common/services/ai_service.dart';
-import 'package:common/services/ai_registry.dart';
+import 'package:xuan_common/common_logger.dart';
+import 'package:xuan_common/services/ai_service.dart';
+import 'package:xuan_common/services/ai_registry.dart';
 import 'package:ai_core/ai_core.dart';
 import 'package:ai_core/utils/ai_bootstrap.dart';
 import 'package:ai_core/services/ai_service_impl.dart';

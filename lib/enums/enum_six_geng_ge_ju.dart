@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 
 import '../model/each_gong.dart';
 import '../model/shi_jia_qi_men.dart';

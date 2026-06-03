@@ -1,5 +1,5 @@
-import 'package:common/adapters/lunar_adapter.dart';
-import 'package:common/enums.dart';
+import 'package:xuan_common/adapters/lunar_adapter.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/utils/datetime_jie_qi.dart';
 import 'package:tuple/tuple.dart';
 

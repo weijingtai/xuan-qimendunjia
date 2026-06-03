@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/domain/entities/san_yuan_type.dart';
 
 /// 年家三元起算锚点

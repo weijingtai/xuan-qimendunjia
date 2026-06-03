@@ -1,5 +1,5 @@
-import 'package:common/adapters/lunar_adapter.dart';
-import 'package:common/enums.dart';
+import 'package:xuan_common/adapters/lunar_adapter.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/domain/entities/nian_jia_ju.dart';
 import 'package:qimendunjia/utils/nian_jia_san_yuan_anchor.dart';
 

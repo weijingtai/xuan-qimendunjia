@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 
 enum SixJia {
   JIA_ZI_WU("甲子戊", JiaZi.JIA_ZI, TianGan.WU),

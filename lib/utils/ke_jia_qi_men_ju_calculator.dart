@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:intl/intl.dart';
 import 'package:qimendunjia/domain/entities/ke_jia_ju.dart';
 import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
@@ -188,13 +188,24 @@ class KeJiaQiMenJuCalculator {
     var effectiveInitJu = shiJiaJu.juNumber;
     var effectiveFuTou = shiJiaJu.fuTouJiaZi;
     var effectiveYuan = shiJiaJu.atThreeYuan;
-    if (fuTouScheme == FuTouSchemeType.JIA_FU_TOU) {
-      // 神刻奇门：仅甲日作符头
-      var dayJiaZi = JiaZi.getFromGanZhiValue(fourZhuParts[2])!;
-      // 23:00 边界：与 ChaiBuCalculator 保持一致（次日日柱）
-      if (dateTime.hour == 23) {
-        dayJiaZi = JiaZi.getByNumber((dayJiaZi.number + 1) % 60);
+
+    final dayJiaZi = JiaZi.getFromGanZhiValue(fourZhuParts[2])!;
+
+    if (isShenKe) {
+      // 神刻奇门突破性定局：取决于当日旬序号与阴阳遁 (九宫飞布循环)
+      final dayXunIndex = ((dayJiaZi.number - 1) ~/ 10) + 1;
+      if (shiJiaJu.yinYangDun.isYang) {
+        // 阳遁：2, 5, 8 循环 (每旬跳 3 宫)
+        effectiveInitJu = [2, 5, 8, 2, 5, 8][dayXunIndex - 1];
+      } else {
+        // 阴遁：1, 9, 8, 7, 6, 5 序列 (根据参考案例 4/5 推导)
+        effectiveInitJu = [1, 9, 8, 7, 6, 5][dayXunIndex - 1];
       }
+      effectiveFuTou = computeJiaOnlyFuTou(dayJiaZi);
+      effectiveYuan =
+          ShiJiaQiMenJuCalculator.getThreeYuanByFuHead(effectiveFuTou);
+    } else if (fuTouScheme == FuTouSchemeType.JIA_FU_TOU) {
+      // 仅甲日作符头方案
       effectiveFuTou = computeJiaOnlyFuTou(dayJiaZi);
       effectiveYuan =
           ShiJiaQiMenJuCalculator.getThreeYuanByFuHead(effectiveFuTou);
@@ -212,15 +223,13 @@ class KeJiaQiMenJuCalculator {
           effectiveInitJu = jueTuple.item3;
           break;
         case EnumThreeYuan.NONE:
-          // 不应触达：getThreeYuanByFuHead 永远返回 START/MIDDLE/END
           effectiveInitJu = shiJiaJu.juNumber;
           break;
       }
     }
 
     final shiftedJu = isShenKe
-        // 神刻进阶方法：每旬（10刻）局数 +1，xunIndex = (keIndex-1)÷10 ∈ [0,5]
-        ? (((effectiveInitJu - 1 + (keIndex - 1) ~/ 10) % 9) + 1)
+        ? effectiveInitJu
         : calcShiftedJuNumber(
             effectiveInitJu,
             keIndex,

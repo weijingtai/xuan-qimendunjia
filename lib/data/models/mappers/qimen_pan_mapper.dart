@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/domain/entities/each_gong.dart' as entity;
 import 'package:qimendunjia/domain/entities/qimen_pan.dart' as entity;
 import 'package:qimendunjia/model/shi_jia_qi_men.dart' as model;

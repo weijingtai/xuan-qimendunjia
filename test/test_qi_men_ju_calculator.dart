@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:qimendunjia/model/shi_jia_ju.dart';
 import 'package:qimendunjia/utils/qi_men_ju_calculator.dart';

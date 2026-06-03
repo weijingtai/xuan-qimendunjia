@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:common/adapters/lunar_adapter.dart';
+import 'package:xuan_common/adapters/lunar_adapter.dart';
 import 'package:qimendunjia/data.dart';
 import 'package:tuple/tuple.dart';
 

@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/model/door_star_ke_ying.dart';
 import 'package:qimendunjia/model/eight_door_ke_ying.dart';

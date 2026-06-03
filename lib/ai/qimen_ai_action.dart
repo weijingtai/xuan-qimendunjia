@@ -1,7 +1,7 @@
-import 'package:common/domain/ai/ai_action.dart';
-import 'package:common/domain/ai/ai_context.dart';
+import 'package:ai_core/ai/ai_action.dart';
+import 'package:ai_core/ai/ai_context.dart';
 import 'package:provider/provider.dart';
-import 'package:common/services/ai_service.dart';
+import 'package:xuan_common/services/ai_service.dart';
 import 'package:flutter/material.dart';
 
 class QiMenAnalyzeAction implements AiAction {

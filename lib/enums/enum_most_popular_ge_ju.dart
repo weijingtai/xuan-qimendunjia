@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_san_zha_wu_jia.dart';
 import 'package:qimendunjia/enums/enum_six_jia.dart';

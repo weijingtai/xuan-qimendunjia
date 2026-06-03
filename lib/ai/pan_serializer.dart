@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';

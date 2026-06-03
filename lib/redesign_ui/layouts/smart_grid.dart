@@ -1,4 +1,4 @@
-import 'package:common/enums/enum_tian_gan.dart';
+import 'package:metaphysics_core/enums/enum_tian_gan.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -7,7 +7,7 @@ import '../components/palace/brief_palace_config.dart';
 import '../../enums/enum_eight_door.dart';
 import '../../enums/enum_eight_gods.dart';
 import '../../enums/enum_nine_stars.dart';
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import '../../domain/entities/each_gong.dart';
 import '../../domain/entities/qi_men_star.dart';
 import '../../enums/enum_six_jia.dart';

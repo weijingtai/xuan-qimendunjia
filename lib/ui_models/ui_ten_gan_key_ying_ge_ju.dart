@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 
 import '../model/ten_gan_ke_ying_ge_ju.dart';
 
