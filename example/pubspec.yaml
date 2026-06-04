@@ -17,10 +17,6 @@ dependencies:
     git:
       url: http://xuan:***@192.168.0.165:3000/xuan/xuan-qimendunjia.git
       ref: main
-  xuan_common:
-    git:
-      url: http://xuan:***@192.168.0.165:3000/xuan/xuan-common.git
-      ref: main
   provider: ^6.1.1
   ai_core:
     git:
@@ -28,21 +24,23 @@ dependencies:
       ref: main
   flutter_ai_toolkit: ^0.9.1
   logging: ^1.2.0
-  timezone: ^0.11.0
+  timezone: ^0.9.4
 
   lottie: ^3.3.2
   cupertino_icons: ^1.0.8
 
 dependency_overrides:
-  google_fonts: ^8.0.0
-  xuan_common:
-    path: ../../xuan-common
+  google_fonts: ^6.2.1
   xuan_four_zhu_card:
     path: ../../xuan-four-zhu-card
   xuan_four_zhu_host:
     path: ../../xuan-four-zhu-host
   xuan_four_zhu_templates:
     path: ../../xuan-four-zhu-templates
+  ai_core:
+    path: ../../xuan-ai
+  persistence_core:
+    path: ../../xuan-storage/core
   qimendunjia:
     path: ../
 
