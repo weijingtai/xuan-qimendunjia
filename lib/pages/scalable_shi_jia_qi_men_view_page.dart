@@ -11,7 +11,7 @@ import 'package:ai_core/ai/ai_persona.dart';
 import 'package:metaphysics_core/enums.dart';
 import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_ji_1.dart';
 import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_xiong_1.dart';
-import 'package:ai_core/ai_core.dart';
+import 'package:ai_core/ai_core.dart' hide AiPersona;
 import 'package:xuan_four_zhu_card/widgets/four_zhu_eight_char.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
