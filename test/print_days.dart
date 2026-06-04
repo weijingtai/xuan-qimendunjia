@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xuan_common/adapters/lunar_adapter.dart';
+import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 
 void main() {
   test('Print day pillars', () {

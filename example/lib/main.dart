@@ -1,6 +1,3 @@
-import 'package:xuan_common/common_logger.dart';
-import 'package:xuan_common/services/ai_service.dart';
-import 'package:xuan_common/services/ai_registry.dart';
 import 'package:ai_core/ai_core.dart';
 import 'package:ai_core/utils/ai_bootstrap.dart';
 import 'package:ai_core/services/ai_service_impl.dart';
@@ -60,7 +57,7 @@ Future<void> initServices() async {
   serviceLocator.init();
 
   // 记录启动日志
-  CommonLogger().logger.i("奇门遁甲模块已启动");
+  Logger('qimendunjia.example').info("奇门遁甲模块已启动");
 }
 
 void main() async {
