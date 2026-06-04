@@ -1,7 +1,7 @@
 import 'package:ai_core/ai/ai_action.dart';
 import 'package:ai_core/ai/ai_context.dart';
 import 'package:provider/provider.dart';
-import 'package:xuan_common/services/ai_service.dart';
+import 'package:ai_core/ai_core.dart';
 import 'package:flutter/material.dart';
 
 class QiMenAnalyzeAction implements AiAction {

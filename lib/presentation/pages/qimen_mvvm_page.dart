@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:ai_core/ai/ai_chat_event.dart';
-import 'package:xuan_common/services/ai_service.dart';
+import 'package:ai_core/ai_core.dart';
 import 'package:ai_core/ai/ai_persona.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
