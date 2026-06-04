@@ -35,15 +35,8 @@ dependencies:
   aura_box: ^1.0.2
 
   provider: ^6.1.5+1
-  xuan_common:
 
-    git:
-
-      url: http://xuan:wjt19951215@192.168.0.165:3000/xuan/xuan-common.git
-
-      ref: main
-
-  dotlottie_loader: ^0.0.5
+  dotlottie_loader:
   auto_size_text: ^3.0.0
   flutter_sliding_toast: ^1.5.3
   json_serializable: ^6.12.0
@@ -63,8 +56,6 @@ dev_dependencies:
   drift_dev: ^2.30.1
 
 dependency_overrides:
-  xuan_common:
-    path: ../xuan-common
   xuan_four_zhu_card:
     path: ../xuan-four-zhu-card
   xuan_four_zhu_host:
