@@ -99,7 +99,7 @@
 
 - **新建**：`lib/domain/entities/yue_jia_ju.dart`
   ```dart
-  import 'package:common/enums.dart';
+  import 'package:xuan_common/enums.dart';
   import 'base_entity.dart';
   import 'base_ju.dart';
   import 'qi_men_jia.dart' show QiMenJia;
@@ -170,8 +170,8 @@
 - **新建**：`lib/utils/yue_jia_qi_men_ju_calculator.dart`
 - **代码骨架**：
   ```dart
-  import 'package:common/enums.dart';
-  import 'package:common/adapters/lunar_adapter.dart';
+  import 'package:xuan_common/enums.dart';
+  import 'package:xuan_common/adapters/lunar_adapter.dart';
   import 'package:qimendunjia/domain/entities/yue_jia_ju.dart';
   import 'package:qimendunjia/domain/entities/san_yuan_type.dart';
   
@@ -290,7 +290,7 @@
 - **新建**：`lib/model/gan_zhi_driven_qi_men_pan.dart`
 - **代码骨架**：
   ```dart
-  import 'package:common/enums.dart';
+  import 'package:xuan_common/enums.dart';
   import 'package:qimendunjia/domain/entities/base_ju.dart';
   import 'package:qimendunjia/domain/entities/qi_men_star.dart';
   import 'package:qimendunjia/domain/entities/each_gong.dart';

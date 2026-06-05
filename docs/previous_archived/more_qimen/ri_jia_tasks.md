@@ -92,7 +92,7 @@
 - **新建**：`lib/domain/entities/ri_jia_ju.dart`
 - **代码骨架**：
   ```dart
-  import 'package:common/enums.dart';
+  import 'package:xuan_common/enums.dart';
   import 'base_entity.dart';
   import 'base_ju.dart';
   import 'qi_men_jia.dart' show QiMenJia;
@@ -166,7 +166,7 @@
 - **新建**：`lib/enums/enum_ri_jia_stars.dart`
 - **代码骨架**：
   ```dart
-  import 'package:common/enums.dart';
+  import 'package:xuan_common/enums.dart';
   import 'package:qimendunjia/domain/entities/qi_men_star.dart';
   
   /// 日家九星
@@ -230,8 +230,8 @@
 - **新建**：`lib/utils/ri_jia_qi_men_ju_calculator.dart`
 - **代码骨架**：
   ```dart
-  import 'package:common/enums.dart';
-  import 'package:common/adapters/lunar_adapter.dart';
+  import 'package:xuan_common/enums.dart';
+  import 'package:xuan_common/adapters/lunar_adapter.dart';
   import 'package:qimendunjia/domain/entities/ri_jia_ju.dart';
   
   /// 日家局计算器

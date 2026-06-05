@@ -95,7 +95,7 @@ abstract class Equatable {
 **创建文件**: `lib/domain/entities/shi_jia_ju.dart`
 
 ```dart
-import 'package:common/enums.dart';
+import 'package:xuan_common/enums.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_three_yuan.dart';
 import 'base_entity.dart';
@@ -186,7 +186,7 @@ class ShiJiaJu extends Equatable {
 **创建文件**: `lib/domain/entities/each_gong.dart`
 
 ```dart
-import 'package:common/enums.dart';
+import 'package:xuan_common/enums.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_eight_gods.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
@@ -260,7 +260,7 @@ class EachGong extends Equatable {
 **创建文件**: `lib/domain/entities/qimen_pan.dart`
 
 ```dart
-import 'package:common/enums.dart';
+import 'package:xuan_common/enums.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_most_popular_ge_ju.dart';
@@ -393,7 +393,7 @@ abstract class QiMenCalculatorRepository {
 **创建文件**: `lib/domain/repositories/qimen_data_repository.dart`
 
 ```dart
-import 'package:common/enums.dart';
+import 'package:xuan_common/enums.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/model/door_star_ke_ying.dart';
@@ -699,7 +699,7 @@ class CacheDataSource {
 ```dart
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:common/enums.dart';
+import 'package:xuan_common/enums.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/model/door_star_ke_ying.dart';

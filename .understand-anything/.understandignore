@@ -10,6 +10,7 @@ example/ios/
 example/linux/
 example/macos/
 example/windows/
+example/assets/dataset/geo/
 *.lock
 *.png
 *.jpg

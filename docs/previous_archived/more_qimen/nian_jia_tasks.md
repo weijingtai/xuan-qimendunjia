@@ -110,7 +110,7 @@
 - **新建**：`lib/domain/entities/nian_jia_ju.dart`
 - **代码骨架**：
   ```dart
-  import 'package:common/enums.dart';
+  import 'package:xuan_common/enums.dart';
   import 'base_entity.dart';
   import 'base_ju.dart';
   import 'qi_men_jia.dart' show QiMenJia;
@@ -208,7 +208,7 @@ enum ZiBaiStarEnum implements QiMenStar {
 - **新建**：`lib/utils/nian_jia_san_yuan_anchor.dart`
 - **代码骨架**：
   ```dart
-  import 'package:common/enums.dart';
+  import 'package:xuan_common/enums.dart';
   import 'package:qimendunjia/domain/entities/san_yuan_type.dart';
   
   /// 年家三元起算锚点
@@ -293,8 +293,8 @@ enum ZiBaiStarEnum implements QiMenStar {
 - **新建**：`lib/utils/nian_jia_qi_men_ju_calculator.dart`
 - **代码骨架**：
   ```dart
-  import 'package:common/enums.dart';
-  import 'package:common/adapters/lunar_adapter.dart';
+  import 'package:xuan_common/enums.dart';
+  import 'package:xuan_common/adapters/lunar_adapter.dart';
   import 'package:qimendunjia/domain/entities/nian_jia_ju.dart';
   import 'package:qimendunjia/utils/nian_jia_san_yuan_anchor.dart';
   
