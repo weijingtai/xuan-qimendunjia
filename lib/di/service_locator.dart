@@ -10,9 +10,11 @@ import 'package:qimendunjia/domain/usecases/calculate_ju_usecase.dart';
 import 'package:qimendunjia/domain/usecases/select_gong_usecase.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
+import 'package:qimendunjia/utils/read_data_utils.dart';
 import 'package:qimendunjia/utils/yue_jia_qi_men_ju_calculator.dart' show YueJiaSanYuanStrategy;
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/redesign_ui/core/qi_men_star_theme.dart';
+import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
 
 /// 服务定位器
 ///
@@ -29,9 +31,12 @@ class ServiceLocator {
   final Map<Type, dynamic> _services = {};
 
   /// 初始化所有依赖
-  void init() {
+  ///
+  /// [officialRules] 由 host/app 装配层注入的官方规则资源仓储（assets 后端实现）。
+  /// 产品包不直接依赖任何具体存储后端（见 EXECUTOR-RULES N3）。
+  void init(QimendunjiaOfficialRuleRepository officialRules) {
     // 1. 注册数据源
-    _registerDataSources();
+    _registerDataSources(officialRules);
 
     // 2. 注册仓储
     _registerRepositories();
@@ -44,9 +49,13 @@ class ServiceLocator {
   }
 
   /// 注册数据源
-  void _registerDataSources() {
+  void _registerDataSources(QimendunjiaOfficialRuleRepository officialRules) {
+    // 官方规则读取器（基于注入的 assets 端口，无 rootBundle）
+    final reader = ReadDataUtils(officialRules);
+    _services[ReadDataUtils] = reader;
+
     // JSON 数据源（单例）
-    _services[JsonDataSource] = JsonDataSource();
+    _services[JsonDataSource] = JsonDataSource(reader);
 
     // 缓存数据源（单例）
     _services[CacheDataSource] = CacheDataSource();
@@ -141,15 +150,12 @@ class ServiceLocator {
     return service as T;
   }
 
+  /// 提供官方规则读取器给传统页面（遗留静态调用迁移点，见 §10）。
+  ReadDataUtils get officialRuleReader => get<ReadDataUtils>();
+
   /// 清理所有服务
   void dispose() {
     _services.clear();
-  }
-
-  /// 重置服务定位器（用于测试）
-  void reset() {
-    _services.clear();
-    init();
   }
 }
 
