@@ -12,6 +12,7 @@ import 'package:logging/logging.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:qimendunjia/navigator.dart';
 import 'package:qimendunjia/di/service_locator.dart';
+import 'package:persistence_assets/persistence_assets.dart';
 import 'package:provider/provider.dart';
 
 /// 初始化 dart `logging` 包，将日志桥接到 debugPrint。
@@ -54,7 +55,7 @@ Future<void> initServices() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 初始化服务定位器 (MVVM架构需要)
-  serviceLocator.init();
+  serviceLocator.init(const AssetsQimendunjiaOfficialRuleRepository());
 
   // 记录启动日志
   Logger('qimendunjia.example').info("奇门遁甲模块已启动");

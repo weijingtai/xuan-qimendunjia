@@ -24,6 +24,8 @@ dependencies:
       ref: main
   flutter_ai_toolkit: ^0.9.1
   logging: ^1.2.0
+  persistence_assets:
+    path: ../../xuan-storage/assets
   timezone: ^0.9.4
 
   lottie: ^3.3.2
@@ -33,10 +35,6 @@ dependency_overrides:
   google_fonts: ^6.2.1
   xuan_four_zhu_card:
     path: ../../xuan-four-zhu-card
-  xuan_four_zhu_host:
-    path: ../../xuan-four-zhu-host
-  xuan_four_zhu_templates:
-    path: ../../xuan-four-zhu-templates
   ai_core:
     path: ../../xuan-ai
   persistence_core:
