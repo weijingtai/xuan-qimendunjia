@@ -21,6 +21,7 @@ import 'package:qimendunjia/model/each_gong.dart';
 import 'package:qimendunjia/model/eight_door_ke_ying.dart';
 import 'package:qimendunjia/utils/constant_resources_of_qi_men.dart';
 import 'package:qimendunjia/utils/constant_ui_resources_of_qi_men.dart';
+import 'package:qimendunjia/di/service_locator.dart';
 import 'package:qimendunjia/utils/read_data_utils.dart';
 import 'package:qimendunjia/widgets/ten_gan_ke_ying_ge_ju_detail.dart';
 import 'package:slide_switcher/slide_switcher.dart';
@@ -1060,7 +1061,7 @@ class _ScalableBeautifulPageState extends State<ScalableBeautifulPage>
       TianGan zhiFuGan,
       Map<HouTianGua, EachGong> gong) async {
     Map<TianGan, Map<TianGan, TenGanKeYingGeJu>> loadResult =
-        await ReadDataUtils.readTenGanKeYingGeJu();
+        await serviceLocator.officialRuleReader.readTenGanKeYingGeJu();
     Map<HouTianGua, UITenGanKeYingGeJu> result = {};
     for (var entry in gong.entries) {
       if (plateType == PlateType.ZHUAN_PAN && entry.key == HouTianGua.Center) {
@@ -1149,21 +1150,21 @@ class _ScalableBeautifulPageState extends State<ScalableBeautifulPage>
   Future<DoorStarKeYing?> loadDoorStarKeYing(
       EightDoorEnum door, NineStarsEnum star) async {
     Map<EightDoorEnum, Map<NineStarsEnum, DoorStarKeYing>> loadResult =
-        await ReadDataUtils.readDoorStarKeYing();
+        await serviceLocator.officialRuleReader.readDoorStarKeYing();
     return loadResult[door]?[star];
   }
 
   Future<String?> loadEightDoorGanKeYing(
       EightDoorEnum door, TianGan tianPanGan) async {
     Map<EightDoorEnum, Map<TianGan, String>> loadResult =
-        await ReadDataUtils.readDoorGanKeYing();
+        await serviceLocator.officialRuleReader.readDoorGanKeYing();
     return loadResult[door]?[tianPanGan];
   }
 
   Future<TenGanKeYing?> loadTenGanKeyYing(
       BuildContext context, TianGan tianPanGan, TianGan diPanGan) async {
     Map<TianGan, Map<TianGan, TenGanKeYing>> loadResult =
-        await ReadDataUtils.readTenGanKeYing();
+        await serviceLocator.officialRuleReader.readTenGanKeYing();
     // if (tianPanGan == TianGan.JIA && diPanGan == TianGan.BING){
     //   print(loadResult[tianPanGan]?[TianGan.BING]);
     // }
@@ -1176,7 +1177,7 @@ class _ScalableBeautifulPageState extends State<ScalableBeautifulPage>
 
     try {
       Map<EightDoorEnum, Map<EightDoorEnum, Map<YinYang, EightDoorKeYing>>>
-          loadResult = await ReadDataUtils.readEightDoorKeYing();
+          loadResult = await serviceLocator.officialRuleReader.readEightDoorKeYing();
       return loadResult[door]?[fixDoor];
     } catch (e) {
       rethrow;
@@ -1189,7 +1190,7 @@ class _ScalableBeautifulPageState extends State<ScalableBeautifulPage>
       HouTianGua gongGua, TianGan tianPanGan) async {
     if ([TianGan.YI, TianGan.BING, TianGan.DING].contains(tianPanGan)) {
       Map<HouTianGua, Map<TianGan, QiYiRuGong>> qiYiRuGongMapper =
-          await ReadDataUtils.readQiYiRuGong();
+          await serviceLocator.officialRuleReader.readQiYiRuGong();
       return qiYiRuGongMapper[gongGua]![tianPanGan]!;
     }
     return null;
@@ -1198,7 +1199,7 @@ class _ScalableBeautifulPageState extends State<ScalableBeautifulPage>
   Future<String?> loadTianPanGanRuGong(
       HouTianGua gongGua, TianGan tianPanGan) async {
     Map<HouTianGua, Map<TianGan, String>> qiYiRuGongMapper =
-        await ReadDataUtils.readQiYiRuGongDisease();
+        await serviceLocator.officialRuleReader.readQiYiRuGongDisease();
     return qiYiRuGongMapper[gongGua]?[tianPanGan];
   }
 

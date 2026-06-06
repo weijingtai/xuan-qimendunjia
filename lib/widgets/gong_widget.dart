@@ -19,6 +19,7 @@ import '../model/each_gong_wang_shuai.dart';
 import '../model/shi_jia_qi_men.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../utils/constant_ui_resources_of_qi_men.dart';
+import 'package:qimendunjia/di/service_locator.dart';
 import '../utils/read_data_utils.dart';
 import 'BounceDialog.dart';
 import 'QiMenGongContentBackground.dart';
@@ -709,13 +710,13 @@ class _GongWidgetWidgetState extends State<GongWidget> {
   Future<TenGanKeYing> getTenGanKeYing(
       BuildContext context, TianGan tianPanGan, TianGan diPanGan) async {
     Map<TianGan, Map<TianGan, TenGanKeYing>> tenGanKeYingMapper =
-        await ReadDataUtils.readTenGanKeYing();
+        await serviceLocator.officialRuleReader.readTenGanKeYing();
     return tenGanKeYingMapper[tianPanGan]![diPanGan]!;
   }
 
   void tianPanGanTapped(BuildContext context, TianGan gan) async {
     Map<TianGan, Map<TianGan, TenGanKeYing>> tenGanKeYingMapper =
-        await ReadDataUtils.readTenGanKeYing();
+        await serviceLocator.officialRuleReader.readTenGanKeYing();
 
     showGeneralDialog(
       context: context,
