@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:qimendunjia/navigator.dart';
 import 'package:qimendunjia/di/service_locator.dart';
 
+// NOTE (storage-refactor/qimendunjia): the in-package demo entrypoint cannot
+// construct the assets backend without the product depending on
+// persistence_assets (EXECUTOR-RULES N3). Run the module via `example/lib/main.dart`,
+// which injects AssetsQimendunjiaOfficialRuleRepository into ServiceLocator.init(...).
+// See §10 transitional exception E2 for the removal/relocation task.
 void main() {
-  // 初始化依赖注入
-  serviceLocator.init();
-
-  runApp(const QiMenDunJiaApp());
+  throw UnsupportedError(
+    'Run qimendunjia via example/lib/main.dart (host injects the assets backend). '
+    'See storage-refactor plan §10 (E2).',
+  );
 }
 
 class QiMenDunJiaApp extends StatelessWidget {

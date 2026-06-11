@@ -1090,6 +1090,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.3"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      sha256: "75ec242d22e950bdcc79ee38dd520ce4ee0bc491d7fadc4ea47694604d22bf06"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.0"
   provider:
     dependency: "direct main"
     description:
@@ -1197,6 +1205,13 @@ packages:
     dependency: transitive
     description:
       path: "../../repository-interface-four-zhu-card"
+      relative: true
+    source: path
+    version: "0.0.0"
+  repository_interface_qimendunjia:
+    dependency: transitive
+    description:
+      path: "../../repository-interface-qimendunjia"
       relative: true
     source: path
     version: "0.0.0"
@@ -1555,20 +1570,6 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
-  xuan_four_zhu_host:
-    dependency: "direct overridden"
-    description:
-      path: "../../xuan-four-zhu-host"
-      relative: true
-    source: path
-    version: "0.1.0-deprecated"
-  xuan_four_zhu_templates:
-    dependency: "direct overridden"
-    description:
-      path: "../../xuan-four-zhu-templates"
-      relative: true
-    source: path
-    version: "0.1.0-deprecated"
   xuan_time_location:
     dependency: transitive
     description:
