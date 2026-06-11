@@ -1,4 +1,4 @@
-import 'package:common/services/ai_service.dart';
+import 'package:ai_core/ai_core.dart';
 import 'package:qimendunjia/ai/qimen_agent_tool.dart';
 
 class QiMenAiIntegration {

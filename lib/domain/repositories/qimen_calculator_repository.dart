@@ -1,5 +1,9 @@
+import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
+import 'package:qimendunjia/enums/enum_ke_scheme.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
+import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/model/shi_jia_qi_men.dart';
 import '../entities/qimen_pan.dart';
 import '../entities/shi_jia_ju.dart';
@@ -11,27 +15,36 @@ abstract class QiMenCalculatorRepository {
   /// 计算局数
   ///
   /// [dateTime] 起盘时间
-  /// [arrangeType] 起盘方式（拆补/置润/茅山/阴盘）
+  /// [jia] 家维度（时/日/月/年/刻）
+  /// [arrangeType] 起盘方式（拆补/置润/茅山/阴盘；非时家可忽略此参数）
+  /// [keScheme] 刻家专用：刻制方案（仅 [QiMenJia.KE] 时生效；其它家忽略）
+  /// [fuTouScheme] 刻家专用：拆补法符头派别（仅 [QiMenJia.KE] 时生效）
   ///
-  /// 返回计算好的局信息
+  /// 返回 domain 层 [BaseJu]：时家返回 [ShiJiaJu]，月家返回 `YueJiaJu`，
+  /// 调用方按 `ju.jia` 或 `ju is XxxJu` 类型守卫处理。
   ///
+  /// 抛出 [UnsupportedJiaArrangeException] 当 (jia, arrangeType) 组合未注册时
   /// 抛出 [QiMenCalculationException] 当计算失败时
-  Future<ShiJiaJu> calculateJu({
+  Future<BaseJu> calculateJu({
     required DateTime dateTime,
+    required QiMenJia jia,
     required ArrangeType arrangeType,
+    KeSchemeType? keScheme,
+    FuTouSchemeType? fuTouScheme,
   });
 
   /// 排盘
   ///
-  /// [ju] 局信息
+  /// [ju] 局信息（[BaseJu] 任意子类型，按 [ju.jia] 派发）
   /// [plateType] 盘类型（转盘/飞盘）
   /// [settings] 排盘设置
   ///
   /// 返回完整的奇门盘
   ///
   /// 抛出 [QiMenCalculationException] 当排盘失败时
+  /// 抛出 [UnsupportedJiaArrangeException] 当对应家排盘器未实现时
   Future<QiMenPan> arrangePan({
-    required ShiJiaJu ju,
+    required BaseJu ju,
     required PlateType plateType,
     required PanSettings settings,
   });
@@ -60,6 +73,12 @@ class PanSettings {
   /// 干宫类型
   final GanGongTypeEnum ganGongType;
 
+  /// 刻家奇门刻制方案（仅刻家生效）
+  final KeSchemeType keScheme;
+
+  /// 刻家奇门拆补法符头派别（仅刻家生效）
+  final FuTouSchemeType fuTouScheme;
+
   const PanSettings({
     required this.arrangeType,
     required this.jiGong,
@@ -68,6 +87,8 @@ class PanSettings {
     required this.doorFourWeiGongType,
     required this.godWithGongType,
     required this.ganGongType,
+    this.keScheme = KeSchemeType.TEN_KE_WU_ZI_JIAN_YUAN,
+    this.fuTouScheme = FuTouSchemeType.JIA_JI_FU_TOU,
   });
 
   /// 默认设置
@@ -80,6 +101,8 @@ class PanSettings {
       doorFourWeiGongType: GongTypeEnum.GONG_GUA,
       godWithGongType: GodWithGongTypeEnum.GONG_GUA_ONLY,
       ganGongType: GanGongTypeEnum.WANG_MU,
+      keScheme: KeSchemeType.TEN_KE_WU_ZI_JIAN_YUAN,
+      fuTouScheme: FuTouSchemeType.JIA_JI_FU_TOU,
     );
   }
 }
@@ -92,5 +115,14 @@ class QiMenCalculationException implements Exception {
 
   @override
   String toString() => 'QiMenCalculationException: $message';
+}
+
+/// 不支持的家×起局法组合异常
+class UnsupportedJiaArrangeException extends QiMenCalculationException {
+  final QiMenJia jia;
+  final ArrangeType arrangeType;
+
+  UnsupportedJiaArrangeException(this.jia, this.arrangeType)
+      : super('不支持的家×起局法组合: ${jia.name} / ${arrangeType.name}');
 }
 

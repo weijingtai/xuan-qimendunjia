@@ -1,0 +1,24 @@
+# .understandignore - patterns for files/dirs to exclude from analysis
+node_modules/
+.git/
+.dart_tool/
+build/
+example/.dart_tool/
+example/build/
+example/android/
+example/ios/
+example/linux/
+example/macos/
+example/windows/
+example/assets/dataset/geo/
+*.lock
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.ttf
+*.woff
+*.woff2
+*.log

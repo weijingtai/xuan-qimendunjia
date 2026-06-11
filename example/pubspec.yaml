@@ -14,21 +14,33 @@ dependencies:
     sdk: flutter
 
   qimendunjia:
-    path: ../
-  common:
-    path: ../../xuan-common
+    git:
+      url: http://xuan:***@192.168.0.165:3000/xuan/xuan-qimendunjia.git
+      ref: main
   provider: ^6.1.1
   ai_core:
-    path: ../../xuan-ai
+    git:
+      url: http://xuan:***@192.168.0.165:3000/xuan/xuan-ai.git
+      ref: main
   flutter_ai_toolkit: ^0.9.1
   logging: ^1.2.0
-  timezone: ^0.11.0
+  persistence_assets:
+    path: ../../xuan-storage/assets
+  timezone: ^0.9.4
 
   lottie: ^3.3.2
   cupertino_icons: ^1.0.8
 
 dependency_overrides:
-  google_fonts: ^8.0.0
+  google_fonts: ^6.2.1
+  xuan_four_zhu_card:
+    path: ../../xuan-four-zhu-card
+  ai_core:
+    path: ../../xuan-ai
+  persistence_core:
+    path: ../../xuan-storage/core
+  qimendunjia:
+    path: ../
 
 dev_dependencies:
   flutter_test:

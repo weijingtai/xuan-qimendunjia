@@ -221,9 +221,9 @@ AiContext? buildAiContext(); // 内部用 QiMenPanMapper.fromModel() 转换
 
 | 依赖 | 来源 | 用途 |
 |------|------|------|
-| `AiContext` | `package:common/domain/ai/ai_context.dart` | 聊天初始上下文容器 |
-| `AiEntity` | `package:common/domain/ai/ai_entity.dart` | 业务实体包装（description + rawData） |
-| `AiService.buildChatView()` | `package:common/services/ai_service.dart` | 构建聊天 UI，接受 `initialContext` 参数 |
+| `AiContext` | `package:xuan_common/domain/ai/ai_context.dart` | 聊天初始上下文容器 |
+| `AiEntity` | `package:xuan_common/domain/ai/ai_entity.dart` | 业务实体包装（description + rawData） |
+| `AiService.buildChatView()` | `package:xuan_common/services/ai_service.dart` | 构建聊天 UI，接受 `initialContext` 参数 |
 | `QiMenPanMapper.fromModel()` | `lib/data/models/mappers/qimen_pan_mapper.dart` | 老 Model (`ShiJiaQiMen`) 转 Domain Entity (`QiMenPan`) |
 | `QiMenAgentTool` | `lib/ai/qimen_agent_tool.dart` | AI 主动排盘的 Function Calling 工具 |
 

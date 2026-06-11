@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:common/adapters/lunar_adapter.dart';
+import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:qimendunjia/utils/zheng_shou_dong_zhi_list.dart';

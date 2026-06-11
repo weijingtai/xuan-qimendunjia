@@ -1,9 +1,9 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_eight_gods.dart';
-import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/enums/enum_six_jia.dart';
 import 'base_entity.dart';
+import 'qi_men_star.dart';
 
 /// 单宫实体
 ///
@@ -16,7 +16,7 @@ class EachGong extends Equatable {
   final HouTianGua gongGua;
 
   /// 九星
-  final NineStarsEnum star;
+  final QiMenStar star;
 
   /// 八门
   final EightDoorEnum door;
@@ -144,7 +144,7 @@ class EachGong extends Equatable {
   EachGong copyWith({
     int? gongNumber,
     HouTianGua? gongGua,
-    NineStarsEnum? star,
+    QiMenStar? star,
     EightDoorEnum? door,
     EightGodsEnum? god,
     EightGodsEnum? diGod,

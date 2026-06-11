@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
@@ -93,7 +93,7 @@ class PanSerializer {
     final pan = QiMenPan(
       id: 'deserialized_${time.millisecondsSinceEpoch}',
       panDateTime: time,
-      shiJiaJu: ju,
+      ju: ju,
       plateType: PlateType.ZHUAN_PAN, // Default, not in serialized data
       gongMapper: gongMapper,
       zhiFuStar: NineStarsEnum.fromName(zhiFuMap['star'] as String),
@@ -167,6 +167,8 @@ class PanSerializer {
     QiMenPan pan, {
     PanDisplayConfig config = const PanDisplayConfig.defaultConfig(),
   }) {
+    // pan_serializer 当前仅支持时家盘的完整序列化（节气、三元、符头等字段为时家专属）；
+    // 月/年/日家通过 BaseJu 的最小集合做降级序列化。
     final ju = pan.shiJiaJu;
 
     // 必选：宫位信息
@@ -208,13 +210,18 @@ class PanSerializer {
     final result = <String, dynamic>{
       'brief': pan.brief,
       'time': DateFormat('yyyy-MM-dd HH:mm').format(pan.panDateTime),
-      'ju': {
-        'description': ju.juDescription,
-        'jieqi': ju.jieQiAt.name,
-        'threeYuan': ju.atThreeYuan.name,
-        'fuTou': ju.fuTouJiaZi.name,
-      },
-      'fourZhuEightChar': ju.fourZhuEightChar,
+      'jia': pan.ju.jia.name,
+      'ju': ju == null
+          ? {
+              'description': '${pan.ju.jia.name}·${pan.ju.juNumber}局',
+            }
+          : {
+              'description': ju.juDescription,
+              'jieqi': ju.jieQiAt.name,
+              'threeYuan': ju.atThreeYuan.name,
+              'fuTou': ju.fuTouJiaZi.name,
+            },
+      'fourZhuEightChar': pan.ju.fourZhuEightChar,
       'zhiFu': {
         'star': pan.zhiFuStar.name,
         'gong': pan.zhiFuStarAtGong.name,
@@ -248,14 +255,19 @@ class PanSerializer {
     QiMenPan pan, {
     PanDisplayConfig config = const PanDisplayConfig.defaultConfig(),
   }) {
-    final ju = pan.shiJiaJu;
+    final shiJiaJu = pan.shiJiaJu; // 时家专用，nullable
     final buf = StringBuffer();
 
     buf.writeln('【奇门遁甲盘局】');
     buf.writeln(pan.brief);
     buf.writeln('起盘时间：${DateFormat('yyyy-MM-dd HH:mm').format(pan.panDateTime)}');
-    buf.writeln('四柱八字：${ju.fourZhuEightChar}');
-    buf.writeln('局信息：${ju.juDescription}，节气${ju.jieQiAt.name}，${ju.atThreeYuan.name}，符头${ju.fuTouJiaZi.name}');
+    buf.writeln('四柱八字：${pan.ju.fourZhuEightChar}');
+    if (shiJiaJu != null) {
+      buf.writeln(
+          '局信息：${shiJiaJu.juDescription}，节气${shiJiaJu.jieQiAt.name}，${shiJiaJu.atThreeYuan.name}，符头${shiJiaJu.fuTouJiaZi.name}');
+    } else {
+      buf.writeln('局信息：${pan.ju.jia.name}·${pan.ju.juNumber}局');
+    }
     buf.writeln('值符：${pan.zhiFuStar.name}落${pan.zhiFuStarAtGong.name}宫');
     buf.writeln('值使：${pan.zhiShiDoor.name}落${pan.zhiShiDoorAtGong.name}宫');
     buf.writeln('驿马：${pan.horseLocation.name}');

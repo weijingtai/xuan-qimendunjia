@@ -1,4 +1,4 @@
-import 'package:common/const_resources_mapper.dart';
+import 'package:theme/const_resources_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qimendunjia/widgets/ten_gan_ke_ying_yin_zhang.dart';

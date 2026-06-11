@@ -2,8 +2,8 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:common/const_resources_mapper.dart';
-import 'package:common/enums.dart';
+import 'package:theme/const_resources_mapper.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_toast/flutter_sliding_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +19,7 @@ import '../model/each_gong_wang_shuai.dart';
 import '../model/shi_jia_qi_men.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../utils/constant_ui_resources_of_qi_men.dart';
+import 'package:qimendunjia/di/service_locator.dart';
 import '../utils/read_data_utils.dart';
 import 'BounceDialog.dart';
 import 'QiMenGongContentBackground.dart';
@@ -709,13 +710,13 @@ class _GongWidgetWidgetState extends State<GongWidget> {
   Future<TenGanKeYing> getTenGanKeYing(
       BuildContext context, TianGan tianPanGan, TianGan diPanGan) async {
     Map<TianGan, Map<TianGan, TenGanKeYing>> tenGanKeYingMapper =
-        await ReadDataUtils.readTenGanKeYing();
+        await serviceLocator.officialRuleReader.readTenGanKeYing();
     return tenGanKeYingMapper[tianPanGan]![diPanGan]!;
   }
 
   void tianPanGanTapped(BuildContext context, TianGan gan) async {
     Map<TianGan, Map<TianGan, TenGanKeYing>> tenGanKeYingMapper =
-        await ReadDataUtils.readTenGanKeYing();
+        await serviceLocator.officialRuleReader.readTenGanKeYing();
 
     showGeneralDialog(
       context: context,

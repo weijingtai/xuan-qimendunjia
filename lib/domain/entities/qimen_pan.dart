@@ -1,10 +1,11 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_most_popular_ge_ju.dart';
-import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'base_entity.dart';
+import 'base_ju.dart';
 import 'each_gong.dart';
+import 'qi_men_star.dart';
 import 'shi_jia_ju.dart';
 
 /// 奇门盘实体
@@ -17,8 +18,13 @@ class QiMenPan extends Equatable implements Entity {
   /// 起盘时间
   final DateTime panDateTime;
 
-  /// 局信息
-  final ShiJiaJu shiJiaJu;
+  /// 局信息（任意家：时 / 日 / 月 / 年）
+  final BaseJu ju;
+
+  /// 时家专用便利访问；非时家盘返回 null。
+  ///
+  /// 既有时家专属代码用此 getter；新代码请用 [ju] + 类型守卫。
+  ShiJiaJu? get shiJiaJu => ju is ShiJiaJu ? ju as ShiJiaJu : null;
 
   /// 盘类型（转盘/飞盘）
   final PlateType plateType;
@@ -35,7 +41,7 @@ class QiMenPan extends Equatable implements Entity {
   final HouTianGua zhiShiDoorAtGong;
 
   /// 值符星
-  final NineStarsEnum zhiFuStar;
+  final QiMenStar zhiFuStar;
 
   /// 值符星所在宫
   final HouTianGua zhiFuStarAtGong;
@@ -73,7 +79,7 @@ class QiMenPan extends Equatable implements Entity {
   QiMenPan({
     required this.id,
     required this.panDateTime,
-    required this.shiJiaJu,
+    required this.ju,
     required this.plateType,
     required this.gongMapper,
     required this.zhiShiDoor,
@@ -94,7 +100,7 @@ class QiMenPan extends Equatable implements Entity {
   List<Object?> get props => [
         id,
         panDateTime,
-        shiJiaJu,
+        ju,
         plateType,
         gongMapper,
         zhiShiDoor,
@@ -149,9 +155,13 @@ class QiMenPan extends Equatable implements Entity {
   /// 获取离宫
   EachGong? get liGong => getGong(HouTianGua.Li);
 
-  /// 获取盘局简要描述
-  String get brief =>
-      '${shiJiaJu.juDescription} ${plateType.name} ${_formatDateTime(panDateTime)}';
+  /// 获取盘局简要描述（按家维度走子类的 juDescription）
+  String get brief {
+    final juBrief = ju is ShiJiaJu
+        ? (ju as ShiJiaJu).juDescription
+        : '${ju.jia.name}·${ju.juNumber}局';
+    return '$juBrief ${plateType.name} ${_formatDateTime(panDateTime)}';
+  }
 
   /// 获取格局数量
   int get geJuCount => panGeJuList?.length ?? 0;
@@ -169,12 +179,12 @@ class QiMenPan extends Equatable implements Entity {
   QiMenPan copyWith({
     String? id,
     DateTime? panDateTime,
-    ShiJiaJu? shiJiaJu,
+    BaseJu? ju,
     PlateType? plateType,
     Map<HouTianGua, EachGong>? gongMapper,
     EightDoorEnum? zhiShiDoor,
     HouTianGua? zhiShiDoorAtGong,
-    NineStarsEnum? zhiFuStar,
+    QiMenStar? zhiFuStar,
     HouTianGua? zhiFuStarAtGong,
     bool? isStarFuYin,
     bool? isStarFanYin,
@@ -188,7 +198,7 @@ class QiMenPan extends Equatable implements Entity {
     return QiMenPan(
       id: id ?? this.id,
       panDateTime: panDateTime ?? this.panDateTime,
-      shiJiaJu: shiJiaJu ?? this.shiJiaJu,
+      ju: ju ?? this.ju,
       plateType: plateType ?? this.plateType,
       gongMapper: gongMapper ?? this.gongMapper,
       zhiShiDoor: zhiShiDoor ?? this.zhiShiDoor,

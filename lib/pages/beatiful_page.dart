@@ -4,21 +4,24 @@ import 'dart:ui';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:animated_read_more_text/animated_read_more_text.dart';
 import 'package:board_datetime_picker/board_datetime_picker.dart';
-import 'package:common/enums.dart';
-import 'package:common/module.dart';
-import 'package:common/widgets/four_zhu_eight_char.dart';
+import 'package:metaphysics_core/enums.dart';
+import 'package:theme/const_resources_mapper.dart';
+import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_ji_1.dart';
+import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_xiong_1.dart';
+import 'package:xuan_four_zhu_card/widgets/four_zhu_eight_char.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_shakemywidget/flutter_shakemywidget.dart';
 import 'package:flutter_sliding_toast/flutter_sliding_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:common/adapters/lunar_adapter.dart';
+import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/model/each_gong.dart';
 import 'package:qimendunjia/model/eight_door_ke_ying.dart';
 import 'package:qimendunjia/utils/constant_resources_of_qi_men.dart';
 import 'package:qimendunjia/utils/constant_ui_resources_of_qi_men.dart';
+import 'package:qimendunjia/di/service_locator.dart';
 import 'package:qimendunjia/utils/read_data_utils.dart';
 import 'package:qimendunjia/widgets/ten_gan_ke_ying_ge_ju_detail.dart';
 import 'package:slide_switcher/slide_switcher.dart';
@@ -551,7 +554,7 @@ class _BeautifulPageState extends State<BeautifulPage>
                                   // margin: EdgeInsets.fromLTRB(0, 24, 0, 0),
                                   child: FutureBuilder(
                                     future: loadDoorStarKeYing(
-                                        gong.door, gong.star),
+                                        gong.door, gong.star as NineStarsEnum),
                                     builder: (context,
                                         AsyncSnapshot<DoorStarKeYing?>
                                             snapshot) {
@@ -1057,7 +1060,7 @@ class _BeautifulPageState extends State<BeautifulPage>
       TianGan zhiFuGan,
       Map<HouTianGua, EachGong> gong) async {
     Map<TianGan, Map<TianGan, TenGanKeYingGeJu>> loadResult =
-        await ReadDataUtils.readTenGanKeYingGeJu();
+        await serviceLocator.officialRuleReader.readTenGanKeYingGeJu();
     Map<HouTianGua, UITenGanKeYingGeJu> result = {};
     for (var entry in gong.entries) {
       if (plateType == PlateType.ZHUAN_PAN && entry.key == HouTianGua.Center) {
@@ -1146,21 +1149,21 @@ class _BeautifulPageState extends State<BeautifulPage>
   Future<DoorStarKeYing?> loadDoorStarKeYing(
       EightDoorEnum door, NineStarsEnum star) async {
     Map<EightDoorEnum, Map<NineStarsEnum, DoorStarKeYing>> loadResult =
-        await ReadDataUtils.readDoorStarKeYing();
+        await serviceLocator.officialRuleReader.readDoorStarKeYing();
     return loadResult[door]?[star];
   }
 
   Future<String?> loadEightDoorGanKeYing(
       EightDoorEnum door, TianGan tianPanGan) async {
     Map<EightDoorEnum, Map<TianGan, String>> loadResult =
-        await ReadDataUtils.readDoorGanKeYing();
+        await serviceLocator.officialRuleReader.readDoorGanKeYing();
     return loadResult[door]?[tianPanGan];
   }
 
   Future<TenGanKeYing?> loadTenGanKeyYing(
       BuildContext context, TianGan tianPanGan, TianGan diPanGan) async {
     Map<TianGan, Map<TianGan, TenGanKeYing>> loadResult =
-        await ReadDataUtils.readTenGanKeYing();
+        await serviceLocator.officialRuleReader.readTenGanKeYing();
     // if (tianPanGan == TianGan.JIA && diPanGan == TianGan.BING){
     //   print(loadResult[tianPanGan]?[TianGan.BING]);
     // }
@@ -1173,7 +1176,7 @@ class _BeautifulPageState extends State<BeautifulPage>
 
     try {
       Map<EightDoorEnum, Map<EightDoorEnum, Map<YinYang, EightDoorKeYing>>>
-          loadResult = await ReadDataUtils.readEightDoorKeYing();
+          loadResult = await serviceLocator.officialRuleReader.readEightDoorKeYing();
       return loadResult[door]?[fixDoor];
     } catch (e) {
       rethrow;
@@ -1186,7 +1189,7 @@ class _BeautifulPageState extends State<BeautifulPage>
       HouTianGua gongGua, TianGan tianPanGan) async {
     if ([TianGan.YI, TianGan.BING, TianGan.DING].contains(tianPanGan)) {
       Map<HouTianGua, Map<TianGan, QiYiRuGong>> qiYiRuGongMapper =
-          await ReadDataUtils.readQiYiRuGong();
+          await serviceLocator.officialRuleReader.readQiYiRuGong();
       return qiYiRuGongMapper[gongGua]![tianPanGan]!;
     }
     return null;
@@ -1195,7 +1198,7 @@ class _BeautifulPageState extends State<BeautifulPage>
   Future<String?> loadTianPanGanRuGong(
       HouTianGua gongGua, TianGan tianPanGan) async {
     Map<HouTianGua, Map<TianGan, String>> qiYiRuGongMapper =
-        await ReadDataUtils.readQiYiRuGongDisease();
+        await serviceLocator.officialRuleReader.readQiYiRuGongDisease();
     return qiYiRuGongMapper[gongGua]?[tianPanGan];
   }
 

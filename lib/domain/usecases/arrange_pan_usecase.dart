@@ -1,12 +1,12 @@
 import '../../enums/enum_arrange_plate_type.dart';
+import '../entities/base_ju.dart';
 import '../entities/qimen_pan.dart';
-import '../entities/shi_jia_ju.dart';
 import '../repositories/qimen_calculator_repository.dart';
 import 'base_usecase.dart';
 
 /// 排盘用例参数
 class ArrangePanParams {
-  final ShiJiaJu ju;
+  final BaseJu ju;
   final PlateType plateType;
   final PanSettings settings;
 
@@ -46,8 +46,10 @@ class ArrangePanUseCase extends UseCase<QiMenPan, ArrangePanParams> {
       );
 
       return pan;
-    } catch (e) {
-      throw QiMenCalculationException('排盘失败: $e');
+    } catch (e, st) {
+      // 已经是 QiMenCalculationException 时直接 rethrow，避免双层包装吞掉堆栈
+      if (e is QiMenCalculationException) rethrow;
+      throw QiMenCalculationException('排盘失败: $e\n$st');
     }
   }
 }

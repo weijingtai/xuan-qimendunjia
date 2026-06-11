@@ -2,8 +2,8 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:common/const_resources_mapper.dart';
-import 'package:common/enums.dart';
+import 'package:theme/const_resources_mapper.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_toast/flutter_sliding_toast.dart';

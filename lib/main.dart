@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:qimendunjia/navigator.dart';
 import 'package:qimendunjia/di/service_locator.dart';
 
+// NOTE (storage-refactor/qimendunjia): the in-package demo entrypoint cannot
+// construct the assets backend without the product depending on
+// persistence_assets (EXECUTOR-RULES N3). Run the module via `example/lib/main.dart`,
+// which injects AssetsQimendunjiaOfficialRuleRepository into ServiceLocator.init(...).
+// See §10 transitional exception E2 for the removal/relocation task.
 void main() {
-  // 初始化依赖注入
-  serviceLocator.init();
-
-  runApp(const QiMenDunJiaApp());
+  throw UnsupportedError(
+    'Run qimendunjia via example/lib/main.dart (host injects the assets backend). '
+    'See storage-refactor plan §10 (E2).',
+  );
 }
 
 class QiMenDunJiaApp extends StatelessWidget {
@@ -45,50 +50,68 @@ class ArchitectureSelectionPage extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                '选择应用架构',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '选择入口',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                '本应用提供两种架构实现，功能相同',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
+                const SizedBox(height: 16),
+                const Text(
+                  '前两项为同一时家奇门的两种架构实现；第三项支持多家切换',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 48),
+                const SizedBox(height: 32),
 
-              // 旧版架构卡片
-              _buildArchitectureCard(
-                context,
-                title: '传统架构版本',
-                subtitle: 'ViewModel + UI直接通信',
-                description: '• 简单直接的状态管理\n• ViewModel直接处理业务逻辑\n• 适合快速开发和原型验证',
-                color: Colors.blue,
-                icon: Icons.layers,
-                route: '/qimendunjia',
-              ),
+                // 旧版架构卡片
+                _buildArchitectureCard(
+                  context,
+                  title: '传统架构版本',
+                  subtitle: 'ViewModel + UI直接通信（仅时家）',
+                  description:
+                      '• 简单直接的状态管理\n• ViewModel直接处理业务逻辑\n• 适合快速开发和原型验证',
+                  color: Colors.blue,
+                  icon: Icons.layers,
+                  route: '/qimendunjia',
+                ),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 16),
 
-              // 新版架构卡片
-              _buildArchitectureCard(
-                context,
-                title: 'MVVM+UseCase版本',
-                subtitle: 'Clean Architecture分层架构',
-                description: '• Domain层独立业务逻辑\n• UseCase封装用例场景\n• Repository模式分离数据层',
-                color: Colors.green,
-                icon: Icons.architecture,
-                route: '/qimendunjia/mvvm',
-              ),
-            ],
+                // 新版架构卡片
+                _buildArchitectureCard(
+                  context,
+                  title: 'MVVM+UseCase版本',
+                  subtitle: 'Clean Architecture分层架构（仅时家）',
+                  description: '• Domain层独立业务逻辑\n• UseCase封装用例场景\n• Repository模式分离数据层',
+                  color: Colors.green,
+                  icon: Icons.architecture,
+                  route: '/qimendunjia/mvvm',
+                ),
+
+                const SizedBox(height: 16),
+
+                // 多家奇门卡片（新）
+                _buildArchitectureCard(
+                  context,
+                  title: '多家奇门',
+                  subtitle: '时家 / 月家 / 年家可切换',
+                  description:
+                      '• 时家：转盘排宫，4 种起局法\n• 月家：飞盘逆飞，按年支孟仲季三元\n• 年家：飞盘逆飞，180 年大三元',
+                  color: Colors.deepPurple,
+                  icon: Icons.hub_outlined,
+                  route: '/qimendunjia/multi_jia',
+                ),
+              ],
+            ),
           ),
         ),
       ),

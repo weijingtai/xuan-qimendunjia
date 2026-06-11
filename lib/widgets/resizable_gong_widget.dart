@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:common/enums.dart';
-import 'package:common/module.dart';
+import 'package:metaphysics_core/enums.dart';
+import 'package:metaphysics_core/models/twelve_zhang_sheng.dart';
+import 'package:theme/const_resources_mapper.dart';
+import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_xiong_1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -147,7 +149,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                                   SizedBox(
                                       width: fontSize * 3,
                                       child: _stars(
-                                          gong.star,
+                                          gong.star as NineStarsEnum,
                                           fontSize,
                                           jiFontSize,
                                           hintFontSize,

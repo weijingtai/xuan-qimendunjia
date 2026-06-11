@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 part 'eight_door_ke_ying.g.dart';

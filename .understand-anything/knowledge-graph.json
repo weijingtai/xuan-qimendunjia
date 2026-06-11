@@ -1,0 +1,3618 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "xuan-qimendunjia",
+    "languages": [
+      "dart"
+    ],
+    "frameworks": [
+      "flutter"
+    ],
+    "description": "Qi Men Dun Jia divination module",
+    "analyzedAt": "2026-06-04T21:51:14.073Z",
+    "gitCommitHash": "875f68b55694c92576b539c8907f1f0a173d198d"
+  },
+  "nodes": [
+    {
+      "id": "config:.understand-anything/analysis-summary.json",
+      "name": "analysis-summary.json",
+      "type": "config",
+      "summary": "Metadata summary of the codebase analysis including node and edge counts.",
+      "tags": [
+        "json",
+        "analysis",
+        "metadata"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.understand-anything/config.json",
+      "name": "config.json",
+      "type": "config",
+      "summary": "Configuration settings for the analysis tool, such as output language.",
+      "tags": [
+        "json",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.understand-anything/fingerprints.json",
+      "name": "fingerprints.json",
+      "type": "config",
+      "summary": "Structural fingerprints of project files for incremental update detection.",
+      "tags": [
+        "json",
+        "checksums"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.understand-anything/knowledge-graph.json",
+      "name": "knowledge-graph.json",
+      "type": "config",
+      "summary": "The main knowledge graph output containing all nodes and edges.",
+      "tags": [
+        "json",
+        "graph"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.understand-anything/meta.json",
+      "name": "meta.json",
+      "type": "config",
+      "summary": "Metadata about the last analysis run, including commit hash and timestamp.",
+      "tags": [
+        "json",
+        "metadata"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.understand-anything/intermediate/assembled-graph.json",
+      "name": "assembled-graph.json",
+      "type": "config",
+      "summary": "Intermediate combined graph before final validation.",
+      "tags": [
+        "json",
+        "intermediate"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.understand-anything/intermediate/review.json",
+      "name": "review.json",
+      "type": "config",
+      "summary": "Validation report for the assembled knowledge graph.",
+      "tags": [
+        "json",
+        "report"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.understand-anything/intermediate/scan-result.json",
+      "name": "scan-result.json",
+      "type": "config",
+      "summary": "Result of the initial project scan identifying all files and categories.",
+      "tags": [
+        "json",
+        "scan"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:AGENTS.md",
+      "name": "AGENTS.md",
+      "type": "docs",
+      "summary": "Mandatory rules and conventions for AI agents operating in this project.",
+      "tags": [
+        "markdown",
+        "documentation",
+        "rules"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:AI_README.md",
+      "name": "AI_README.md",
+      "type": "docs",
+      "summary": "Entry point for AI agents defining core principles and SPEC-driven workflow.",
+      "tags": [
+        "markdown",
+        "documentation",
+        "guidelines"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:ARCHITECTURE.md",
+      "name": "ARCHITECTURE.md",
+      "type": "docs",
+      "summary": "Technical overview of the project's dual-architecture design (Traditional vs MVVM+UseCase).",
+      "tags": [
+        "markdown",
+        "architecture",
+        "design"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:CHANGELOG.md",
+      "name": "CHANGELOG.md",
+      "type": "docs",
+      "summary": "Log of changes and releases for the project.",
+      "tags": [
+        "markdown",
+        "history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:README.md",
+      "name": "README.md",
+      "type": "docs",
+      "summary": "Main project documentation providing a quick start guide and overview.",
+      "tags": [
+        "markdown",
+        "documentation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:analysis_options.yaml",
+      "name": "analysis_options.yaml",
+      "type": "config",
+      "summary": "Static analysis rules and linting configuration for Dart.",
+      "tags": [
+        "yaml",
+        "dart",
+        "linting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:build.yaml",
+      "name": "build.yaml",
+      "type": "config",
+      "summary": "Build runner configuration for code generation in the project.",
+      "tags": [
+        "yaml",
+        "build",
+        "dart"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:cell-design.html",
+      "name": "cell-design.html",
+      "type": "markup",
+      "summary": "UI design prototype for a single palace cell in the QiMen grid.",
+      "tags": [
+        "html",
+        "css",
+        "ui",
+        "prototype"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:devtools_options.yaml",
+      "name": "devtools_options.yaml",
+      "type": "config",
+      "summary": "Configuration for Dart and Flutter DevTools extensions.",
+      "tags": [
+        "yaml",
+        "dart",
+        "devtools"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:index.html",
+      "name": "index.html",
+      "type": "markup",
+      "summary": "Web-based UI prototype for the QiMenDunJia grid layout.",
+      "tags": [
+        "html",
+        "css",
+        "ui",
+        "prototype"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:pubspec.yaml",
+      "name": "pubspec.yaml",
+      "type": "config",
+      "summary": "Project manifest defining dependencies and assets for the Flutter package.",
+      "tags": [
+        "yaml",
+        "flutter",
+        "dependencies"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:说明文档.md",
+      "name": "说明文档.md",
+      "type": "docs",
+      "summary": "Project planning and progress documentation in Chinese.",
+      "tags": [
+        "markdown",
+        "documentation",
+        "planning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/qi_men_dun_jia/door_gan_ke_ying.json",
+      "name": "door_gan_ke_ying.json",
+      "type": "config",
+      "summary": "Divination text mappings for Eight Doors combining with Heavenly Stems.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/qi_men_dun_jia/eight_door_ke_ying.json",
+      "name": "eight_door_ke_ying.json",
+      "type": "config",
+      "summary": "Detailed dynamic and static omens for Eight Doors combinations.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/qi_men_dun_jia/gong_gan.json",
+      "name": "gong_gan.json",
+      "type": "config",
+      "summary": "Mapping of palace positions to corresponding Heavenly Stems.",
+      "tags": [
+        "json",
+        "data",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/qi_men_dun_jia/gong_qi.json",
+      "name": "gong_qi.json",
+      "type": "config",
+      "summary": "Mapping of palace positions to corresponding 'Qi' or energies.",
+      "tags": [
+        "json",
+        "data",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/qi_men_dun_jia/star_door_ke_ying.json",
+      "name": "star_door_ke_ying.json",
+      "type": "config",
+      "summary": "Divination text for Nine Stars combining with Eight Doors.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/qi_men_dun_jia/star_zhi_chen.json",
+      "name": "star_zhi_chen.json",
+      "type": "config",
+      "summary": "Mapping of Nine Stars to their corresponding Earthly Branches or timings.",
+      "tags": [
+        "json",
+        "data",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/qi_men_dun_jia/ten_gan_ke_ying_final.json",
+      "name": "ten_gan_ke_ying_final.json",
+      "type": "config",
+      "summary": "Final refined version of divination text for Heavenly Stem combinations.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/qi_men_dun_jia/ten_gan_ke_ying_ji_xiong.json",
+      "name": "ten_gan_ke_ying_ji_xiong.json",
+      "type": "config",
+      "summary": "Auspiciousness/Inauspiciousness ratings for Heavenly Stem combinations.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/qi_men_dun_jia/ten_gan_ke_ying_v1.json",
+      "name": "ten_gan_ke_ying_v1.json",
+      "type": "config",
+      "summary": "Initial version of Heavenly Stem combination divination text.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ONBOARDING.md",
+      "name": "ONBOARDING.md",
+      "type": "docs",
+      "summary": "Onboarding guide for developers joining the QiMenDunJia project.",
+      "tags": [
+        "markdown",
+        "documentation",
+        "onboarding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/Plans.md",
+      "name": "Plans.md",
+      "type": "docs",
+      "summary": "High-level development plans and feature roadmap for the project.",
+      "tags": [
+        "markdown",
+        "planning",
+        "roadmap"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/README.md",
+      "name": "README.md",
+      "type": "docs",
+      "summary": "Root documentation file for the docs/ directory.",
+      "tags": [
+        "markdown",
+        "documentation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/README_zh.md",
+      "name": "README_zh.md",
+      "type": "docs",
+      "summary": "Chinese version of the root documentation for the docs/ directory.",
+      "tags": [
+        "markdown",
+        "documentation",
+        "chinese"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/CONSTITUTION.md",
+      "name": "CONSTITUTION.md",
+      "type": "docs",
+      "summary": "Version matrix and revision history for the AI governance modules.",
+      "tags": [
+        "markdown",
+        "governance",
+        "ai"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/board-protocol.md",
+      "name": "board-protocol.md",
+      "type": "docs",
+      "summary": "Protocol for AI agents interacting with project boards and plans.",
+      "tags": [
+        "markdown",
+        "governance",
+        "ai"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/code-style.md",
+      "name": "code-style.md",
+      "type": "docs",
+      "summary": "Coding style guidelines for AI agents when writing Dart/Flutter code.",
+      "tags": [
+        "markdown",
+        "standards",
+        "coding-style"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/delivery-pipeline.md",
+      "name": "delivery-pipeline.md",
+      "type": "docs",
+      "summary": "5-step delivery pipeline and quality gates for AI-generated code.",
+      "tags": [
+        "markdown",
+        "standards",
+        "devops"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/directory-structure.md",
+      "name": "directory-structure.md",
+      "type": "docs",
+      "summary": "Directory structure conventions and directory-level responsibilities.",
+      "tags": [
+        "markdown",
+        "standards",
+        "architecture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/doc-standards.md",
+      "name": "doc-standards.md",
+      "type": "docs",
+      "summary": "Documentation standards and naming rules for project documents.",
+      "tags": [
+        "markdown",
+        "standards",
+        "documentation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/git-rules.md",
+      "name": "git-rules.md",
+      "type": "docs",
+      "summary": "Git branching, commit, and merge rules for AI agents.",
+      "tags": [
+        "markdown",
+        "standards",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/glossary.md",
+      "name": "glossary.md",
+      "type": "docs",
+      "summary": "Glossary of terms used in the project's AI governance documentation.",
+      "tags": [
+        "markdown",
+        "documentation",
+        "glossary"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/phases.md",
+      "name": "phases.md",
+      "type": "docs",
+      "summary": "Detailed definitions of the SPEC Coding phases (A1-A4, B1-B3).",
+      "tags": [
+        "markdown",
+        "standards",
+        "workflow"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/principles.md",
+      "name": "principles.md",
+      "type": "docs",
+      "summary": "7 core non-negotiable principles for AI agent behavior.",
+      "tags": [
+        "markdown",
+        "governance",
+        "ai"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/project-context-guide.md",
+      "name": "project-context-guide.md",
+      "type": "docs",
+      "summary": "Guide for AI agents on how to understand and navigate the project context.",
+      "tags": [
+        "markdown",
+        "documentation",
+        "context"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ai/toolchain.md",
+      "name": "toolchain.md",
+      "type": "docs",
+      "summary": "Flutter SDK and build toolchain configuration requirements for AI agents.",
+      "tags": [
+        "markdown",
+        "standards",
+        "toolchain"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/IMPLEMENTATION_COMPLETE.md",
+      "name": "IMPLEMENTATION_COMPLETE.md",
+      "type": "docs",
+      "summary": "Archived log of completed implementations and features.",
+      "tags": [
+        "markdown",
+        "archive",
+        "history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/IMPLEMENTATION_GUIDE.md",
+      "name": "IMPLEMENTATION_GUIDE.md",
+      "type": "docs",
+      "summary": "Historical implementation guide for previous project phases.",
+      "tags": [
+        "markdown",
+        "archive",
+        "documentation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/IMPLEMENTATION_PROGRESS.md",
+      "name": "IMPLEMENTATION_PROGRESS.md",
+      "type": "docs",
+      "summary": "Archived progress reports and tracking.",
+      "tags": [
+        "markdown",
+        "archive",
+        "history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/PRDs.md",
+      "name": "PRDs.md",
+      "type": "docs",
+      "summary": "Collection of historical Product Requirement Documents.",
+      "tags": [
+        "markdown",
+        "archive",
+        "prd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/REFACTORING_PLAN.md",
+      "name": "REFACTORING_PLAN.md",
+      "type": "docs",
+      "summary": "Archived plan for a major project refactoring.",
+      "tags": [
+        "markdown",
+        "archive",
+        "refactoring"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/REFACTORING_SUMMARY.md",
+      "name": "REFACTORING_SUMMARY.md",
+      "type": "docs",
+      "summary": "Summary of results from a previous refactoring effort.",
+      "tags": [
+        "markdown",
+        "archive",
+        "history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/日家伪时家.md",
+      "name": "日家伪时家.md",
+      "type": "docs",
+      "summary": "Archived research or documentation on Ri Jia and Shi Jia Qi Men.",
+      "tags": [
+        "markdown",
+        "archive",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/日家奇门.md",
+      "name": "日家奇门.md",
+      "type": "docs",
+      "summary": "Archived documentation specific to Ri Jia Qi Men divination.",
+      "tags": [
+        "markdown",
+        "archive",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/more_qimen/extra_hour_plans.md",
+      "name": "extra_hour_plans.md",
+      "type": "docs",
+      "summary": "Implementation plan for extending the project to support Nian, Yue, and Ri Jia Qi Men systems.",
+      "tags": [
+        "markdown",
+        "planning",
+        "architecture",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/more_qimen/extra_hour_tasks.md",
+      "name": "extra_hour_tasks.md",
+      "type": "docs",
+      "summary": "Task list and checklist corresponding to the extension plan for non-Shi Jia Qi Men systems.",
+      "tags": [
+        "markdown",
+        "checklist",
+        "planning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/more_qimen/nian_jia_algorithm.md",
+      "name": "nian_jia_algorithm.md",
+      "type": "docs",
+      "summary": "Detailed algorithm and rules for Year Jia Qi Men (Nian Jia Qi Men) divination.",
+      "tags": [
+        "markdown",
+        "algorithm",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/more_qimen/nian_jia_tasks.md",
+      "name": "nian_jia_tasks.md",
+      "type": "docs",
+      "summary": "Specific implementation tasks for the Year Jia Qi Men functionality.",
+      "tags": [
+        "markdown",
+        "checklist",
+        "planning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/more_qimen/qimen_jia_comparison.md",
+      "name": "qimen_jia_comparison.md",
+      "type": "docs",
+      "summary": "Authoritative comparison table of rules and mechanisms for the four types of Qi Men.",
+      "tags": [
+        "markdown",
+        "documentation",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/more_qimen/ri_jia_algorithm.md",
+      "name": "ri_jia_algorithm.md",
+      "type": "docs",
+      "summary": "Detailed algorithm and rules for Day Jia Qi Men (Ri Jia Qi Men) divination.",
+      "tags": [
+        "markdown",
+        "algorithm",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/more_qimen/ri_jia_tasks.md",
+      "name": "ri_jia_tasks.md",
+      "type": "docs",
+      "summary": "Specific implementation tasks for the Day Jia Qi Men functionality.",
+      "tags": [
+        "markdown",
+        "checklist",
+        "planning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/more_qimen/yue_jia_algorithm.md",
+      "name": "yue_jia_algorithm.md",
+      "type": "docs",
+      "summary": "Detailed algorithm and rules for Month Jia Qi Men (Yue Jia Qi Men) divination.",
+      "tags": [
+        "markdown",
+        "algorithm",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/more_qimen/yue_jia_tasks.md",
+      "name": "yue_jia_tasks.md",
+      "type": "docs",
+      "summary": "Specific implementation tasks for the Month Jia Qi Men functionality.",
+      "tags": [
+        "markdown",
+        "checklist",
+        "planning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:example/README.md",
+      "name": "README.md",
+      "type": "docs",
+      "summary": "Basic instructions for running the example project.",
+      "tags": [
+        "markdown",
+        "documentation",
+        "example"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/analysis_options.yaml",
+      "name": "analysis_options.yaml",
+      "type": "config",
+      "summary": "Static analysis rules for the example project.",
+      "tags": [
+        "yaml",
+        "dart",
+        "linting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/pubspec.yaml",
+      "name": "pubspec.yaml",
+      "type": "config",
+      "summary": "Manifest for the example project, defining dependencies and assets.",
+      "tags": [
+        "yaml",
+        "flutter",
+        "dependencies"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:example/run_web.sh",
+      "name": "run_web.sh",
+      "type": "script",
+      "summary": "Shell script to run the example project in a web browser.",
+      "tags": [
+        "shell",
+        "script",
+        "web"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/dataset/area.min.json",
+      "name": "area.min.json",
+      "type": "config",
+      "summary": "Minified JSON data containing geographic area information.",
+      "tags": [
+        "json",
+        "data",
+        "geography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/dataset/city.min.json",
+      "name": "city.min.json",
+      "type": "config",
+      "summary": "Minified JSON data containing city information.",
+      "tags": [
+        "json",
+        "data",
+        "geography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/dataset/combined-now.json",
+      "name": "combined-now.json",
+      "type": "config",
+      "summary": "Combined dataset likely for current location or time settings.",
+      "tags": [
+        "json",
+        "data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/dataset/data.min.json",
+      "name": "data.min.json",
+      "type": "config",
+      "summary": "Minified general dataset for the application.",
+      "tags": [
+        "json",
+        "data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/dataset/province.min.json",
+      "name": "province.min.json",
+      "type": "config",
+      "summary": "Minified JSON data containing provincial information.",
+      "tags": [
+        "json",
+        "data",
+        "geography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/dataset/province_city_area_lng_lat.json",
+      "name": "province_city_area_lng_lat.json",
+      "type": "config",
+      "summary": "Geographic data including coordinates for provinces, cities, and areas.",
+      "tags": [
+        "json",
+        "data",
+        "geography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/dataset/regions.json",
+      "name": "regions.json",
+      "type": "config",
+      "summary": "Hierarchical region data for location selection.",
+      "tags": [
+        "json",
+        "data",
+        "geography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/dataset/timezones.json",
+      "name": "timezones.json",
+      "type": "config",
+      "summary": "JSON data containing timezone information.",
+      "tags": [
+        "json",
+        "data",
+        "geography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/lotties/arrow_down.json",
+      "name": "arrow_down.json",
+      "type": "config",
+      "summary": "Lottie animation file for an arrow down effect.",
+      "tags": [
+        "json",
+        "lottie",
+        "animation",
+        "assets"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/lotties/arrow_up.json",
+      "name": "arrow_up.json",
+      "type": "config",
+      "summary": "Lottie animation file for an arrow up effect.",
+      "tags": [
+        "json",
+        "lottie",
+        "animation",
+        "assets"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/lotties/horse_walking.json",
+      "name": "horse_walking.json",
+      "type": "config",
+      "summary": "Lottie animation file for a walking horse effect.",
+      "tags": [
+        "json",
+        "lottie",
+        "animation",
+        "assets"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/lotties/three_down_arrow.json",
+      "name": "three_down_arrow.json",
+      "type": "config",
+      "summary": "Lottie animation file for three downward arrows.",
+      "tags": [
+        "json",
+        "lottie",
+        "animation",
+        "assets"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/lotties/two_down_arrow.json",
+      "name": "two_down_arrow.json",
+      "type": "config",
+      "summary": "Lottie animation file for two downward arrows.",
+      "tags": [
+        "json",
+        "lottie",
+        "animation",
+        "assets"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/qi_men_dun_jia/door_gan_ke_ying.json",
+      "name": "door_gan_ke_ying.json",
+      "type": "config",
+      "summary": "Divination text mappings for Eight Doors in the example project.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/qi_men_dun_jia/eight_door_ke_ying.json",
+      "name": "eight_door_ke_ying.json",
+      "type": "config",
+      "summary": "Omen data for Eight Doors in the example project.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/qi_men_dun_jia/gong_gan.json",
+      "name": "gong_gan.json",
+      "type": "config",
+      "summary": "Palace-Stem mappings in the example project.",
+      "tags": [
+        "json",
+        "data",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/qi_men_dun_jia/gong_qi.json",
+      "name": "gong_qi.json",
+      "type": "config",
+      "summary": "Palace-Qi mappings in the example project.",
+      "tags": [
+        "json",
+        "data",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/qi_men_dun_jia/star_door_ke_ying.json",
+      "name": "star_door_ke_ying.json",
+      "type": "config",
+      "summary": "Star-Door combination omens in the example project.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/qi_men_dun_jia/star_zhi_chen.json",
+      "name": "star_zhi_chen.json",
+      "type": "config",
+      "summary": "Star-Timing mappings in the example project.",
+      "tags": [
+        "json",
+        "data",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/qi_men_dun_jia/ten_gan_ke_ying_final.json",
+      "name": "ten_gan_ke_ying_final.json",
+      "type": "config",
+      "summary": "Final Heavenly Stem combination data in the example project.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/qi_men_dun_jia/ten_gan_ke_ying_ji_xiong.json",
+      "name": "ten_gan_ke_ying_ji_xiong.json",
+      "type": "config",
+      "summary": "Heavenly Stem combination auspiciousness data in the example project.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/assets/qi_men_dun_jia/ten_gan_ke_ying_v1.json",
+      "name": "ten_gan_ke_ying_v1.json",
+      "type": "config",
+      "summary": "Initial Heavenly Stem combination data in the example project.",
+      "tags": [
+        "json",
+        "data",
+        "divination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/web/tmp/grid/grid_1.html",
+      "name": "grid_1.html",
+      "type": "markup",
+      "summary": "Temporary HTML file for testing grid layout version 1.",
+      "tags": [
+        "html",
+        "web",
+        "prototype",
+        "testing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/web/tmp/grid/grid_2.html",
+      "name": "grid_2.html",
+      "type": "markup",
+      "summary": "Temporary HTML file for testing grid layout version 2.",
+      "tags": [
+        "html",
+        "web",
+        "prototype",
+        "testing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/web/tmp/grid/grid_3.html",
+      "name": "grid_3.html",
+      "type": "markup",
+      "summary": "Temporary HTML file for testing grid layout version 3.",
+      "tags": [
+        "html",
+        "web",
+        "prototype",
+        "testing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/web/tmp/grid/improved_palace_card.html",
+      "name": "improved_palace_card.html",
+      "type": "markup",
+      "summary": "Temporary HTML file for prototyping an improved palace card UI.",
+      "tags": [
+        "html",
+        "web",
+        "prototype",
+        "testing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.codex/config.toml",
+      "name": "config.toml",
+      "type": "config",
+      "summary": "Configuration for the Codex tool.",
+      "tags": [
+        "toml",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:.flutter-plugins",
+      "name": ".flutter-plugins",
+      "type": "file",
+      "summary": "Flutter plugin location metadata.",
+      "tags": [
+        "config",
+        "flutter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:.flutter-plugins-dependencies",
+      "name": ".flutter-plugins-dependencies",
+      "type": "file",
+      "summary": "Flutter plugin dependency metadata.",
+      "tags": [
+        "config",
+        "flutter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:.metadata",
+      "name": ".metadata",
+      "type": "file",
+      "summary": "Flutter project metadata.",
+      "tags": [
+        "config",
+        "flutter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "name": ".understandignore",
+      "type": "file",
+      "summary": "Patterns for files and directories to exclude from codebase analysis.",
+      "tags": [
+        "config",
+        "ignore"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/data/ten_gan_ke_ying_v1.json",
+      "name": "ten_gan_ke_ying_v1.json",
+      "type": "config",
+      "summary": "Divination data for Heavenly Stem combinations version 1.",
+      "tags": [
+        "json",
+        "data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/icons/icon_list.json",
+      "name": "icon_list.json",
+      "type": "config",
+      "summary": "List of available icons in the project.",
+      "tags": [
+        "json",
+        "data",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:assets/lotties/horse_walking.json",
+      "name": "horse_walking.json",
+      "type": "config",
+      "summary": "Lottie animation file for a walking horse.",
+      "tags": [
+        "json",
+        "lottie",
+        "assets"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:check_day_2.dart",
+      "name": "check_day_2.dart",
+      "type": "file",
+      "summary": "Utility script for checking day cycles in QiMen divination.",
+      "tags": [
+        "dart",
+        "script",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:check_day.dart",
+      "name": "check_day.dart",
+      "type": "file",
+      "summary": "Utility script for checking day cycles in QiMen divination.",
+      "tags": [
+        "dart",
+        "script",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:check_ju.dart",
+      "name": "check_ju.dart",
+      "type": "file",
+      "summary": "Utility script for checking divination局 cycles.",
+      "tags": [
+        "dart",
+        "script",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/board/PROGRESS.md",
+      "name": "PROGRESS.md",
+      "type": "docs",
+      "summary": "Project board progress tracking.",
+      "tags": [
+        "markdown",
+        "planning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/board/TASKS.md",
+      "name": "TASKS.md",
+      "type": "docs",
+      "summary": "Project board task list.",
+      "tags": [
+        "markdown",
+        "planning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/claude/code_review.md",
+      "name": "code_review.md",
+      "type": "docs",
+      "summary": "Archived code review feedback from Claude.",
+      "tags": [
+        "markdown",
+        "archive",
+        "review"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/integrate_ai/PRDs_v1.md",
+      "name": "PRDs_v1.md",
+      "type": "docs",
+      "summary": "Archived AI integration requirements version 1.",
+      "tags": [
+        "markdown",
+        "archive",
+        "prd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/integrate_ai/tasks_v1.md",
+      "name": "tasks_v1.md",
+      "type": "docs",
+      "summary": "Archived AI integration tasks version 1.",
+      "tags": [
+        "markdown",
+        "archive",
+        "ai"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/previous_archived/old_ui_layout/layout_report.md",
+      "name": "layout_report.md",
+      "type": "docs",
+      "summary": "Archived report on old UI layout designs.",
+      "tags": [
+        "markdown",
+        "archive",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/project/README.md",
+      "name": "README.md",
+      "type": "docs",
+      "summary": "README for the internal project documentation.",
+      "tags": [
+        "markdown",
+        "documentation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/superpowers/plans/2026-05-08-ai-readme-implementation.md",
+      "name": "2026-05-08-ai-readme-implementation.md",
+      "type": "docs",
+      "summary": "Implementation plan for the AI agent README documentation.",
+      "tags": [
+        "markdown",
+        "planning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/superpowers/specs/2026-05-08-ai-governance-v2-design.md",
+      "name": "2026-05-08-ai-governance-v2-design.md",
+      "type": "docs",
+      "summary": "Design specification for the second version of project AI governance.",
+      "tags": [
+        "markdown",
+        "planning",
+        "governance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/superpowers/specs/2026-05-08-ai-readme-design.md",
+      "name": "2026-05-08-ai-readme-design.md",
+      "type": "docs",
+      "summary": "Design specification for the AI agent README documentation.",
+      "tags": [
+        "markdown",
+        "planning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/.metadata",
+      "name": ".metadata",
+      "type": "file",
+      "summary": "Flutter metadata for the example project.",
+      "tags": [
+        "config",
+        "flutter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/assets/dataset/world_country.pro",
+      "name": "world_country.pro",
+      "type": "file",
+      "summary": "Country database file for geographic lookups in the example project.",
+      "tags": [
+        "pro",
+        "data",
+        "geography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/assets/dataset/world.sqlite3",
+      "name": "world.sqlite3",
+      "type": "file",
+      "summary": "SQLite database containing world geographic data for the example project.",
+      "tags": [
+        "sqlite3",
+        "database",
+        "geography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/lib/main.dart",
+      "name": "main.dart",
+      "type": "file",
+      "summary": "Entry point for the example application.",
+      "tags": [
+        "dart",
+        "entrypoint",
+        "example"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/lib/redesign_ui/components/palace/brief_palace_layout.dart",
+      "name": "brief_palace_layout.dart",
+      "type": "file",
+      "summary": "Widget defining the layout for a brief palace view.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/lib/redesign_ui/core/design_system.dart",
+      "name": "design_system.dart",
+      "type": "file",
+      "summary": "Core design system definitions for the redesigned UI.",
+      "tags": [
+        "dart",
+        "design-system",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/lib/redesign_ui/demo/smart_grid_demo.dart",
+      "name": "smart_grid_demo.dart",
+      "type": "file",
+      "summary": "Demo page for testing the smart grid layout.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "demo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/lib/redesign_ui/layouts/smart_grid.dart",
+      "name": "smart_grid.dart",
+      "type": "file",
+      "summary": "Widget defining the smart grid layout mechanism.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/web/index.html",
+      "name": "index.html",
+      "type": "markup",
+      "summary": "Web entry point for the example app.",
+      "tags": [
+        "html",
+        "web"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:example/web/manifest.json",
+      "name": "manifest.json",
+      "type": "config",
+      "summary": "Web manifest for the example app.",
+      "tags": [
+        "json",
+        "web"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/web/sqlite3.wasm",
+      "name": "sqlite3.wasm",
+      "type": "file",
+      "summary": "WASM binary for SQLite support in the web version of the example.",
+      "tags": [
+        "wasm",
+        "binary",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:example/web/tmp/panel/v1.html",
+      "name": "v1.html",
+      "type": "markup",
+      "summary": "Temporary HTML prototype for a UI panel.",
+      "tags": [
+        "html",
+        "web",
+        "prototype"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/ai/pan_display_config.dart",
+      "name": "pan_display_config.dart",
+      "type": "file",
+      "summary": "Configuration for how the QiMen pan is displayed.",
+      "tags": [
+        "dart",
+        "config",
+        "ai"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/ai/pan_serializer.dart",
+      "name": "pan_serializer.dart",
+      "type": "file",
+      "summary": "Logic for serializing and deserializing QiMen pan data for AI interaction.",
+      "tags": [
+        "dart",
+        "ai",
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/ai/qimen_agent_tool.dart",
+      "name": "qimen_agent_tool.dart",
+      "type": "file",
+      "summary": "Tool definition for AI agents to interact with QiMen divination logic.",
+      "tags": [
+        "dart",
+        "ai",
+        "tool"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/ai/qimen_ai_action.dart",
+      "name": "qimen_ai_action.dart",
+      "type": "file",
+      "summary": "Definition of actions that AI can perform related to QiMen.",
+      "tags": [
+        "dart",
+        "ai"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/ai/qimen_ai_integration.dart",
+      "name": "qimen_ai_integration.dart",
+      "type": "file",
+      "summary": "Integration point for AI services within the QiMenDunJia package.",
+      "tags": [
+        "dart",
+        "ai",
+        "integration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/data.dart",
+      "name": "data.dart",
+      "type": "file",
+      "summary": "Barrel file exporting data layer components.",
+      "tags": [
+        "dart",
+        "barrel"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/data/datasources/cache_data_source.dart",
+      "name": "cache_data_source.dart",
+      "type": "file",
+      "summary": "Implementation of a cached data source for performance optimization.",
+      "tags": [
+        "dart",
+        "data",
+        "cache"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/data/datasources/calculator/qimen_calculator_data_source.dart",
+      "name": "qimen_calculator_data_source.dart",
+      "type": "file",
+      "summary": "Data source providing calculated QiMen results.",
+      "tags": [
+        "dart",
+        "data",
+        "calculator"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/data/datasources/json_data_source.dart",
+      "name": "json_data_source.dart",
+      "type": "file",
+      "summary": "Data source for reading QiMen data from JSON files.",
+      "tags": [
+        "dart",
+        "data",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/data/models/mappers/each_gong_mapper.dart",
+      "name": "each_gong_mapper.dart",
+      "type": "file",
+      "summary": "Data mapping logic for individual palace (Gong) objects.",
+      "tags": [
+        "dart",
+        "data",
+        "mapper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/data/models/mappers/qimen_pan_mapper.dart",
+      "name": "qimen_pan_mapper.dart",
+      "type": "file",
+      "summary": "Data mapping logic for the QiMen pan (plate) objects.",
+      "tags": [
+        "dart",
+        "data",
+        "mapper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/data/models/mappers/shi_jia_ju_mapper.dart",
+      "name": "shi_jia_ju_mapper.dart",
+      "type": "file",
+      "summary": "Data mapping logic for Shi Jia Qi Men results.",
+      "tags": [
+        "dart",
+        "data",
+        "mapper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/data/repositories/qimen_calculator_repository_impl.dart",
+      "name": "qimen_calculator_repository_impl.dart",
+      "type": "file",
+      "summary": "Concrete implementation of the QiMen calculator repository.",
+      "tags": [
+        "dart",
+        "data",
+        "repository"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/data/repositories/qimen_data_repository_impl.dart",
+      "name": "qimen_data_repository_impl.dart",
+      "type": "file",
+      "summary": "Concrete implementation of the QiMen data repository.",
+      "tags": [
+        "dart",
+        "data",
+        "repository"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/di/service_locator.dart",
+      "name": "service_locator.dart",
+      "type": "file",
+      "summary": "Service locator for dependency injection.",
+      "tags": [
+        "dart",
+        "di"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/base_entity.dart",
+      "name": "base_entity.dart",
+      "type": "file",
+      "summary": "Base class for domain entities.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/base_ju.dart",
+      "name": "base_ju.dart",
+      "type": "file",
+      "summary": "Base class for divination局 results.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/each_gong.dart",
+      "name": "each_gong.dart",
+      "type": "file",
+      "summary": "Entity representing complete information (star, door, gods, stems) for a single palace in the QiMen grid.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/ke_jia_ju.dart",
+      "name": "ke_jia_ju.dart",
+      "type": "file",
+      "summary": "Entity for Ke Jia Qi Men divination局 results.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/nian_jia_ju.dart",
+      "name": "nian_jia_ju.dart",
+      "type": "file",
+      "summary": "Entity for Year Jia Qi Men divination局 results.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/qi_men_star.dart",
+      "name": "qi_men_star.dart",
+      "type": "file",
+      "summary": "Abstract interface for QiMen stars (Nine Stars).",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/qimen_pan.dart",
+      "name": "qimen_pan.dart",
+      "type": "file",
+      "summary": "Entity representing the complete QiMen plate/pan with 9 palaces.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/ri_jia_day_analysis.dart",
+      "name": "ri_jia_day_analysis.dart",
+      "type": "file",
+      "summary": "Entity for analyzing Day Jia Qi Men specific data.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/ri_jia_ju.dart",
+      "name": "ri_jia_ju.dart",
+      "type": "file",
+      "summary": "Entity for Day Jia Qi Men divination局 results.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/san_yuan_type.dart",
+      "name": "san_yuan_type.dart",
+      "type": "file",
+      "summary": "Enum or entity for the Three Cycles (San Yuan) system.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/shi_jia_ju.dart",
+      "name": "shi_jia_ju.dart",
+      "type": "file",
+      "summary": "Entity for Time Jia Qi Men divination局 results.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/entities/yue_jia_ju.dart",
+      "name": "yue_jia_ju.dart",
+      "type": "file",
+      "summary": "Entity for Month Jia Qi Men divination局 results.",
+      "tags": [
+        "dart",
+        "domain",
+        "entity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/repositories/qimen_calculator_repository.dart",
+      "name": "qimen_calculator_repository.dart",
+      "type": "file",
+      "summary": "Repository interface for calculating QiMen data.",
+      "tags": [
+        "dart",
+        "domain",
+        "repository"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/repositories/qimen_data_repository.dart",
+      "name": "qimen_data_repository.dart",
+      "type": "file",
+      "summary": "Repository interface for fetching QiMen data.",
+      "tags": [
+        "dart",
+        "domain",
+        "repository"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/usecases/arrange_pan_usecase.dart",
+      "name": "arrange_pan_usecase.dart",
+      "type": "file",
+      "summary": "Domain-level use case for plate arrangement logic.",
+      "tags": [
+        "dart",
+        "domain",
+        "usecase"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/usecases/base_usecase.dart",
+      "name": "base_usecase.dart",
+      "type": "file",
+      "summary": "Base interface for all business logic use cases.",
+      "tags": [
+        "dart",
+        "domain",
+        "usecase"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/usecases/calculate_ju_usecase.dart",
+      "name": "calculate_ju_usecase.dart",
+      "type": "file",
+      "summary": "Domain-level use case for calculating divination局.",
+      "tags": [
+        "dart",
+        "domain",
+        "usecase"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/domain/usecases/select_gong_usecase.dart",
+      "name": "select_gong_usecase.dart",
+      "type": "file",
+      "summary": "Domain-level use case for palace selection and analysis.",
+      "tags": [
+        "dart",
+        "domain",
+        "usecase"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_arrange_plate_type.dart",
+      "name": "enum_arrange_plate_type.dart",
+      "type": "file",
+      "summary": "Enum defining different plate arrangement types (e.g., Chai Bu, Zhi Run).",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_eight_door.dart",
+      "name": "enum_eight_door.dart",
+      "type": "file",
+      "summary": "Enum defining the Eight Doors in QiMen divination.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_eight_gods.dart",
+      "name": "enum_eight_gods.dart",
+      "type": "file",
+      "summary": "Enum defining the Eight Gods in QiMen divination.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_fu_fan_yin.dart",
+      "name": "enum_fu_fan_yin.dart",
+      "type": "file",
+      "summary": "Enum defining Fu Yin and Fan Yin patterns.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_fu_tou_scheme.dart",
+      "name": "enum_fu_tou_scheme.dart",
+      "type": "file",
+      "summary": "Enum for defining the Fu Tou calculation scheme.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_ke_scheme.dart",
+      "name": "enum_ke_scheme.dart",
+      "type": "file",
+      "summary": "Enum for defining the Ke calculation scheme.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_most_popular_ge_ju.dart",
+      "name": "enum_most_popular_ge_ju.dart",
+      "type": "file",
+      "summary": "Enum listing popular metaphysical patterns (Ge Ju).",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_nine_stars.dart",
+      "name": "enum_nine_stars.dart",
+      "type": "file",
+      "summary": "Enum defining the Nine Stars in QiMen divination.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_qi_men_jia.dart",
+      "name": "enum_qi_men_jia.dart",
+      "type": "file",
+      "summary": "Enum defining the four families (Time, Day, Month, Year) of QiMen.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_ri_jia_huang_dao.dart",
+      "name": "enum_ri_jia_huang_dao.dart",
+      "type": "file",
+      "summary": "Enum for Day Jia Qi Men Yellow Path (Huang Dao) stars.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_ri_jia_stars.dart",
+      "name": "enum_ri_jia_stars.dart",
+      "type": "file",
+      "summary": "Enum for Day Jia Qi Men specific stars.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_san_zha_wu_jia.dart",
+      "name": "enum_san_zha_wu_jia.dart",
+      "type": "file",
+      "summary": "Enum for San Zha and Wu Jia metaphysical concepts.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_six_bing_ge_ju.dart",
+      "name": "enum_six_bing_ge_ju.dart",
+      "type": "file",
+      "summary": "Enum for patterns involving the Bing stem.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_six_geng_ge_ju.dart",
+      "name": "enum_six_geng_ge_ju.dart",
+      "type": "file",
+      "summary": "Enum for patterns involving the Geng stem.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_six_jia.dart",
+      "name": "enum_six_jia.dart",
+      "type": "file",
+      "summary": "Enum defining the Six Jia (Xun) headers.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_three_yuan.dart",
+      "name": "enum_three_yuan.dart",
+      "type": "file",
+      "summary": "Enum defining the Three Cycles (Upper, Middle, Lower).",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/enum_zhi_run_type.dart",
+      "name": "enum_zhi_run_type.dart",
+      "type": "file",
+      "summary": "Enum defining specific types for the Zhi Run calculation.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/enums/nine_dun.dart",
+      "name": "nine_dun.dart",
+      "type": "file",
+      "summary": "Enum defining the Nine Hidden (Dun) patterns.",
+      "tags": [
+        "dart",
+        "domain",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/main.dart",
+      "name": "main.dart",
+      "type": "file",
+      "summary": "Main entry point for the QiMen package, handling initialization.",
+      "tags": [
+        "dart",
+        "entrypoint"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/base_ten_gan_ke_ying.dart",
+      "name": "base_ten_gan_ke_ying.dart",
+      "type": "file",
+      "summary": "Base model for Heavenly Stem combination (Ke Ying) data.",
+      "tags": [
+        "dart",
+        "model",
+        "data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/base_ten_gan_ke_ying.g.dart",
+      "name": "base_ten_gan_ke_ying.g.dart",
+      "type": "file",
+      "summary": "Generated JSON serialization code for base Ke Ying model.",
+      "tags": [
+        "dart",
+        "generated"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/ConstantQiMenNineGongDataClass.dart",
+      "name": "ConstantQiMenNineGongDataClass.dart",
+      "type": "file",
+      "summary": "Model class for constant data related to the Nine Palaces.",
+      "tags": [
+        "dart",
+        "model",
+        "constants"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/door_star_ke_ying.dart",
+      "name": "door_star_ke_ying.dart",
+      "type": "file",
+      "summary": "Data model for Door-Star combination results.",
+      "tags": [
+        "dart",
+        "model",
+        "data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/door_star_ke_ying.g.dart",
+      "name": "door_star_ke_ying.g.dart",
+      "type": "file",
+      "summary": "Generated JSON serialization code for Door-Star Ke Ying model.",
+      "tags": [
+        "dart",
+        "generated"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/each_gong_explain.dart",
+      "name": "each_gong_explain.dart",
+      "type": "file",
+      "summary": "Data model for explanations of individual palace status.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/each_gong_ge_ju.dart",
+      "name": "each_gong_ge_ju.dart",
+      "type": "file",
+      "summary": "Data model for patterns found within a single palace.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/each_gong_wang_shuai.dart",
+      "name": "each_gong_wang_shuai.dart",
+      "type": "file",
+      "summary": "Data model for the strength (Wang Shuai) of a single palace.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/each_gong.dart",
+      "name": "each_gong.dart",
+      "type": "file",
+      "summary": "Data model representing a palace in the model layer.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/eight_door_ke_ying.dart",
+      "name": "eight_door_ke_ying.dart",
+      "type": "file",
+      "summary": "Data model for Eight Door combination results.",
+      "tags": [
+        "dart",
+        "model",
+        "data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/eight_door_ke_ying.g.dart",
+      "name": "eight_door_ke_ying.g.dart",
+      "type": "file",
+      "summary": "Generated JSON serialization code for Eight Door Ke Ying model.",
+      "tags": [
+        "dart",
+        "generated"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/gan_zhi_driven_qi_men_pan.dart",
+      "name": "gan_zhi_driven_qi_men_pan.dart",
+      "type": "file",
+      "summary": "Specialized plate model driven by Heavenly Stems and Earthly Branches.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/ke_jia_qi_men_pan.dart",
+      "name": "ke_jia_qi_men_pan.dart",
+      "type": "file",
+      "summary": "Plate model specific to Ke Jia Qi Men.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/pan_arrange_settings.dart",
+      "name": "pan_arrange_settings.dart",
+      "type": "file",
+      "summary": "Model for storing plate arrangement preferences.",
+      "tags": [
+        "dart",
+        "model",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/qi_yi_ru_gong.dart",
+      "name": "qi_yi_ru_gong.dart",
+      "type": "file",
+      "summary": "Data model for Stems entering the palaces.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/qi_yi_ru_gong.g.dart",
+      "name": "qi_yi_ru_gong.g.dart",
+      "type": "file",
+      "summary": "Generated code for Qi Yi entry into palaces.",
+      "tags": [
+        "dart",
+        "generated"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/ri_jia_qi_men.dart",
+      "name": "ri_jia_qi_men.dart",
+      "type": "file",
+      "summary": "Implementation model for Day Jia Qi Men system.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/shen_ke_qi_men_pan.dart",
+      "name": "shen_ke_qi_men_pan.dart",
+      "type": "file",
+      "summary": "Plate model for Shen Ke Qi Men system.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/shi_jia_ju.dart",
+      "name": "shi_jia_ju.dart",
+      "type": "file",
+      "summary": "Model representing the Time Jia divination局.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/shi_jia_qi_men.dart",
+      "name": "shi_jia_qi_men.dart",
+      "type": "file",
+      "summary": "Core implementation model for Time Jia Qi Men systems.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/ten_gan_ke_ying_ge_ju.dart",
+      "name": "ten_gan_ke_ying_ge_ju.dart",
+      "type": "file",
+      "summary": "Model for Heavenly Stem combination patterns.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/ten_gan_ke_ying_ge_ju.g.dart",
+      "name": "ten_gan_ke_ying_ge_ju.g.dart",
+      "type": "file",
+      "summary": "Generated code for Heavenly Stem combination patterns.",
+      "tags": [
+        "dart",
+        "generated"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/ten_gan_ke_ying_zhu.dart",
+      "name": "ten_gan_ke_ying_zhu.dart",
+      "type": "file",
+      "summary": "Data model for the Ten Heavenly Stems combination annotations.",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/ten_gan_ke_ying_zhu.g.dart",
+      "name": "ten_gan_ke_ying_zhu.g.dart",
+      "type": "file",
+      "summary": "Generated code for Ten Heavenly Stems annotations.",
+      "tags": [
+        "dart",
+        "generated"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/ten_gan_ke_ying.dart",
+      "name": "ten_gan_ke_ying.dart",
+      "type": "file",
+      "summary": "Data model for Heavenly Stem combinations (Ke Ying).",
+      "tags": [
+        "dart",
+        "model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/model/ten_gan_ke_ying.g.dart",
+      "name": "ten_gan_ke_ying.g.dart",
+      "type": "file",
+      "summary": "Generated code for Heavenly Stem combinations.",
+      "tags": [
+        "dart",
+        "generated"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/navigator.dart",
+      "name": "navigator.dart",
+      "type": "file",
+      "summary": "Navigation logic and route definitions for the package.",
+      "tags": [
+        "dart",
+        "navigation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/beatiful_page.dart",
+      "name": "beatiful_page.dart",
+      "type": "file",
+      "summary": "UI page for displaying the QiMen plate with an aesthetic style.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "page"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/primary_page.bak.dart",
+      "name": "primary_page.bak.dart",
+      "type": "file",
+      "summary": "Backup of the primary UI page.",
+      "tags": [
+        "dart",
+        "backup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/primary_page.dart",
+      "name": "primary_page.dart",
+      "type": "file",
+      "summary": "Main landing or selection page for the package.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "page"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/scalable_beatiful_page.dart",
+      "name": "scalable_beatiful_page.dart",
+      "type": "file",
+      "summary": "Scalable version of the aesthetic QiMen plate page.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "page"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/scalable_shi_jia_qi_men_view_page.dart",
+      "name": "scalable_shi_jia_qi_men_view_page.dart",
+      "type": "file",
+      "summary": "Scalable UI page for viewing Time Jia Qi Men plates.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "page"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/shi_jia_qi_men_view_model.dart",
+      "name": "shi_jia_qi_men_view_model.dart",
+      "type": "file",
+      "summary": "ViewModel for the traditional architecture version of the Time Jia view.",
+      "tags": [
+        "dart",
+        "viewModel"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pages/shi_jia_qi_men_view_page.dart",
+      "name": "shi_jia_qi_men_view_page.dart",
+      "type": "file",
+      "summary": "UI page for viewing Time Jia Qi Men plates in traditional architecture.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "page"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/presentation/pages/multi_jia_qimen_page.dart",
+      "name": "multi_jia_qimen_page.dart",
+      "type": "file",
+      "summary": "UI page supporting multiple families of QiMen (Time, Day, Month, Year).",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "page"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/presentation/pages/qimen_mvvm_page.dart",
+      "name": "qimen_mvvm_page.dart",
+      "type": "file",
+      "summary": "UI page for the QiMen view using the MVVM + UseCase architecture.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "page"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/presentation/viewmodels/qimen_viewmodel.dart",
+      "name": "qimen_viewmodel.dart",
+      "type": "file",
+      "summary": "ViewModel for the modern MVVM architecture path.",
+      "tags": [
+        "dart",
+        "viewModel"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/qimendunjia.dart",
+      "name": "qimendunjia.dart",
+      "type": "file",
+      "summary": "Main package export file providing a public API surface.",
+      "tags": [
+        "dart",
+        "barrel"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/redesign_ui/components/palace/brief_palace_config.dart",
+      "name": "brief_palace_config.dart",
+      "type": "file",
+      "summary": "Configuration model for the redesigned brief palace view.",
+      "tags": [
+        "dart",
+        "model",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/redesign_ui/components/palace/brief_palace_layout.dart",
+      "name": "brief_palace_layout.dart",
+      "type": "file",
+      "summary": "Layout model for the redesigned brief palace view.",
+      "tags": [
+        "dart",
+        "model",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/redesign_ui/core/design_system.dart",
+      "name": "design_system.dart",
+      "type": "file",
+      "summary": "Core implementation of the redesigned UI's design system.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "design-system"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/redesign_ui/core/qi_men_star_theme.dart",
+      "name": "qi_men_star_theme.dart",
+      "type": "file",
+      "summary": "Theme definitions specifically for QiMen stars visual style.",
+      "tags": [
+        "dart",
+        "ui",
+        "theme"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/redesign_ui/demo/smart_grid_demo.dart",
+      "name": "smart_grid_demo.dart",
+      "type": "file",
+      "summary": "Demo page for testing and showcasing the smart grid layout.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "demo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/redesign_ui/layouts/smart_grid.dart",
+      "name": "smart_grid.dart",
+      "type": "file",
+      "summary": "Implementation of the smart grid layout system for the QiMen plate.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/ui_models/ui_each_gong_model.dart",
+      "name": "ui_each_gong_model.dart",
+      "type": "file",
+      "summary": "UI-specific data model for individual palaces.",
+      "tags": [
+        "dart",
+        "model",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/ui_models/ui_pan_meta_model.dart",
+      "name": "ui_pan_meta_model.dart",
+      "type": "file",
+      "summary": "UI-specific metadata model for the complete plate.",
+      "tags": [
+        "dart",
+        "model",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/ui_models/ui_ten_gan_key_ying_ge_ju.dart",
+      "name": "ui_ten_gan_key_ying_ge_ju.dart",
+      "type": "file",
+      "summary": "UI-specific model for displaying Heavenly Stem combination patterns.",
+      "tags": [
+        "dart",
+        "model",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/arrange_plate_utils.dart",
+      "name": "arrange_plate_utils.dart",
+      "type": "file",
+      "summary": "Utility functions for arranging elements on the QiMen plate.",
+      "tags": [
+        "dart",
+        "utility",
+        "calculation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/change_sequence_utils.dart",
+      "name": "change_sequence_utils.dart",
+      "type": "file",
+      "summary": "Utility for managing and transforming metaphysical sequences.",
+      "tags": [
+        "dart",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/constant_resources_of_qi_men.dart",
+      "name": "constant_resources_of_qi_men.dart",
+      "type": "file",
+      "summary": "Centralized constants and resources for QiMen logic.",
+      "tags": [
+        "dart",
+        "utility",
+        "constants"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/constant_ui_resources_of_qi_men.dart",
+      "name": "constant_ui_resources_of_qi_men.dart",
+      "type": "file",
+      "summary": "Centralized constants and resources for QiMen UI elements.",
+      "tags": [
+        "dart",
+        "utility",
+        "ui",
+        "constants"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/datetime_jie_qi.dart",
+      "name": "datetime_jie_qi.dart",
+      "type": "file",
+      "summary": "Utility for calculating solar terms (Jie Qi) from dates.",
+      "tags": [
+        "dart",
+        "utility",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/ke_jia_qi_men_ju_calculator.dart",
+      "name": "ke_jia_qi_men_ju_calculator.dart",
+      "type": "file",
+      "summary": "Engine for calculating Ke Jia Qi Men divination局.",
+      "tags": [
+        "dart",
+        "utility",
+        "calculation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/nian_jia_qi_men_ju_calculator.dart",
+      "name": "nian_jia_qi_men_ju_calculator.dart",
+      "type": "file",
+      "summary": "Engine for calculating Year Jia Qi Men divination局.",
+      "tags": [
+        "dart",
+        "utility",
+        "calculation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/nian_jia_san_yuan_anchor.dart",
+      "name": "nian_jia_san_yuan_anchor.dart",
+      "type": "file",
+      "summary": "Anchor points and constants for Year Jia Three Cycles system.",
+      "tags": [
+        "dart",
+        "utility",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/nine_yi_utils.dart",
+      "name": "nine_yi_utils.dart",
+      "type": "file",
+      "summary": "Utilities for handling the Nine Stems (Nine Yi) in QiMen.",
+      "tags": [
+        "dart",
+        "utility",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/qi_men_ju_calculator.dart",
+      "name": "qi_men_ju_calculator.dart",
+      "type": "file",
+      "summary": "Primary engine for calculating various QiMen divination types.",
+      "tags": [
+        "dart",
+        "utility",
+        "calculation",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/read_data_utils.dart",
+      "name": "read_data_utils.dart",
+      "type": "file",
+      "summary": "Utilities for reading and parsing package data assets.",
+      "tags": [
+        "dart",
+        "utility",
+        "io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/ri_jia_qi_men_ju_calculator.dart",
+      "name": "ri_jia_qi_men_ju_calculator.dart",
+      "type": "file",
+      "summary": "Engine for calculating Day Jia Qi Men divination局.",
+      "tags": [
+        "dart",
+        "utility",
+        "calculation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/yue_jia_qi_men_ju_calculator.dart",
+      "name": "yue_jia_qi_men_ju_calculator.dart",
+      "type": "file",
+      "summary": "Engine for calculating Month Jia Qi Men divination局.",
+      "tags": [
+        "dart",
+        "utility",
+        "calculation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils/zheng_shou_dong_zhi_list.dart",
+      "name": "zheng_shou_dong_zhi_list.dart",
+      "type": "file",
+      "summary": "List and utilities for Zheng Shou and Dong Zhi metaphysical cycles.",
+      "tags": [
+        "dart",
+        "utility",
+        "metaphysics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/BounceDialog.dart",
+      "name": "BounceDialog.dart",
+      "type": "file",
+      "summary": "Custom animated dialog widget with bounce effects.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/each_gong_widget.dart",
+      "name": "each_gong_widget.dart",
+      "type": "file",
+      "summary": "Reusable UI widget for displaying a single palace.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/flowing_text.dart",
+      "name": "flowing_text.dart",
+      "type": "file",
+      "summary": "Custom widget for displaying animated or flowing text.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/gong_widget.dart",
+      "name": "gong_widget.dart",
+      "type": "file",
+      "summary": "Base widget for QiMen palace representations.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/new_each_gong_widget.dart",
+      "name": "new_each_gong_widget.dart",
+      "type": "file",
+      "summary": "Redesigned UI widget for a single palace cell.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/OctagonPainter.dart",
+      "name": "OctagonPainter.dart",
+      "type": "file",
+      "summary": "Custom painter for drawing octagon-based metaphysical diagrams.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "painter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/qi_yi_wang_shuai.dart",
+      "name": "qi_yi_wang_shuai.dart",
+      "type": "file",
+      "summary": "UI component for displaying Stem strength (Wang Shuai) data.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/QiMenGongContentBackground.dart",
+      "name": "QiMenGongContentBackground.dart",
+      "type": "file",
+      "summary": "Background styling widget for QiMen palace cells.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/resizable_gong_widget.dart",
+      "name": "resizable_gong_widget.dart",
+      "type": "file",
+      "summary": "A palace widget that supports dynamic resizing for various screen sizes.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/season_24_tag.dart",
+      "name": "season_24_tag.dart",
+      "type": "file",
+      "summary": "UI tag component for displaying the 24 solar terms.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/ten_gan_ke_ying_ge_ju_detail.dart",
+      "name": "ten_gan_ke_ying_ge_ju_detail.dart",
+      "type": "file",
+      "summary": "UI component showing detailed patterns of Heavenly Stem combinations.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/ten_gan_ke_ying_yin_zhang.dart",
+      "name": "ten_gan_ke_ying_yin_zhang.dart",
+      "type": "file",
+      "summary": "UI component for displaying the 'Insignia' (Yin Zhang) of Stem combinations.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/wang_shuai_hint_top_down.dart",
+      "name": "wang_shuai_hint_top_down.dart",
+      "type": "file",
+      "summary": "UI hint component for palace strength with top-down layout.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/widgets/wang_shuai_hint.dart",
+      "name": "wang_shuai_hint.dart",
+      "type": "file",
+      "summary": "Primary UI hint component for displaying palace strength.",
+      "tags": [
+        "dart",
+        "flutter",
+        "ui",
+        "widget"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/check_day_test.dart",
+      "name": "check_day_test.dart",
+      "type": "file",
+      "summary": "Unit test for validating day cycle checking logic.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:test/data/ten_gan_ke_ying_final_v1.json",
+      "name": "ten_gan_ke_ying_final_v1.json",
+      "type": "config",
+      "summary": "Test dataset containing finalized Heavenly Stem combination omens.",
+      "tags": [
+        "json",
+        "test-data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/debug_ke_jia_repro.dart",
+      "name": "debug_ke_jia_repro.dart",
+      "type": "file",
+      "summary": "Reproduction script for debugging Ke Jia Qi Men issues.",
+      "tags": [
+        "dart",
+        "debug"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/debug_midnight.dart",
+      "name": "debug_midnight.dart",
+      "type": "file",
+      "summary": "Debug script for investigating midnight boundary behavior in calculations.",
+      "tags": [
+        "dart",
+        "debug"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/handle_json_data.dart",
+      "name": "handle_json_data.dart",
+      "type": "file",
+      "summary": "Utility for testing and handling JSON asset loading.",
+      "tags": [
+        "dart",
+        "test",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/handle_zheng_shou.dart",
+      "name": "handle_zheng_shou.dart",
+      "type": "file",
+      "summary": "Debug script for investigating Zheng Shou calculation accuracy.",
+      "tags": [
+        "dart",
+        "debug"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/inspect_chaibu.dart",
+      "name": "inspect_chaibu.dart",
+      "type": "file",
+      "summary": "Investigation script for the Chai Bu calculation method.",
+      "tags": [
+        "dart",
+        "debug"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/inspect_lunar.dart",
+      "name": "inspect_lunar.dart",
+      "type": "file",
+      "summary": "Investigation script for lunar calendar accuracy.",
+      "tags": [
+        "dart",
+        "debug"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/print_days.dart",
+      "name": "print_days.dart",
+      "type": "file",
+      "summary": "Script to print day series for manual verification.",
+      "tags": [
+        "dart",
+        "debug"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/qimendunjia_test.dart",
+      "name": "qimendunjia_test.dart",
+      "type": "file",
+      "summary": "Main functional test suite for the QiMenDunJia package.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/repro_shen_ke_bug_test.dart",
+      "name": "repro_shen_ke_bug_test.dart",
+      "type": "file",
+      "summary": "Reproduction test case for a bug in the Shen Ke calculation engine.",
+      "tags": [
+        "dart",
+        "test",
+        "debug"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/shen_ke_comprehensive_test.dart",
+      "name": "shen_ke_comprehensive_test.dart",
+      "type": "file",
+      "summary": "Comprehensive test suite for the Shen Ke system.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_eight_doors_exhaustion.dart",
+      "name": "test_eight_doors_exhaustion.dart",
+      "type": "file",
+      "summary": "Exhaustive test for all possible Eight Door combinations.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_eight_doors.dart",
+      "name": "test_eight_doors.dart",
+      "type": "file",
+      "summary": "Unit tests for Eight Door metaphysical logic.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_eight_gods.dart",
+      "name": "test_eight_gods.dart",
+      "type": "file",
+      "summary": "Unit tests for Eight God metaphysical logic.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_ke_jia_qi_men.dart",
+      "name": "test_ke_jia_qi_men.dart",
+      "type": "file",
+      "summary": "Unit tests for the Ke Jia Qi Men calculation engine.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_nine_stars.dart",
+      "name": "test_nine_stars.dart",
+      "type": "file",
+      "summary": "Unit tests for the Nine Stars metaphysical logic.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_nine_yi.dart",
+      "name": "test_nine_yi.dart",
+      "type": "file",
+      "summary": "Unit tests for the Nine Stems (Nine Yi) metaphysical logic.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_qi_men_ju_calculator.dart",
+      "name": "test_qi_men_ju_calculator.dart",
+      "type": "file",
+      "summary": "Unit tests for the main divination局 calculation logic.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_ri_jia_day_analysis.dart",
+      "name": "test_ri_jia_day_analysis.dart",
+      "type": "file",
+      "summary": "Unit tests for the Day Jia analysis module.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_ri_jia_qi_men.dart",
+      "name": "test_ri_jia_qi_men.dart",
+      "type": "file",
+      "summary": "Unit tests for the Day Jia Qi Men calculation engine.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_shi_jia_zhuan_pan_qi_men.dart",
+      "name": "test_shi_jia_zhuan_pan_qi_men.dart",
+      "type": "file",
+      "summary": "Unit tests for the Time Jia rotating plate calculation engine.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/test_yue_jia_qi_men.dart",
+      "name": "test_yue_jia_qi_men.dart",
+      "type": "file",
+      "summary": "Unit tests for the Month Jia Qi Men calculation engine.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/utils/test_data.dart",
+      "name": "test_data.dart",
+      "type": "file",
+      "summary": "Utility provider for standardized test data.",
+      "tags": [
+        "dart",
+        "test",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test/utils/test_datetime_jie_qi.dart",
+      "name": "test_datetime_jie_qi.dart",
+      "type": "file",
+      "summary": "Unit tests for solar term calculation utilities.",
+      "tags": [
+        "dart",
+        "test"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [],
+  "layers": [
+    {
+      "id": "layer:domain",
+      "name": "Domain Layer",
+      "description": "Core business logic, entities, and use cases for QiMen divination.",
+      "nodeIds": [
+        "file:lib/domain/entities/base_entity.dart",
+        "file:lib/domain/entities/base_ju.dart",
+        "file:lib/domain/entities/each_gong.dart",
+        "file:lib/domain/entities/ke_jia_ju.dart",
+        "file:lib/domain/entities/nian_jia_ju.dart",
+        "file:lib/domain/entities/qi_men_star.dart",
+        "file:lib/domain/entities/qimen_pan.dart",
+        "file:lib/domain/entities/ri_jia_day_analysis.dart",
+        "file:lib/domain/entities/ri_jia_ju.dart",
+        "file:lib/domain/entities/san_yuan_type.dart",
+        "file:lib/domain/entities/shi_jia_ju.dart",
+        "file:lib/domain/entities/yue_jia_ju.dart",
+        "file:lib/domain/repositories/qimen_calculator_repository.dart",
+        "file:lib/domain/repositories/qimen_data_repository.dart",
+        "file:lib/domain/usecases/arrange_pan_usecase.dart",
+        "file:lib/domain/usecases/base_usecase.dart",
+        "file:lib/domain/usecases/calculate_ju_usecase.dart",
+        "file:lib/domain/usecases/select_gong_usecase.dart",
+        "file:lib/enums/enum_arrange_plate_type.dart",
+        "file:lib/enums/enum_eight_door.dart",
+        "file:lib/enums/enum_eight_gods.dart",
+        "file:lib/enums/enum_fu_fan_yin.dart",
+        "file:lib/enums/enum_fu_tou_scheme.dart",
+        "file:lib/enums/enum_ke_scheme.dart",
+        "file:lib/enums/enum_most_popular_ge_ju.dart",
+        "file:lib/enums/enum_nine_stars.dart",
+        "file:lib/enums/enum_qi_men_jia.dart",
+        "file:lib/enums/enum_ri_jia_huang_dao.dart",
+        "file:lib/enums/enum_ri_jia_stars.dart",
+        "file:lib/enums/enum_san_zha_wu_jia.dart",
+        "file:lib/enums/enum_six_bing_ge_ju.dart",
+        "file:lib/enums/enum_six_geng_ge_ju.dart",
+        "file:lib/enums/enum_six_jia.dart",
+        "file:lib/enums/enum_three_yuan.dart",
+        "file:lib/enums/enum_zhi_run_type.dart",
+        "file:lib/enums/nine_dun.dart"
+      ]
+    },
+    {
+      "id": "layer:data",
+      "name": "Data Layer",
+      "description": "Repositories, data sources, and models for QiMen data management.",
+      "nodeIds": [
+        "file:lib/data.dart",
+        "file:lib/data/datasources/cache_data_source.dart",
+        "file:lib/data/datasources/calculator/qimen_calculator_data_source.dart",
+        "file:lib/data/datasources/json_data_source.dart",
+        "file:lib/data/models/mappers/each_gong_mapper.dart",
+        "file:lib/data/models/mappers/qimen_pan_mapper.dart",
+        "file:lib/data/models/mappers/shi_jia_ju_mapper.dart",
+        "file:lib/data/repositories/qimen_calculator_repository_impl.dart",
+        "file:lib/data/repositories/qimen_data_repository_impl.dart",
+        "file:lib/model/base_ten_gan_ke_ying.dart",
+        "file:lib/model/base_ten_gan_ke_ying.g.dart",
+        "file:lib/model/ConstantQiMenNineGongDataClass.dart",
+        "file:lib/model/door_star_ke_ying.dart",
+        "file:lib/model/door_star_ke_ying.g.dart",
+        "file:lib/model/each_gong_explain.dart",
+        "file:lib/model/each_gong_ge_ju.dart",
+        "file:lib/model/each_gong_wang_shuai.dart",
+        "file:lib/model/each_gong.dart",
+        "file:lib/model/eight_door_ke_ying.dart",
+        "file:lib/model/eight_door_ke_ying.g.dart",
+        "file:lib/model/gan_zhi_driven_qi_men_pan.dart",
+        "file:lib/model/ke_jia_qi_men_pan.dart",
+        "file:lib/model/pan_arrange_settings.dart",
+        "file:lib/model/qi_yi_ru_gong.dart",
+        "file:lib/model/qi_yi_ru_gong.g.dart",
+        "file:lib/model/ri_jia_qi_men.dart",
+        "file:lib/model/shen_ke_qi_men_pan.dart",
+        "file:lib/model/shi_jia_ju.dart",
+        "file:lib/model/shi_jia_qi_men.dart",
+        "file:lib/model/ten_gan_ke_ying_ge_ju.dart",
+        "file:lib/model/ten_gan_ke_ying_ge_ju.g.dart",
+        "file:lib/model/ten_gan_ke_ying_zhu.dart",
+        "file:lib/model/ten_gan_ke_ying_zhu.g.dart",
+        "file:lib/model/ten_gan_ke_ying.dart",
+        "file:lib/model/ten_gan_ke_ying.g.dart"
+      ]
+    },
+    {
+      "id": "layer:presentation",
+      "name": "Presentation Layer",
+      "description": "UI components, pages, and ViewModels for the QiMen interface.",
+      "nodeIds": [
+        "file:lib/pages/beatiful_page.dart",
+        "file:lib/pages/primary_page.bak.dart",
+        "file:lib/pages/primary_page.dart",
+        "file:lib/pages/scalable_beatiful_page.dart",
+        "file:lib/pages/scalable_shi_jia_qi_men_view_page.dart",
+        "file:lib/pages/shi_jia_qi_men_view_model.dart",
+        "file:lib/pages/shi_jia_qi_men_view_page.dart",
+        "file:lib/presentation/pages/multi_jia_qimen_page.dart",
+        "file:lib/presentation/pages/qimen_mvvm_page.dart",
+        "file:lib/presentation/viewmodels/qimen_viewmodel.dart",
+        "file:lib/redesign_ui/components/palace/brief_palace_config.dart",
+        "file:lib/redesign_ui/components/palace/brief_palace_layout.dart",
+        "file:lib/redesign_ui/core/design_system.dart",
+        "file:lib/redesign_ui/core/qi_men_star_theme.dart",
+        "file:lib/redesign_ui/demo/smart_grid_demo.dart",
+        "file:lib/redesign_ui/layouts/smart_grid.dart",
+        "file:lib/ui_models/ui_each_gong_model.dart",
+        "file:lib/ui_models/ui_pan_meta_model.dart",
+        "file:lib/ui_models/ui_ten_gan_key_ying_ge_ju.dart",
+        "file:lib/widgets/BounceDialog.dart",
+        "file:lib/widgets/each_gong_widget.dart",
+        "file:lib/widgets/flowing_text.dart",
+        "file:lib/widgets/gong_widget.dart",
+        "file:lib/widgets/new_each_gong_widget.dart",
+        "file:lib/widgets/OctagonPainter.dart",
+        "file:lib/widgets/qi_yi_wang_shuai.dart",
+        "file:lib/widgets/QiMenGongContentBackground.dart",
+        "file:lib/widgets/resizable_gong_widget.dart",
+        "file:lib/widgets/season_24_tag.dart",
+        "file:lib/widgets/ten_gan_ke_ying_ge_ju_detail.dart",
+        "file:lib/widgets/ten_gan_ke_ying_yin_zhang.dart",
+        "file:lib/widgets/wang_shuai_hint_top_down.dart",
+        "file:lib/widgets/wang_shuai_hint.dart",
+        "file:cell-design.html",
+        "file:index.html"
+      ]
+    },
+    {
+      "id": "layer:infrastructure",
+      "name": "Infrastructure Layer",
+      "description": "Dependency injection, navigation, and core entry points.",
+      "nodeIds": [
+        "file:lib/di/service_locator.dart",
+        "file:lib/navigator.dart",
+        "file:lib/main.dart",
+        "file:lib/qimendunjia.dart"
+      ]
+    },
+    {
+      "id": "layer:utility",
+      "name": "Utility Layer",
+      "description": "Helper functions and engines for QiMen calculations.",
+      "nodeIds": [
+        "file:lib/utils/arrange_plate_utils.dart",
+        "file:lib/utils/change_sequence_utils.dart",
+        "file:lib/utils/constant_resources_of_qi_men.dart",
+        "file:lib/utils/constant_ui_resources_of_qi_men.dart",
+        "file:lib/utils/datetime_jie_qi.dart",
+        "file:lib/utils/ke_jia_qi_men_ju_calculator.dart",
+        "file:lib/utils/nian_jia_qi_men_ju_calculator.dart",
+        "file:lib/utils/nian_jia_san_yuan_anchor.dart",
+        "file:lib/utils/nine_yi_utils.dart",
+        "file:lib/utils/qi_men_ju_calculator.dart",
+        "file:lib/utils/read_data_utils.dart",
+        "file:lib/utils/ri_jia_qi_men_ju_calculator.dart",
+        "file:lib/utils/yue_jia_qi_men_ju_calculator.dart",
+        "file:lib/utils/zheng_shou_dong_zhi_list.dart",
+        "file:check_day_2.dart",
+        "file:check_day.dart",
+        "file:check_ju.dart"
+      ]
+    },
+    {
+      "id": "layer:assets",
+      "name": "Assets & Configuration",
+      "description": "Static data files, asset definitions, and project configuration.",
+      "nodeIds": [
+        "config:assets/qi_men_dun_jia/door_gan_ke_ying.json",
+        "config:assets/qi_men_dun_jia/eight_door_ke_ying.json",
+        "config:assets/qi_men_dun_jia/gong_gan.json",
+        "config:assets/qi_men_dun_jia/gong_qi.json",
+        "config:assets/qi_men_dun_jia/star_door_ke_ying.json",
+        "config:assets/qi_men_dun_jia/star_zhi_chen.json",
+        "config:assets/qi_men_dun_jia/ten_gan_ke_ying_final.json",
+        "config:assets/qi_men_dun_jia/ten_gan_ke_ying_ji_xiong.json",
+        "config:assets/qi_men_dun_jia/ten_gan_ke_ying_v1.json",
+        "config:assets/data/ten_gan_ke_ying_v1.json",
+        "config:assets/icons/icon_list.json",
+        "config:assets/lotties/horse_walking.json",
+        "config:pubspec.yaml",
+        "config:build.yaml",
+        "config:analysis_options.yaml",
+        "config:devtools_options.yaml",
+        "config:.codex/config.toml",
+        "config:.metadata",
+        "config:.flutter-plugins",
+        "config:.flutter-plugins-dependencies"
+      ]
+    },
+    {
+      "id": "layer:documentation",
+      "name": "Documentation",
+      "description": "Technical specifications, AI governance, and project guides.",
+      "nodeIds": [
+        "document:README.md",
+        "document:ARCHITECTURE.md",
+        "document:AGENTS.md",
+        "document:AI_README.md",
+        "document:CHANGELOG.md",
+        "document:说明文档.md",
+        "document:docs/ONBOARDING.md",
+        "document:docs/Plans.md",
+        "document:docs/README.md",
+        "document:docs/README_zh.md",
+        "document:docs/ai/CONSTITUTION.md",
+        "document:docs/ai/board-protocol.md",
+        "document:docs/ai/code-style.md",
+        "document:docs/ai/delivery-pipeline.md",
+        "document:docs/ai/directory-structure.md",
+        "document:docs/ai/doc-standards.md",
+        "document:docs/ai/git-rules.md",
+        "document:docs/ai/glossary.md",
+        "document:docs/ai/phases.md",
+        "document:docs/ai/principles.md",
+        "document:docs/ai/project-context-guide.md",
+        "document:docs/ai/toolchain.md",
+        "document:docs/board/PROGRESS.md",
+        "document:docs/board/TASKS.md"
+      ]
+    },
+    {
+      "id": "layer:test",
+      "name": "Test Suite",
+      "description": "Unit and functional tests for verifying divination logic.",
+      "nodeIds": [
+        "file:test/check_day_test.dart",
+        "file:test/debug_ke_jia_repro.dart",
+        "file:test/debug_midnight.dart",
+        "file:test/handle_json_data.dart",
+        "file:test/handle_zheng_shou.dart",
+        "file:test/inspect_chaibu.dart",
+        "file:test/inspect_lunar.dart",
+        "file:test/print_days.dart",
+        "file:test/qimendunjia_test.dart",
+        "file:test/repro_shen_ke_bug_test.dart",
+        "file:test/shen_ke_comprehensive_test.dart",
+        "file:test/test_eight_doors_exhaustion.dart",
+        "file:test/test_eight_doors.dart",
+        "file:test/test_eight_gods.dart",
+        "file:test/test_ke_jia_qi_men.dart",
+        "file:test/test_nine_stars.dart",
+        "file:test/test_nine_yi.dart",
+        "file:test/test_qi_men_ju_calculator.dart",
+        "file:test/test_ri_jia_day_analysis.dart",
+        "file:test/test_ri_jia_qi_men.dart",
+        "file:test/test_shi_jia_zhuan_pan_qi_men.dart",
+        "file:test/test_yue_jia_qi_men.dart",
+        "file:test/utils/test_data.dart",
+        "file:test/utils/test_datetime_jie_qi.dart",
+        "config:test/data/ten_gan_ke_ying_final_v1.json"
+      ]
+    },
+    {
+      "id": "layer:example",
+      "name": "Example App",
+      "description": "Sample application demonstrating the QiMenDunJia package capabilities.",
+      "nodeIds": [
+        "file:example/lib/main.dart",
+        "file:example/lib/redesign_ui/components/palace/brief_palace_layout.dart",
+        "file:example/lib/redesign_ui/core/design_system.dart",
+        "file:example/lib/redesign_ui/demo/smart_grid_demo.dart",
+        "file:example/lib/redesign_ui/layouts/smart_grid.dart",
+        "config:example/pubspec.yaml",
+        "config:example/analysis_options.yaml",
+        "document:example/README.md",
+        "file:example/run_web.sh",
+        "file:example/web/index.html",
+        "config:example/web/manifest.json",
+        "file:example/web/sqlite3.wasm"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Project Overview",
+      "description": "This project provides a comprehensive engine and UI for Qi Men Dun Jia (奇门遁甲) divination. It supports multiple 'families' (Time, Day, Month, Year Jia) and features a transition from a traditional monolithic architecture to a modern, decoupled design.",
+      "nodeIds": [
+        "document:README.md",
+        "document:ARCHITECTURE.md"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Domain Entities",
+      "description": "The core of the project is the domain layer, which defines pure metaphysical entities like the QiMen Pan (the plate), Gong (palaces), and Ju (the specific divination outcome). These are independent of any framework or UI.",
+      "nodeIds": [
+        "file:lib/domain/entities/qimen_pan.dart",
+        "file:lib/domain/entities/each_gong.dart",
+        "file:lib/domain/entities/shi_jia_ju.dart"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Data Sources",
+      "description": "Data is sourced from static JSON files containing metaphysical mappings (stars, doors, gods) and dynamic calculators that implement the complex time-based algorithms of Qi Men Dun Jia.",
+      "nodeIds": [
+        "file:lib/data/datasources/json_data_source.dart",
+        "file:lib/data/datasources/calculator/qimen_calculator_data_source.dart"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Dual-Architecture UI (Legacy vs Modern)",
+      "description": "Compare the legacy traditional approach—a monolithic single-file view—with the modern Clean Architecture implementation using MVVM, UseCases, and a dedicated Design System in the redesign_ui module.",
+      "nodeIds": [
+        "file:lib/pages/shi_jia_qi_men_view_page.dart",
+        "file:lib/presentation/pages/qimen_mvvm_page.dart",
+        "file:lib/redesign_ui/core/design_system.dart"
+      ]
+    }
+  ]
+}

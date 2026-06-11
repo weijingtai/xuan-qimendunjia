@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_six_geng_ge_ju.dart';
 import 'package:qimendunjia/model/each_gong_wang_shuai.dart';
@@ -307,9 +307,9 @@ class ShiJiaQiMen {
     Map<HouTianGua, EachGong> gongRes = {};
 
     for (int i = 1; i < 10; i++) {
-      // if (i == 5){
-      //   continue;
-      // }
+      if (i == 5) {
+        continue;
+      }
       gongRes[HouTianGua.getGua(i)] = generateEachGong(
           i: i,
           nineStarsGongNumberMapper: nineStarsGongNumberMapper,
@@ -322,10 +322,6 @@ class ShiJiaQiMen {
           houGuaNumberGanMapper: diPanGanWithGongMapper,
           diPanEightGodsMapper: diGodsGongNumberMapper);
     }
-
-    // 中五宫 寄宫
-    // gongRes = settleCenterGongJiGong(gongRes, _diPanGanWithGongMapper,TianGan.YI);
-    // gongRes = settleCenterGongJiGong(gongRes, _diPanGanWithGongMapper,_diPanGanWithGongMapper[5]!);
 
     return gongRes;
   }
@@ -627,17 +623,19 @@ class ShiJiaQiMen {
     bool isDiPanXunShou = each.diPan == xunHeaderTianGan;
     // 当天盘干为旬首天干时，需要使用“遁干甲”作为天盘干看待
     bool isTianPanXunShou = each.tianPan == xunHeaderTianGan;
+    // 时家排盘内九星恒为 NineStarsEnum；通过 cast 调用其专属判定方法。
+    final star = each.star as NineStarsEnum;
     return EachGongWangShuai(
       gongNumber: each.gongNumber,
 
-      starFuFanYin: each.star.checkFuFanYinByGong(gongGua),
+      starFuFanYin: star.checkFuFanYinByGong(gongGua),
       starMonthWangShuai: starMonthTokenType == MonthTokenTypeEnum.ZHU_QI_NA_GUA
-          ? each.star.checkWithMonthTokenNaGua(monthToken)
-          : each.star.checkWithMonthToken(monthToken),
+          ? star.checkWithMonthTokenNaGua(monthToken)
+          : star.checkWithMonthToken(monthToken),
       starMonthTokenType: starMonthTokenType,
       starGongWangShuai: starFourWeiGongType == GongTypeEnum.GONG_GUA
-          ? each.star.checkWithGongGua(gongGua)
-          : each.star.checkWithGongNeiDiZhi(
+          ? star.checkWithGongGua(gongGua)
+          : star.checkWithGongNeiDiZhi(
               gongGua, yinYangDun, timeJiaZi, starFourWeiGongType),
       starFourWeiGongType: starFourWeiGongType,
 

@@ -1,6 +1,3 @@
-import 'package:common/common_logger.dart';
-import 'package:common/services/ai_service.dart';
-import 'package:common/services/ai_registry.dart';
 import 'package:ai_core/ai_core.dart';
 import 'package:ai_core/utils/ai_bootstrap.dart';
 import 'package:ai_core/services/ai_service_impl.dart';
@@ -15,6 +12,7 @@ import 'package:logging/logging.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:qimendunjia/navigator.dart';
 import 'package:qimendunjia/di/service_locator.dart';
+import 'package:persistence_assets/persistence_assets.dart';
 import 'package:provider/provider.dart';
 
 /// 初始化 dart `logging` 包，将日志桥接到 debugPrint。
@@ -57,10 +55,10 @@ Future<void> initServices() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 初始化服务定位器 (MVVM架构需要)
-  serviceLocator.init();
+  serviceLocator.init(const AssetsQimendunjiaOfficialRuleRepository());
 
   // 记录启动日志
-  CommonLogger().logger.i("奇门遁甲模块已启动");
+  Logger('qimendunjia.example').info("奇门遁甲模块已启动");
 }
 
 void main() async {
@@ -169,6 +167,22 @@ class SelectionPage extends StatelessWidget {
                 textStyle: const TextStyle(fontSize: 18),
               ),
               child: const Text('新架构 (MVVM + UseCase)'),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/qimendunjia/multi_jia');
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                textStyle: const TextStyle(fontSize: 18),
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('多家奇门 (时/月/年家)'),
             ),
             const SizedBox(height: 24),
             ElevatedButton(

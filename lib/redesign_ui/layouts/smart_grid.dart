@@ -1,6 +1,16 @@
+import 'package:metaphysics_core/enums/enum_tian_gan.dart';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../core/design_system.dart';
 import '../components/palace/brief_palace_config.dart';
+import '../../enums/enum_eight_door.dart';
+import '../../enums/enum_eight_gods.dart';
+import '../../enums/enum_nine_stars.dart';
+import 'package:metaphysics_core/enums.dart';
+import '../../domain/entities/each_gong.dart';
+import '../../domain/entities/qi_men_star.dart';
+import '../../enums/enum_six_jia.dart';
 
 part '../components/palace/brief_palace_layout.dart';
 
@@ -53,9 +63,8 @@ class SmartQiMenGrid extends StatelessWidget {
     final availableHeight = constraints.maxHeight;
 
     // 取可用空间的最小值，确保正方形
-    final maxAvailable = availableWidth < availableHeight
-        ? availableWidth
-        : availableHeight;
+    final maxAvailable =
+        availableWidth < availableHeight ? availableWidth : availableHeight;
 
     // 根据可用空间选择预设尺寸
     if (maxAvailable >= Dimensions.gridLarge) {
@@ -222,519 +231,350 @@ class _SmartPalaceWidgetState extends State<SmartPalaceWidget>
 
 /// 宫位数据模型
 class PalaceData {
-  final String name; // 宫位名称
+  final HouTianGua gongEnum; // 宫位卦象
   final String number; // 宫位数字
-  final String star; // 九星
-  final String door; // 八门
-  final String god; // 天盘八神
-  final String diGod; // 地盘八神
-  final String tianPanGan; // 天盘干
-  final String diPanGan; // 地盘干
-  final String diZhi; // 地支
-  final String wangShuai; // 旺衰
+  final QiMenStar starEnum; // 九星
+  final EightDoorEnum doorEnum; // 八门
+  final EightGodsEnum godEnum; // 天盘八神
+  final EightGodsEnum? diGodEnum; // 地盘八神
+  final TianGan tianPanGanEnum; // 天盘干
+  final TianGan diPanGanEnum; // 地盘干
+  final String diZhi; // 地支（如：子、丑、寅、卯）
+  final String wangShuai; // 旺衰 (暂保留文字，因为涉及多种旺衰计算)
   final String jiXiong; // 吉凶
-  final String geJu; // 格局
-  final List<String> marks; // 特殊标记（含「驿马」「空亡」等）
+  final List<String> geJu; // 格局
+  final List<String> marks; // 特殊标记
   final bool isYangDun; // 是否阳遁
-  final String? yinGan; // 隐干（可选流派）
-  final String? tianPanAnGan; // 天盘暗干（可选流派）
-  final String? renPanAnGan; // 人盘暗干（可选流派）
-  final String? tianPanJiGan; // 天盘寄宫干（仅寄宫宫位）
-  final String? diPanJiGan; // 地盘寄宫干（仅寄宫宫位）
-  final String? jiStar; // 寄宫九星（仅寄宫宫位）
+  final TianGan? yinGanEnum; // 隐干
+  final TianGan? tianPanAnGanEnum; // 天盘暗干
+  final TianGan? renPanAnGanEnum; // 人盘暗干
+  final TianGan? tianPanJiGanEnum; // 天盘寄宫干
+  final TianGan? diPanJiGanEnum; // 地盘寄宫干
+  final QiMenStar? jiStarEnum; // 寄宫九星
+  final bool isTianPanDunjia; // 天盘干是遁甲
+  final bool isDiPanDunjia; // 地盘干是遁甲
+  final bool isTianJiGanDunjia; // 天盘寄干是遁甲
+  final bool isDiJiGanDunjia; // 地盘寄干是遁甲
+  final bool isTianPanJiXing; // 天盘干是击刑
+  final bool isDiPanJiXing; // 地盘干是击刑
+  final bool isTianJiGanJiXing; // 天盘寄干是击刑
+  final bool isDiJiGanJiXing; // 地盘寄干是击刑
 
-  // === 星旺衰 ===
-  final String? starGongWangShuai; // 九星宫位旺衰
-  final String? starMonthWangShuai; // 九星月令旺衰
+  /// 是否在该宫位渲染八门
+  ///
+  /// 月家 / 年家中 5 寄坤 2，只寄星不寄门 — UI 上中 5 不渲染门。
+  /// 时家盘默认 true 不受影响。
+  final bool showDoor;
 
-  // === 门旺衰 ===
-  final String? doorGongWangShuai; // 八门宫位旺衰
-  final String? doorMonthWangShuai; // 八门月令旺衰
+  /// 是否在该宫位渲染八神
+  ///
+  /// 月家 / 年家飞盘八神飞 8 非中宫，中 5 无神 — UI 上中 5 不渲染神。
+  final bool showGod;
 
-  // === 神旺衰 ===
-  final String? godGongWangShuai; // 天盘神旺衰
-  final String? diGodGongWangShuai; // 地盘神旺衰
-
-  // === 天盘干十二长生 ===
-  final String? tianPanGongZhangSheng; // 天盘干宫位长生简称
-  final String? tianPanMonthZhangSheng; // 天盘干月令长生简称
-
-  // === 天盘寄宫干十二长生 ===
-  final String? tianPanJiGanGongZhangSheng; // 天盘寄宫干宫位长生简称
-  final String? tianPanJiGanMonthZhangSheng; // 天盘寄宫干月令长生简称
-
-  // === 地盘干十二长生 ===
-  final String? diPanGongZhangSheng; // 地盘干宫位长生简称
-  final String? diPanMonthZhangSheng; // 地盘干月令长生简称
-
-  // === 地盘寄宫干十二长生 ===
-  final String? diPanJiGanGongZhangSheng; // 地盘寄宫干宫位长生简称
-  final String? diPanJiGanMonthZhangSheng; // 地盘寄宫干月令长生简称
-
-  // === 隐干十二长生 ===
-  final String? yinGanGongZhangSheng; // 隐干宫位长生简称
-  final String? yinGanMonthZhangSheng; // 隐干月令长生简称
-
-  // === 天盘暗干十二长生 ===
-  final String? tianPanAnGanGongZhangSheng; // 天盘暗干宫位长生简称
-  final String? tianPanAnGanMonthZhangSheng; // 天盘暗干月令长生简称
-
-  // === 人盘暗干十二长生 ===
-  final String? renPanAnGanGongZhangSheng; // 人盘暗干宫位长生简称
-  final String? renPanAnGanMonthZhangSheng; // 人盘暗干月令长生简称
+  // --- 为了 UI 层的平滑过渡，提供字符串 Getter ---
+  String get name => gongEnum.name;
+  String get star => starEnum.singleCharName;
+  String get door => doorEnum.name;
+  String get god => godEnum.name;
+  String get diGod => diGodEnum?.name ?? '';
+  String get tianPanGan => tianPanGanEnum.name;
+  String get diPanGan => diPanGanEnum.name;
+  String? get yinGan => yinGanEnum?.name;
+  String? get tianPanAnGan => tianPanAnGanEnum?.name;
+  String? get renPanAnGan => renPanAnGanEnum?.name;
+  String? get tianPanJiGan => tianPanJiGanEnum?.name;
+  String? get diPanJiGan => diPanJiGanEnum?.name;
+  String? get jiStar => jiStarEnum?.singleCharName;
 
   const PalaceData({
-    required this.name,
+    required this.gongEnum,
     required this.number,
-    required this.star,
-    required this.door,
-    required this.god,
-    this.diGod = '',
-    required this.tianPanGan,
-    required this.diPanGan,
+    required this.starEnum,
+    required this.doorEnum,
+    required this.godEnum,
+    this.diGodEnum,
+    required this.tianPanGanEnum,
+    required this.diPanGanEnum,
     required this.diZhi,
     required this.wangShuai,
     required this.jiXiong,
     required this.geJu,
     this.marks = const [],
     required this.isYangDun,
-    this.yinGan,
-    this.tianPanAnGan,
-    this.renPanAnGan,
-    this.tianPanJiGan,
-    this.diPanJiGan,
-    this.jiStar,
-    // 星旺衰
-    this.starGongWangShuai,
-    this.starMonthWangShuai,
-    // 门旺衰
-    this.doorGongWangShuai,
-    this.doorMonthWangShuai,
-    // 神旺衰
-    this.godGongWangShuai,
-    this.diGodGongWangShuai,
-    // 天盘干十二长生
-    this.tianPanGongZhangSheng,
-    this.tianPanMonthZhangSheng,
-    // 天盘寄宫干十二长生
-    this.tianPanJiGanGongZhangSheng,
-    this.tianPanJiGanMonthZhangSheng,
-    // 地盘干十二长生
-    this.diPanGongZhangSheng,
-    this.diPanMonthZhangSheng,
-    // 地盘寄宫干十二长生
-    this.diPanJiGanGongZhangSheng,
-    this.diPanJiGanMonthZhangSheng,
-    // 隐干十二长生
-    this.yinGanGongZhangSheng,
-    this.yinGanMonthZhangSheng,
-    // 天盘暗干十二长生
-    this.tianPanAnGanGongZhangSheng,
-    this.tianPanAnGanMonthZhangSheng,
-    // 人盘暗干十二长生
-    this.renPanAnGanGongZhangSheng,
-    this.renPanAnGanMonthZhangSheng,
+    this.yinGanEnum,
+    this.tianPanAnGanEnum,
+    this.renPanAnGanEnum,
+    this.tianPanJiGanEnum,
+    this.diPanJiGanEnum,
+    this.jiStarEnum,
+    this.isTianPanDunjia = false,
+    this.isDiPanDunjia = false,
+    this.isTianJiGanDunjia = false,
+    this.isDiJiGanDunjia = false,
+    this.isTianPanJiXing = false,
+    this.isDiPanJiXing = false,
+    this.isTianJiGanJiXing = false,
+    this.isDiJiGanJiXing = false,
+    this.showDoor = true,
+    this.showGod = true,
   });
+
+  /// 核心转换工厂方法：从领域实体转换到 UI 数据
+  factory PalaceData.fromEachGong(EachGong domain,
+      {bool isYangDun = true,
+      List<String> geJu = const [],
+      List<String> marks = const [],
+      TianGan? xunHeaderGan,
+      bool showDoor = true,
+      bool showGod = true}) {
+    return PalaceData(
+      gongEnum: domain.gongGua,
+      number: domain.gongNumber.toString(),
+      starEnum: domain.star,
+      doorEnum: domain.door,
+      godEnum: domain.god,
+      diGodEnum: domain.diGod,
+      tianPanGanEnum: domain.tianPan,
+      diPanGanEnum: domain.diPan,
+      diZhi: _getDiZhiByGong(domain.gongGua), // 映射地支
+      // 旺衰判定使用时家九星专属方法；非时家盘暂返回占位"和"
+      wangShuai: (domain.star is NineStarsEnum)
+          ? (domain.star as NineStarsEnum).checkWithGongGua(domain.gongGua).name
+          : "和",
+      jiXiong: "吉", // 待对接规则引擎
+      geJu: geJu,
+      marks: marks,
+      isYangDun: isYangDun,
+      yinGanEnum: domain.yinGan,
+      tianPanAnGanEnum: domain.tianPanAnGan,
+      renPanAnGanEnum: domain.renPanAnGan,
+      tianPanJiGanEnum: domain.tianPanJiGan,
+      diPanJiGanEnum: domain.diPanJiGan,
+      jiStarEnum: domain.isJiTianQin ? NineStarsEnum.QIN : null, // 天禽寄宫
+      isTianPanDunjia: xunHeaderGan != null && domain.tianPan == xunHeaderGan,
+      isDiPanDunjia: xunHeaderGan != null && domain.diPan == xunHeaderGan,
+      isTianJiGanDunjia:
+          xunHeaderGan != null && domain.tianPanJiGan == xunHeaderGan,
+      isDiJiGanDunjia: xunHeaderGan != null && domain.diPanJiGan == xunHeaderGan,
+      isTianPanJiXing: xunHeaderGan != null &&
+          domain.tianPan == xunHeaderGan &&
+          SixJia.getSixJiaByGan(xunHeaderGan).isSixJiXing(domain.gongGua),
+      isDiPanJiXing: xunHeaderGan != null &&
+          domain.diPan == xunHeaderGan &&
+          SixJia.getSixJiaByGan(xunHeaderGan).isSixJiXing(domain.gongGua),
+      isTianJiGanJiXing: xunHeaderGan != null &&
+          domain.tianPanJiGan == xunHeaderGan &&
+          SixJia.getSixJiaByGan(xunHeaderGan).isSixJiXing(domain.gongGua),
+      isDiJiGanJiXing: xunHeaderGan != null &&
+          domain.diPanJiGan == xunHeaderGan &&
+          SixJia.getSixJiaByGan(xunHeaderGan).isSixJiXing(domain.gongGua),
+      showDoor: showDoor,
+      showGod: showGod,
+    );
+  }
+
+  static String _getDiZhiByGong(HouTianGua gong) {
+    switch (gong) {
+      case HouTianGua.Kan: return "子";
+      case HouTianGua.Gen: return "丑寅";
+      case HouTianGua.Zhen: return "卯";
+      case HouTianGua.Xun: return "辰巳";
+      case HouTianGua.Li: return "午";
+      case HouTianGua.Kun: return "未申";
+      case HouTianGua.Dui: return "酉";
+      case HouTianGua.Qian: return "戌亥";
+      default: return "";
+    }
+  }
+
+  static final _mockGeJus = [
+    '青龙合会', '飞鸟跌穴', '玉女守门', '青龙折足', '三奇得使', '青龙逃走', 
+    '白虎猖狂', '腾蛇夭矫', '大格', '小格', '刑格', '悖格'
+  ];
+
+  static List<String> _getRandomGeJus() {
+    final rand = math.Random();
+    final count = rand.nextInt(4) + 1; // 1 to 4
+    final available = List<String>.from(_mockGeJus);
+    return List.generate(count, (_) {
+      final index = rand.nextInt(available.length);
+      return available.removeAt(index);
+    });
+  }
 
   /// 创建示例数据
   static List<PalaceData> generateSampleData() {
     return [
       PalaceData(
-        name: '巽宫',
+        gongEnum: HouTianGua.Xun,
         number: '4',
-        star: '天辅',
-        door: '杜门',
-        god: '六合',
-        diGod: '九天',
-        tianPanGan: '乙',
-        diPanGan: '戊',
+        starEnum: NineStarsEnum.FU,
+        doorEnum: EightDoorEnum.DU,
+        godEnum: EightGodsEnum.LIU_HE,
+        diGodEnum: EightGodsEnum.JIU_TIAN,
+        tianPanGanEnum: TianGan.YI,
+        diPanGanEnum: TianGan.WU,
         diZhi: '巳',
         wangShuai: '旺',
         jiXiong: '吉',
-        geJu: '青龙合会',
+        geJu: _getRandomGeJus(),
         marks: ['驿马'],
         isYangDun: true,
-        yinGan: '庚',
-        tianPanAnGan: '丙',
-        renPanAnGan: '壬',
-        // 星旺衰
-        starGongWangShuai: '旺',
-        starMonthWangShuai: '相',
-        // 门旺衰
-        doorGongWangShuai: '旺',
-        doorMonthWangShuai: '休',
-        // 神旺衰
-        godGongWangShuai: '旺',
-        diGodGongWangShuai: '相',
-        // 天盘干十二长生
-        tianPanGongZhangSheng: '冠',
-        tianPanMonthZhangSheng: '沐',
-        // 地盘干十二长生
-        diPanGongZhangSheng: '死',
-        diPanMonthZhangSheng: '病',
-        // 隐干十二长生
-        yinGanGongZhangSheng: '帝',
-        yinGanMonthZhangSheng: '长',
-        // 天盘暗干十二长生
-        tianPanAnGanGongZhangSheng: '沐',
-        tianPanAnGanMonthZhangSheng: '帝',
-        // 人盘暗干十二长生
-        renPanAnGanGongZhangSheng: '病',
-        renPanAnGanMonthZhangSheng: '养',
+        isTianPanDunjia: true,
+        isTianPanJiXing: true, // Test: 戊 in Xun
+        yinGanEnum: TianGan.GENG,
+        tianPanAnGanEnum: TianGan.BING,
       ),
       PalaceData(
-        name: '离宫',
+        gongEnum: HouTianGua.Li,
         number: '9',
-        star: '天英',
-        door: '景门',
-        god: '九天',
-        diGod: '值符',
-        tianPanGan: '丙',
-        diPanGan: '庚',
+        starEnum: NineStarsEnum.YING,
+        doorEnum: EightDoorEnum.JING_S,
+        godEnum: EightGodsEnum.JIU_TIAN,
+        diGodEnum: EightGodsEnum.ZHI_FU,
+        tianPanGanEnum: TianGan.BING,
+        diPanGanEnum: TianGan.GENG,
         diZhi: '午',
         wangShuai: '相',
         jiXiong: '大吉',
-        geJu: '飞鸟跌穴',
+        geJu: _getRandomGeJus(),
         marks: ['值符'],
         isYangDun: true,
-        yinGan: '戊',
-        tianPanAnGan: '戊',
-        renPanAnGan: '癸',
-        // 星旺衰
-        starGongWangShuai: '囚',
-        starMonthWangShuai: '旺',
-        // 门旺衰
-        doorGongWangShuai: '旺',
-        doorMonthWangShuai: '相',
-        // 神旺衰
-        godGongWangShuai: '旺',
-        diGodGongWangShuai: '旺',
-        // 天盘干十二长生
-        tianPanGongZhangSheng: '帝',
-        tianPanMonthZhangSheng: '沐',
-        // 地盘干十二长生
-        diPanGongZhangSheng: '病',
-        diPanMonthZhangSheng: '衰',
-        // 隐干十二长生
-        yinGanGongZhangSheng: '死',
-        yinGanMonthZhangSheng: '长',
-        // 天盘暗干十二长生
-        tianPanAnGanGongZhangSheng: '帝',
-        tianPanAnGanMonthZhangSheng: '沐',
-        // 人盘暗干十二长生
-        renPanAnGanGongZhangSheng: '绝',
-        renPanAnGanMonthZhangSheng: '养',
+        isDiPanDunjia: true,
+        isDiPanJiXing: true, // Test: Geng in Li (Not JiXing in real rules, but for UI test)
+        yinGanEnum: TianGan.WU,
+        tianPanAnGanEnum: TianGan.WU,
       ),
       PalaceData(
-        name: '坤宫',
+        gongEnum: HouTianGua.Kun,
         number: '2',
-        star: '天芮',
-        door: '死门',
-        god: '九地',
-        diGod: '腾蛇',
-        tianPanGan: '丁',
-        diPanGan: '壬',
+        starEnum: NineStarsEnum.RUI,
+        doorEnum: EightDoorEnum.SI,
+        godEnum: EightGodsEnum.JIU_DI,
+        diGodEnum: EightGodsEnum.TENG_SHE,
+        tianPanGanEnum: TianGan.DING,
+        diPanGanEnum: TianGan.REN,
         diZhi: '未',
         wangShuai: '休',
         jiXiong: '平',
-        geJu: '玉女守门',
+        geJu: _getRandomGeJus(),
         marks: [],
         isYangDun: true,
-        // 中五寄坤（阳遁）
-        jiStar: '天禽',
-        tianPanJiGan: '己',
-        diPanJiGan: '丁',
-        yinGan: '癸',
-        tianPanAnGan: '辛',
-        renPanAnGan: '庚',
-        // 星旺衰
-        starGongWangShuai: '死',
-        starMonthWangShuai: '囚',
-        // 门旺衰
-        doorGongWangShuai: '死',
-        doorMonthWangShuai: '休',
-        // 神旺衰
-        godGongWangShuai: '相',
-        diGodGongWangShuai: '死',
-        // 天盘干十二长生
-        tianPanGongZhangSheng: '沐',
-        tianPanMonthZhangSheng: '绝',
-        // 天盘寄宫干十二长生
-        tianPanJiGanGongZhangSheng: '冠',
-        tianPanJiGanMonthZhangSheng: '沐',
-        // 地盘干十二长生
-        diPanGongZhangSheng: '衰',
-        diPanMonthZhangSheng: '死',
-        // 地盘寄宫干十二长生
-        diPanJiGanGongZhangSheng: '沐',
-        diPanJiGanMonthZhangSheng: '绝',
-        // 隐干十二长生
-        yinGanGongZhangSheng: '养',
-        yinGanMonthZhangSheng: '死',
-        // 天盘暗干十二长生
-        tianPanAnGanGongZhangSheng: '病',
-        tianPanAnGanMonthZhangSheng: '绝',
-        // 人盘暗干十二长生
-        renPanAnGanGongZhangSheng: '病',
-        renPanAnGanMonthZhangSheng: '旺',
+        isTianJiGanDunjia: true,
+        isTianJiGanJiXing: true, // Test: JiGan JiXing (Bottom-Right)
+        jiStarEnum: NineStarsEnum.QIN, // 天禽寄宫
+        tianPanJiGanEnum: TianGan.JI,
+        diPanJiGanEnum: TianGan.DING,
+        yinGanEnum: TianGan.GUI,
+        tianPanAnGanEnum: TianGan.XIN,
       ),
       PalaceData(
-        name: '震宫',
+        gongEnum: HouTianGua.Zhen,
         number: '3',
-        star: '天冲',
-        door: '伤门',
-        god: '白虎',
-        diGod: '太阴',
-        tianPanGan: '戊',
-        diPanGan: '癸',
+        starEnum: NineStarsEnum.CHONG,
+        doorEnum: EightDoorEnum.SHANG,
+        godEnum: EightGodsEnum.BAI_HU,
+        diGodEnum: EightGodsEnum.TAI_YIN,
+        tianPanGanEnum: TianGan.WU,
+        diPanGanEnum: TianGan.GUI,
         diZhi: '卯',
         wangShuai: '囚',
         jiXiong: '凶',
-        geJu: '青龙折足',
+        geJu: _getRandomGeJus(),
         marks: ['空亡'],
         isYangDun: true,
-        yinGan: '壬',
-        tianPanAnGan: '乙',
-        renPanAnGan: '丙',
-        // 星旺衰
-        starGongWangShuai: '旺',
-        starMonthWangShuai: '旺',
-        // 门旺衰
-        doorGongWangShuai: '休',
-        doorMonthWangShuai: '旺',
-        // 神旺衰
-        godGongWangShuai: '死',
-        diGodGongWangShuai: '相',
-        // 天盘干十二长生
-        tianPanGongZhangSheng: '死',
-        tianPanMonthZhangSheng: '旺',
-        // 地盘干十二长生
-        diPanGongZhangSheng: '绝',
-        diPanMonthZhangSheng: '囚',
-        // 隐干十二长生
-        yinGanGongZhangSheng: '长',
-        yinGanMonthZhangSheng: '旺',
-        // 天盘暗干十二长生
-        tianPanAnGanGongZhangSheng: '沐',
-        tianPanAnGanMonthZhangSheng: '旺',
-        // 人盘暗干十二长生
-        renPanAnGanGongZhangSheng: '沐',
-        renPanAnGanMonthZhangSheng: '旺',
+        yinGanEnum: TianGan.REN,
+        tianPanAnGanEnum: TianGan.YI,
       ),
       PalaceData(
-        name: '中宫',
+        gongEnum: HouTianGua.Center,
         number: '5',
-        star: '天禽',
-        door: '死门',
-        god: '值符',
-        diGod: '值符',
-        tianPanGan: '己',
-        diPanGan: '丁',
+        starEnum: NineStarsEnum.QIN,
+        doorEnum: EightDoorEnum.SI,
+        godEnum: EightGodsEnum.ZHI_FU,
+        diGodEnum: EightGodsEnum.ZHI_FU,
+        tianPanGanEnum: TianGan.JI,
+        diPanGanEnum: TianGan.DING,
         diZhi: '辰',
         wangShuai: '旺',
         jiXiong: '大吉',
-        geJu: '三奇得使',
+        geJu: _getRandomGeJus(),
         marks: ['值符', '旬首'],
         isYangDun: true,
-        yinGan: '丁',
-        tianPanAnGan: '己',
-        renPanAnGan: '乙',
-        // 星旺衰
-        starGongWangShuai: '旺',
-        starMonthWangShuai: '囚',
-        // 门旺衰
-        doorGongWangShuai: '死',
-        doorMonthWangShuai: '休',
-        // 神旺衰
-        godGongWangShuai: '旺',
-        diGodGongWangShuai: '旺',
-        // 天盘干十二长生
-        tianPanGongZhangSheng: '冠',
-        tianPanMonthZhangSheng: '沐',
-        // 地盘干十二长生
-        diPanGongZhangSheng: '沐',
-        diPanMonthZhangSheng: '绝',
-        // 隐干十二长生
-        yinGanGongZhangSheng: '沐',
-        yinGanMonthZhangSheng: '绝',
-        // 天盘暗干十二长生
-        tianPanAnGanGongZhangSheng: '冠',
-        tianPanAnGanMonthZhangSheng: '沐',
-        // 人盘暗干十二长生
-        renPanAnGanGongZhangSheng: '沐',
-        renPanAnGanMonthZhangSheng: '旺',
+        yinGanEnum: TianGan.DING,
+        tianPanAnGanEnum: TianGan.JI,
       ),
       PalaceData(
-        name: '兑宫',
+        gongEnum: HouTianGua.Dui,
         number: '7',
-        star: '天柱',
-        door: '惊门',
-        god: '太阴',
-        diGod: '白虎',
-        tianPanGan: '庚',
-        diPanGan: '丙',
+        starEnum: NineStarsEnum.ZHU,
+        doorEnum: EightDoorEnum.JING_W,
+        godEnum: EightGodsEnum.TAI_YIN,
+        diGodEnum: EightGodsEnum.BAI_HU,
+        tianPanGanEnum: TianGan.GENG,
+        diPanGanEnum: TianGan.BING,
         diZhi: '酉',
         wangShuai: '相',
         jiXiong: '吉',
-        geJu: '飞鸟跌穴',
+        geJu: _getRandomGeJus(),
         marks: [],
         isYangDun: true,
-        yinGan: '乙',
-        tianPanAnGan: '丁',
-        renPanAnGan: '癸',
-        // 星旺衰
-        starGongWangShuai: '旺',
-        starMonthWangShuai: '相',
-        // 门旺衰
-        doorGongWangShuai: '死',
-        doorMonthWangShuai: '相',
-        // 神旺衰
-        godGongWangShuai: '相',
-        diGodGongWangShuai: '死',
-        // 天盘干十二长生
-        tianPanGongZhangSheng: '帝',
-        tianPanMonthZhangSheng: '旺',
-        // 地盘干十二长生
-        diPanGongZhangSheng: '沐',
-        diPanMonthZhangSheng: '旺',
-        // 隐干十二长生
-        yinGanGongZhangSheng: '沐',
-        yinGanMonthZhangSheng: '旺',
-        // 天盘暗干十二长生
-        tianPanAnGanGongZhangSheng: '沐',
-        tianPanAnGanMonthZhangSheng: '旺',
-        // 人盘暗干十二长生
-        renPanAnGanGongZhangSheng: '养',
-        renPanAnGanMonthZhangSheng: '旺',
+        yinGanEnum: TianGan.YI,
+        tianPanAnGanEnum: TianGan.DING,
       ),
       PalaceData(
-        name: '艮宫',
+        gongEnum: HouTianGua.Gen,
         number: '8',
-        star: '天任',
-        door: '生门',
-        god: '六合',
-        diGod: '九地',
-        tianPanGan: '辛',
-        diPanGan: '乙',
+        starEnum: NineStarsEnum.REN,
+        doorEnum: EightDoorEnum.SHENG,
+        godEnum: EightGodsEnum.LIU_HE,
+        diGodEnum: EightGodsEnum.JIU_DI,
+        tianPanGanEnum: TianGan.XIN,
+        diPanGanEnum: TianGan.YI,
         diZhi: '寅',
         wangShuai: '休',
         jiXiong: '吉',
-        geJu: '青龙合会',
+        geJu: _getRandomGeJus(),
         marks: ['驿马'],
         isYangDun: true,
-        yinGan: '辛',
-        tianPanAnGan: '癸',
-        renPanAnGan: '壬',
-        // 星旺衰
-        starGongWangShuai: '旺',
-        starMonthWangShuai: '旺',
-        // 门旺衰
-        doorGongWangShuai: '旺',
-        doorMonthWangShuai: '旺',
-        // 神旺衰
-        godGongWangShuai: '旺',
-        diGodGongWangShuai: '相',
-        // 天盘干十二长生
-        tianPanGongZhangSheng: '帝',
-        tianPanMonthZhangSheng: '旺',
-        // 地盘干十二长生
-        diPanGongZhangSheng: '病',
-        diPanMonthZhangSheng: '旺',
-        // 隐干十二长生
-        yinGanGongZhangSheng: '帝',
-        yinGanMonthZhangSheng: '旺',
-        // 天盘暗干十二长生
-        tianPanAnGanGongZhangSheng: '绝',
-        tianPanAnGanMonthZhangSheng: '旺',
-        // 人盘暗干十二长生
-        renPanAnGanGongZhangSheng: '长',
-        renPanAnGanMonthZhangSheng: '旺',
+        yinGanEnum: TianGan.XIN,
+        tianPanAnGanEnum: TianGan.GUI,
       ),
       PalaceData(
-        name: '坎宫',
+        gongEnum: HouTianGua.Kan,
         number: '1',
-        star: '天蓬',
-        door: '休门',
-        god: '玄武',
-        diGod: '六合',
-        tianPanGan: '壬',
-        diPanGan: '辛',
+        starEnum: NineStarsEnum.PENG,
+        doorEnum: EightDoorEnum.XIU,
+        godEnum: EightGodsEnum.XUAN_WU,
+        diGodEnum: EightGodsEnum.LIU_HE,
+        tianPanGanEnum: TianGan.REN,
+        diPanGanEnum: TianGan.XIN,
         diZhi: '子',
         wangShuai: '囚',
         jiXiong: '凶',
-        geJu: '青龙逃走',
+        geJu: _getRandomGeJus(),
         marks: ['空亡'],
         isYangDun: true,
-        yinGan: '甲',
-        tianPanAnGan: '壬',
-        renPanAnGan: '丁',
-        // 星旺衰
-        starGongWangShuai: '囚',
-        starMonthWangShuai: '旺',
-        // 门旺衰
-        doorGongWangShuai: '旺',
-        doorMonthWangShuai: '旺',
-        // 神旺衰
-        godGongWangShuai: '死',
-        diGodGongWangShuai: '旺',
-        // 天盘干十二长生
-        tianPanGongZhangSheng: '长',
-        tianPanMonthZhangSheng: '旺',
-        // 地盘干十二长生
-        diPanGongZhangSheng: '冠',
-        diPanMonthZhangSheng: '旺',
-        // 隐干十二长生
-        yinGanGongZhangSheng: '长',
-        yinGanMonthZhangSheng: '旺',
-        // 天盘暗干十二长生
-        tianPanAnGanGongZhangSheng: '长',
-        tianPanAnGanMonthZhangSheng: '旺',
-        // 人盘暗干十二长生
-        renPanAnGanGongZhangSheng: '沐',
-        renPanAnGanMonthZhangSheng: '旺',
+        yinGanEnum: TianGan.JIA,
+        tianPanAnGanEnum: TianGan.REN,
       ),
       PalaceData(
-        name: '乾宫',
+        gongEnum: HouTianGua.Qian,
         number: '6',
-        star: '天心',
-        door: '开门',
-        god: '腾蛇',
-        diGod: '玄武',
-        tianPanGan: '癸',
-        diPanGan: '戊',
+        starEnum: NineStarsEnum.XIN,
+        doorEnum: EightDoorEnum.KAI,
+        godEnum: EightGodsEnum.TENG_SHE,
+        diGodEnum: EightGodsEnum.XUAN_WU,
+        tianPanGanEnum: TianGan.GUI,
+        diPanGanEnum: TianGan.WU,
         diZhi: '戌',
         wangShuai: '死',
         jiXiong: '大凶',
-        geJu: '白虎猖狂',
+        geJu: _getRandomGeJus(),
         marks: [],
         isYangDun: true,
-        yinGan: '己',
-        tianPanAnGan: '庚',
-        renPanAnGan: '丙',
-        // 星旺衰
-        starGongWangShuai: '旺',
-        starMonthWangShuai: '相',
-        // 门旺衰
-        doorGongWangShuai: '旺',
-        doorMonthWangShuai: '旺',
-        // 神旺衰
-        godGongWangShuai: '死',
-        diGodGongWangShuai: '死',
-        // 天盘干十二长生
-        tianPanGongZhangSheng: '养',
-        tianPanMonthZhangSheng: '旺',
-        // 地盘干十二长生
-        diPanGongZhangSheng: '病',
-        diPanMonthZhangSheng: '旺',
-        // 隐干十二长生
-        yinGanGongZhangSheng: '冠',
-        yinGanMonthZhangSheng: '旺',
-        // 天盘暗干十二长生
-        tianPanAnGanGongZhangSheng: '帝',
-        tianPanAnGanMonthZhangSheng: '旺',
-        // 人盘暗干十二长生
-        renPanAnGanGongZhangSheng: '沐',
-        renPanAnGanMonthZhangSheng: '旺',
+        yinGanEnum: TianGan.JI,
+        tianPanAnGanEnum: TianGan.GENG,
       ),
     ];
   }

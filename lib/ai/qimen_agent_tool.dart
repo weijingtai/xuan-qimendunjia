@@ -1,4 +1,4 @@
-import 'package:common/domain/ai/agent_tool.dart';
+import 'package:ai_core/ai/agent_tool.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/di/service_locator.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';

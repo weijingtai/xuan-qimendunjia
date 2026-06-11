@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 
 enum SixJia {
   JIA_ZI_WU("甲子戊", JiaZi.JIA_ZI, TianGan.WU),
@@ -57,5 +57,10 @@ enum SixJia {
     }
     return SixJia.values.firstWhere((sixJia) => sixJia.jiaZi == jiaZi,
         orElse: () => throw ArgumentError("当前并不是六甲， ${jiaZi.name}"));
+  }
+
+  static SixJia getSixJiaByGan(TianGan gan) {
+    return SixJia.values.firstWhere((sixJia) => sixJia.gan == gan,
+        orElse: () => throw ArgumentError("当前天干并不是六甲旬首， ${gan.name}"));
   }
 }

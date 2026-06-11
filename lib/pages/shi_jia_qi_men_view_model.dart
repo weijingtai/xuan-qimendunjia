@@ -1,6 +1,6 @@
-import 'package:common/domain/ai/ai_context.dart';
-import 'package:common/domain/ai/ai_entity.dart';
-import 'package:common/enums.dart';
+import 'package:ai_core/ai/ai_context.dart';
+import 'package:ai_core/ai/ai_entity.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
@@ -26,6 +26,7 @@ import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
 import '../ui_models/ui_pan_meta_model.dart';
 import '../ui_models/ui_ten_gan_key_ying_ge_ju.dart';
+import 'package:qimendunjia/di/service_locator.dart';
 import '../utils/read_data_utils.dart';
 
 class ShiJiaQiMenViewModel extends ChangeNotifier {
@@ -97,7 +98,8 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     _externalPan = pan;
 
     // Convert entity ShiJiaJu → model ShiJiaJu
-    final modelJu = ShiJiaJuMapper.toModel(pan.shiJiaJu);
+    // 此 ViewModel 是传统时家专用页面；非时家盘不会到达此分支。
+    final modelJu = ShiJiaJuMapper.toModel(pan.shiJiaJu!);
 
     // Use default PanArrangeSettings (matching PanSettings.defaultSettings())
     final defaultSettings = PanArrangeSettings(
@@ -177,7 +179,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       var fixedList = [
         loadAllTenGanKeYingForCurrentGong(_uiPanMetaModel!.xunHeaderTianGan,
             gong.tianPan, gong.diPan, gong.tianPanJiGan, gong.diPanJiGan),
-        loadDoorStarKeYing(gong.door, gong.star),
+        loadDoorStarKeYing(gong.door, gong.star as NineStarsEnum),
         loadThreeQiRuGong(gong.gongGua, gong.tianPan),
         loadEightDoorGanKeYing(gong.door, gong.tianPan),
         loadTianPanGanRuGong(gong.gongGua, gong.tianPan),
@@ -319,14 +321,14 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   Future<DoorStarKeYing?> loadDoorStarKeYing(
       EightDoorEnum door, NineStarsEnum star) async {
     Map<EightDoorEnum, Map<NineStarsEnum, DoorStarKeYing>> loadResult =
-        await ReadDataUtils.readDoorStarKeYing();
+        await serviceLocator.officialRuleReader.readDoorStarKeYing();
     return loadResult[door]?[star];
   }
 
   Future<String?> loadEightDoorGanKeYing(
       EightDoorEnum door, TianGan tianPanGan) async {
     Map<EightDoorEnum, Map<TianGan, String>> loadResult =
-        await ReadDataUtils.readDoorGanKeYing();
+        await serviceLocator.officialRuleReader.readDoorGanKeYing();
     return loadResult[door]?[tianPanGan];
   }
 
@@ -343,7 +345,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   ) async {
     print("loadAllTenGanKeYingForCurrentGong");
     Map<TianGan, Map<TianGan, TenGanKeYing>> loadResult =
-        await ReadDataUtils.readTenGanKeYing();
+        await serviceLocator.officialRuleReader.readTenGanKeYing();
     TenGanKeYing tianDiPanKeYing = loadResult[tianPanGan]![diPanGan]!;
     TenGanKeYing? tianPanJiaDiPanKey;
     if (xunShouGan == tianPanGan) {
@@ -391,7 +393,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       TianGan tianPanGan, TianGan diPanGan) async {
     print("loadTenGanKeyYing");
     Map<TianGan, Map<TianGan, TenGanKeYing>> loadResult =
-        await ReadDataUtils.readTenGanKeYing();
+        await serviceLocator.officialRuleReader.readTenGanKeYing();
     // if (tianPanGan == TianGan.JIA && diPanGan == TianGan.BING){
     //   print(loadResult[tianPanGan]?[TianGan.BING]);
     // }
@@ -404,7 +406,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
     try {
       Map<EightDoorEnum, Map<EightDoorEnum, Map<YinYang, EightDoorKeYing>>>
-          loadResult = await ReadDataUtils.readEightDoorKeYing();
+          loadResult = await serviceLocator.officialRuleReader.readEightDoorKeYing();
       return loadResult[door]?[fixDoor];
     } catch (e) {
       rethrow;
@@ -417,7 +419,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       HouTianGua gongGua, TianGan tianPanGan) async {
     if (tianPanGan.isThreeQi) {
       Map<HouTianGua, Map<TianGan, QiYiRuGong>> qiYiRuGongMapper =
-          await ReadDataUtils.readQiYiRuGong();
+          await serviceLocator.officialRuleReader.readQiYiRuGong();
       return qiYiRuGongMapper[gongGua]![tianPanGan]!;
     }
     return null;
@@ -426,7 +428,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   Future<Map<HouTianGua, List<QiYiRuGong>>> listThreeQiRuGong(
       Map<TianGan, HouTianGua> mapper) async {
     Map<HouTianGua, Map<TianGan, QiYiRuGong>> qiYiRuGongMapper =
-        await ReadDataUtils.readQiYiRuGong();
+        await serviceLocator.officialRuleReader.readQiYiRuGong();
     Map<HouTianGua, List<QiYiRuGong>> res = {};
     for (var mapperEntry in mapper.entries) {
       if (!res.containsKey(mapperEntry.value)) {
@@ -445,7 +447,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   Future<String?> loadTianPanGanRuGong(
       HouTianGua gongGua, TianGan tianPanGan) async {
     Map<HouTianGua, Map<TianGan, String>> qiYiRuGongMapper =
-        await ReadDataUtils.readQiYiRuGongDisease();
+        await serviceLocator.officialRuleReader.readQiYiRuGongDisease();
     return qiYiRuGongMapper[gongGua]?[tianPanGan];
   }
 
@@ -454,7 +456,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       TianGan xunShouGan,
       Map<HouTianGua, EachGong> gong) async {
     Map<TianGan, Map<TianGan, TenGanKeYingGeJu>> loadResult =
-        await ReadDataUtils.readTenGanKeYingGeJu();
+        await serviceLocator.officialRuleReader.readTenGanKeYingGeJu();
     Map<HouTianGua, UITenGanKeYingGeJu> result = {};
     for (var entry in gong.entries) {
       if (plateType == PlateType.ZHUAN_PAN && entry.key == HouTianGua.Center) {

@@ -1,9 +1,10 @@
-import 'package:common/domain/ai/ai_context.dart';
-import 'package:common/domain/ai/ai_entity.dart';
+import 'package:ai_core/ai/ai_context.dart';
+import 'package:ai_core/ai/ai_entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
+import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/each_gong.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart';
@@ -11,6 +12,9 @@ import 'package:qimendunjia/domain/usecases/arrange_pan_usecase.dart';
 import 'package:qimendunjia/domain/usecases/calculate_ju_usecase.dart';
 import 'package:qimendunjia/domain/usecases/select_gong_usecase.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
+import 'package:qimendunjia/enums/enum_ke_scheme.dart';
+import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
 
 /// 奇门遁甲视图状态
@@ -51,7 +55,7 @@ class QiMenViewModel extends ChangeNotifier {
   String? _errorMessage;
 
   // 数据
-  ShiJiaJu? _currentJu;
+  BaseJu? _currentJu;
   QiMenPan? _currentPan;
   EachGong? _selectedGong;
   GongDetailInfo? _gongDetailInfo;
@@ -69,7 +73,11 @@ class QiMenViewModel extends ChangeNotifier {
   // Getters
   QiMenViewState get state => _state;
   String? get errorMessage => _errorMessage;
-  ShiJiaJu? get currentJu => _currentJu;
+  ShiJiaJu? get currentJu =>
+      _currentJu is ShiJiaJu ? _currentJu as ShiJiaJu : null;
+
+  /// 当前局（任意家）。新代码优先使用此 getter，按 `ju.jia` 判断。
+  BaseJu? get currentBaseJu => _currentJu;
   QiMenPan? get currentPan => _currentPan;
   EachGong? get selectedGong => _selectedGong;
   GongDetailInfo? get gongDetailInfo => _gongDetailInfo;
@@ -122,12 +130,18 @@ class QiMenViewModel extends ChangeNotifier {
   /// 计算并排盘
   ///
   /// [dateTime] 起盘时间
+  /// [jia] 家维度（默认时家；日/月/年家在 Phase 2/3/4 接入后才可用）
   /// [arrangeType] 起盘方式
   /// [plateType] 盘类型
+  /// [keScheme] 刻家专用：刻制方案；不传则用 [_panSettings.keScheme]
+  /// [fuTouScheme] 刻家专用：拆补法符头派别；不传则用 [_panSettings.fuTouScheme]
   Future<void> calculateAndArrangePan({
     required DateTime dateTime,
+    QiMenJia jia = QiMenJia.SHI,
     required ArrangeType arrangeType,
     required PlateType plateType,
+    KeSchemeType? keScheme,
+    FuTouSchemeType? fuTouScheme,
   }) async {
     try {
       // 1. 计算局数
@@ -138,7 +152,10 @@ class QiMenViewModel extends ChangeNotifier {
       final ju = await _calculateJuUseCase.execute(
         CalculateJuParams(
           dateTime: dateTime,
+          jia: jia,
           arrangeType: arrangeType,
+          keScheme: keScheme ?? _panSettings.keScheme,
+          fuTouScheme: fuTouScheme ?? _panSettings.fuTouScheme,
         ),
       );
       _currentJu = ju;

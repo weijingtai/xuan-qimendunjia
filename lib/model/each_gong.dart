@@ -1,13 +1,13 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
+import 'package:qimendunjia/domain/entities/qi_men_star.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_eight_gods.dart';
-import 'package:qimendunjia/enums/enum_nine_stars.dart';
 
 import '../enums/enum_six_jia.dart';
 
 class EachGong {
   int gongNumber;
-  NineStarsEnum star;
+  QiMenStar star;
   EightDoorEnum door;
   EightGodsEnum god;
   EightGodsEnum diGod;
@@ -49,7 +49,8 @@ class EachGong {
   }
 
   bool get isStarFuYin {
-    return star.originalGong.houTianOrder == gongNumber;
+    // QiMenStar.originalGong 在日家等无原宫语义的家可为 null，此时恒非伏吟
+    return star.originalGong?.houTianOrder == gongNumber;
   }
 
   bool get isDoorFanYin {
@@ -66,7 +67,8 @@ class EachGong {
       // 当门伏吟时，一定不是反吟
       return false;
     } else {
-      return gongGua.isDuiChongWithOther(star.originalGong);
+      final og = star.originalGong;
+      return og != null && gongGua.isDuiChongWithOther(og);
     }
   }
 

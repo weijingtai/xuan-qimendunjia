@@ -1,4 +1,4 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/domain/entities/each_gong.dart' as entity;
 import 'package:qimendunjia/domain/entities/qimen_pan.dart' as entity;
 import 'package:qimendunjia/model/shi_jia_qi_men.dart' as model;
@@ -27,7 +27,7 @@ class QiMenPanMapper {
     return entity.QiMenPan(
       id: _generateId(),
       panDateTime: modelPan.shiJiaJu.panDateTime,
-      shiJiaJu: ShiJiaJuMapper.fromModel(modelPan.shiJiaJu),
+      ju: ShiJiaJuMapper.fromModel(modelPan.shiJiaJu),
       plateType: modelPan.plateType,
       gongMapper: gongMapper,
       zhiShiDoor: modelPan.zhiShiDoor,

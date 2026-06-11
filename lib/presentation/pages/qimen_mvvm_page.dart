@@ -1,15 +1,18 @@
 import 'dart:async';
 
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:common/domain/ai/ai_chat_event.dart';
-import 'package:common/services/ai_service.dart';
-import 'package:common/domain/ai/ai_persona.dart';
+import 'package:ai_core/ai/ai_chat_event.dart';
+import 'package:ai_core/ai_core.dart' hide AiPersona;
+import 'package:ai_core/ai/ai_persona.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_nine_stars.dart';
+import 'package:qimendunjia/enums/enum_eight_door.dart';
+import 'package:qimendunjia/enums/enum_eight_gods.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/redesign_ui/layouts/smart_grid.dart';
@@ -473,10 +476,10 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
               spacing: 24,
               runSpacing: 4,
               children: [
-                _buildInfoRow('盘类型', pan.plateType.name),
-                _buildInfoRow('局数', ju.juDescription),
-                _buildInfoRow('旬首', ju.fuTouJiaZi.name),
-                _buildInfoRow('节气', ju.jieQiAt.name),
+                _buildInfoRow('盘类型', pan.plateType?.name ?? '未知'),
+                _buildInfoRow('局数', ju?.juDescription ?? '未知'),
+                _buildInfoRow('旬首', ju?.fuTouJiaZi?.name ?? '未知'),
+                _buildInfoRow('节气', ju?.jieQiAt?.name ?? '未知'),
               ],
             ),
           ),
@@ -501,6 +504,8 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                 showDiGod: config.showDiGod,
                 showYinGan: config.showYinGan,
                 showAnGan: config.showAnGan,
+                showSimpleLayout: config.showSimpleLayout,
+                isFeipan: pan.plateType == PlateType.FEI_PAN,
               ),
               onPalaceTap: (index) {
                 final gua = _gridOrderedGuas[index];
@@ -596,39 +601,43 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
 
   /// 将 [QiMenPan] 转换为 [PalaceData] 列表（按网格顺序）
   List<PalaceData> _buildPalaceDataList(QiMenPan pan, PanDisplayConfig config) {
-    final kongWang = pan.shiJiaJu.fuTouJiaZi.getKongWang();
-    final kongWangSet = {kongWang.item1, kongWang.item2};
+    // 时家盘才有"旬空"概念（依赖 fuTouJiaZi）；非时家盘退化为无空亡
+    final shiJiaJu = pan.shiJiaJu;
+    final kongWangSet = <DiZhi>{};
+    if (shiJiaJu != null) {
+      final kongWang = shiJiaJu.fuTouJiaZi.getKongWang();
+      kongWangSet.addAll([kongWang.item1, kongWang.item2]);
+    }
+
+    final xunHeaderGan = pan.gongMapper.values
+        .map((g) => g.sixJiaXunHeader?.gan)
+        .firstWhere((gan) => gan != null, orElse: () => null);
 
     return _gridOrderedGuas.map((gua) {
       final gong = pan.gongMapper[gua];
       if (gong == null) {
-        // 防御性兜底（正常不会发生）
         return PalaceData(
-          name: '${gua.name}宫',
+          gongEnum: gua,
           number: gua.houTianOrder.toString(),
-          star: '',
-          door: '',
-          god: '',
-          tianPanGan: '',
-          diPanGan: '',
+          starEnum: NineStarsEnum.PENG,
+          doorEnum: EightDoorEnum.XIU,
+          godEnum: EightGodsEnum.ZHI_FU,
+          tianPanGanEnum: TianGan.WU,
+          diPanGanEnum: TianGan.JI,
           diZhi: '',
           wangShuai: '',
-          jiXiong: '',
-          geJu: '',
+          jiXiong: 'N/A',
+          geJu: const [],
           isYangDun: true,
         );
       }
 
-      // 判断驿马：宫位的 DiZhi 是否匹配驿马位
       final isYiMa = gong.gongGua.diZhi1 == pan.horseLocation ||
           gong.gongGua.diZhi2 == pan.horseLocation;
-
-      // 判断空亡：宫位 DiZhi 是否在旬空两支中
       final isKongWang = kongWangSet.contains(gong.gongGua.diZhi1) ||
           (gong.gongGua.diZhi2 != null &&
               kongWangSet.contains(gong.gongGua.diZhi2));
 
-      // 特殊标记
       final marks = <String>[
         if (isYiMa) '驿马',
         if (isKongWang) '空亡',
@@ -636,32 +645,14 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
         if (pan.zhiFuStarAtGong == gua) '值符',
       ];
 
-      // 隐干/暗干（KONG_WANG 表示空值）
-      final yinGan = gong.yinGan != TianGan.KONG_WANG ? gong.yinGan.name : null;
-      final tianPanAnGan = gong.tianPanAnGan != TianGan.KONG_WANG
-          ? gong.tianPanAnGan.name
-          : null;
-      final renPanAnGan =
-          gong.renPanAnGan != TianGan.KONG_WANG ? gong.renPanAnGan.name : null;
-
-      return PalaceData(
-        name: '${gong.gongGua.name}宫',
-        number: gong.gongNumber.toString(),
-        star: gong.star.name,
-        door: gong.door.name,
-        god: gong.god.name,
-        diGod: gong.diGod.name,
-        tianPanGan: gong.tianPan.name,
-        diPanGan: gong.diPan.name,
-        diZhi: gong.gongGua.diZhi1.name,
-        wangShuai: '',
-        jiXiong: '',
-        geJu: '',
+      return PalaceData.fromEachGong(
+        gong,
+        isYangDun: pan.ju.yinYangDun.isYang,
+        geJu: const [],
         marks: marks,
-        isYangDun: pan.shiJiaJu.isYangDun,
-        yinGan: config.showYinGan ? yinGan : null,
-        tianPanAnGan: config.showAnGan ? tianPanAnGan : null,
-        renPanAnGan: config.showAnGan ? renPanAnGan : null,
+        xunHeaderGan: xunHeaderGan ??
+            shiJiaJu?.fuTouJiaZi.xunHeader.gan ??
+            TianGan.JIA, // 非时家盘无旬首概念，回退甲
       );
     }).toList();
   }
@@ -710,6 +701,19 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                   Text(
                     '选择发送给 AI 的可选盘信息',
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                  ),
+                  const Divider(),
+                  CheckboxListTile(
+                    title: const Text('简版显示'),
+                    subtitle: const Text('宫位内元素使用单字显示（如：天蓬->蓬、休门->休）'),
+                    value: config.showSimpleLayout,
+                    onChanged: (v) {
+                      viewModel.updateDisplayConfig(
+                          config.copyWith(showSimpleLayout: v));
+                      setSheetState(() {
+                        config = viewModel.displayConfig;
+                      });
+                    },
                   ),
                   const Divider(),
                   CheckboxListTile(

@@ -9,7 +9,12 @@ import 'package:qimendunjia/domain/usecases/arrange_pan_usecase.dart';
 import 'package:qimendunjia/domain/usecases/calculate_ju_usecase.dart';
 import 'package:qimendunjia/domain/usecases/select_gong_usecase.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
+import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
+import 'package:qimendunjia/utils/read_data_utils.dart';
+import 'package:qimendunjia/utils/yue_jia_qi_men_ju_calculator.dart' show YueJiaSanYuanStrategy;
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
+import 'package:qimendunjia/redesign_ui/core/qi_men_star_theme.dart';
+import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
 
 /// 服务定位器
 ///
@@ -26,9 +31,12 @@ class ServiceLocator {
   final Map<Type, dynamic> _services = {};
 
   /// 初始化所有依赖
-  void init() {
+  ///
+  /// [officialRules] 由 host/app 装配层注入的官方规则资源仓储（assets 后端实现）。
+  /// 产品包不直接依赖任何具体存储后端（见 EXECUTOR-RULES N3）。
+  void init(QimendunjiaOfficialRuleRepository officialRules) {
     // 1. 注册数据源
-    _registerDataSources();
+    _registerDataSources(officialRules);
 
     // 2. 注册仓储
     _registerRepositories();
@@ -41,20 +49,48 @@ class ServiceLocator {
   }
 
   /// 注册数据源
-  void _registerDataSources() {
+  void _registerDataSources(QimendunjiaOfficialRuleRepository officialRules) {
+    // 官方规则读取器（基于注入的 assets 端口，无 rootBundle）
+    final reader = ReadDataUtils(officialRules);
+    _services[ReadDataUtils] = reader;
+
     // JSON 数据源（单例）
-    _services[JsonDataSource] = JsonDataSource();
+    _services[JsonDataSource] = JsonDataSource(reader);
 
     // 缓存数据源（单例）
     _services[CacheDataSource] = CacheDataSource();
 
-    // 计算器数据源（每种算法一个实例）
-    _services[Map<ArrangeType, QiMenCalculatorDataSource>] = {
-      ArrangeType.CHAI_BU: ChaiBuCalculatorDataSource(),
-      ArrangeType.ZHI_RUN: ZhiRunCalculatorDataSource(),
-      ArrangeType.MAO_SHAN: MaoShanCalculatorDataSource(),
-      ArrangeType.YIN_PAN: YinPanCalculatorDataSource(),
+    // 计算器数据源（双维 Map：家 × 起局法）
+    // 月家：CHAI_BU = 粗分（5年一局，默认）/ ZHI_RUN = 细分（10月一局）。
+    // 年家：所有 ArrangeType 同映射到一个 DataSource。
+    // 日家：所有 ArrangeType 同映射（不分拆补/置润；以休门为纲）。
+    _services[Map<QiMenJia, Map<ArrangeType, QiMenCalculatorDataSource>>] = {
+      QiMenJia.SHI: {
+        ArrangeType.CHAI_BU: ChaiBuCalculatorDataSource(),
+        ArrangeType.ZHI_RUN: ZhiRunCalculatorDataSource(),
+        ArrangeType.MAO_SHAN: MaoShanCalculatorDataSource(),
+        ArrangeType.YIN_PAN: YinPanCalculatorDataSource(),
+      },
+      QiMenJia.YUE: {
+        ArrangeType.CHAI_BU: YueJiaCalculatorDataSource(
+            strategy: YueJiaSanYuanStrategy.COARSE),
+        ArrangeType.ZHI_RUN: YueJiaCalculatorDataSource(
+            strategy: YueJiaSanYuanStrategy.FINE),
+      },
+      QiMenJia.NIAN: {
+        for (final type in ArrangeType.values) type: NianJiaCalculatorDataSource(),
+      },
+      QiMenJia.RI: {
+        for (final type in ArrangeType.values) type: RiJiaCalculatorDataSource(),
+      },
+      QiMenJia.KE: {
+        for (final type in ArrangeType.values) type: KeJiaCalculatorDataSource(),
+      },
     };
+
+    // 九星主题（家级配色注册表）
+    // Phase 2/4 各家在自己实现内调用 registerFamilyPalette 注入颜色。
+    _services[QiMenStarTheme] = DefaultQiMenStarTheme();
   }
 
   /// 注册仓储
@@ -67,7 +103,7 @@ class ServiceLocator {
 
     // 奇门计算器仓储
     _services[QiMenCalculatorRepository] = QiMenCalculatorRepositoryImpl(
-      get<Map<ArrangeType, QiMenCalculatorDataSource>>(),
+      get<Map<QiMenJia, Map<ArrangeType, QiMenCalculatorDataSource>>>(),
     );
   }
 
@@ -114,15 +150,12 @@ class ServiceLocator {
     return service as T;
   }
 
+  /// 提供官方规则读取器给传统页面（遗留静态调用迁移点，见 §10）。
+  ReadDataUtils get officialRuleReader => get<ReadDataUtils>();
+
   /// 清理所有服务
   void dispose() {
     _services.clear();
-  }
-
-  /// 重置服务定位器（用于测试）
-  void reset() {
-    _services.clear();
-    init();
   }
 }
 

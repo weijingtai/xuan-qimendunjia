@@ -1,6 +1,6 @@
-import 'package:common/enums.dart';
+import 'package:metaphysics_core/enums.dart';
 import 'package:intl/intl.dart';
-import 'package:common/adapters/lunar_adapter.dart';
+import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 import 'package:qimendunjia/enums/enum_three_yuan.dart';
 import 'package:qimendunjia/enums/enum_zhi_run_type.dart';
 import 'package:qimendunjia/model/shi_jia_ju.dart';
@@ -123,6 +123,11 @@ class ChaiBuCalculator extends ShiJiaQiMenJuCalculator {
 
   ShiJiaJu _doCalculate() {
     LunarAdapter lunar = LunarAdapter.fromDate(dateTime);
+    if (dateTime.hour == 23) {
+      // 时辰如果是23点之后 需要将日干支调整为下一天
+      // 影响年月日的干支
+      lunar = LunarAdapter.fromDate(dateTime.add(const Duration(hours: 1)));
+    }
     JiaZi dayGanZhi = JiaZi.getFromGanZhiValue(lunar.getDayInGanZhi())!;
 
     String jieQiName =
@@ -130,9 +135,6 @@ class ChaiBuCalculator extends ShiJiaQiMenJuCalculator {
     TwentyFourJieQi jieQi = TwentyFourJieQi.fromName(jieQiName);
     // 1. 根据节气查看当前节气是阴遁还是阳遁
     YinYang yinYangDun = jieQi.yinYangDun;
-    if (dateTime.hour == 23) {
-      dayGanZhi = JiaZi.getByNumber((dayGanZhi.number + 1) % 60);
-    }
     // 2. 获取符头
     JiaZi fuTou = getFuTouByDayJiaZi(dayGanZhi);
     // 根据符头地支查看三元

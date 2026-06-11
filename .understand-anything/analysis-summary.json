@@ -1,0 +1,28 @@
+{
+  "totalNodes": 1116,
+  "totalEdges": 3478,
+  "totalLayers": 12,
+  "tourSteps": 5,
+  "nodeTypes": {
+    "document": 49,
+    "config": 7,
+    "file": 151,
+    "class": 228,
+    "function": 680,
+    "pipeline": 1
+  },
+  "edgeTypes": {
+    "contains": 883,
+    "imports": 591,
+    "related": 1370,
+    "tested_by": 61,
+    "documents": 573
+  },
+  "fileCategories": {
+    "docs": 49,
+    "config": 7,
+    "code": 151,
+    "script": 1
+  },
+  "filesAnalyzed": 208
+}

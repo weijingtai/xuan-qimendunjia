@@ -1,0 +1,3 @@
+[mcp_servers.toon]
+args = ["/Users/jingtaiwei/Git/Public/toon-mcp-server/dist/index.js"]
+command = "node"

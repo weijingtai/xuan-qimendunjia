@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:common/enums.dart';
-import 'package:common/widgets/eight_gua_widget.dart';
+import 'package:metaphysics_core/enums.dart';
+import 'package:xuan_four_zhu_card/widgets/eight_gua_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:qimendunjia/widgets/season_24_tag.dart';
 

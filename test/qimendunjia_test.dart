@@ -1,5 +1,5 @@
-import 'package:common/enums.dart';
-import 'package:common/adapters/lunar_adapter.dart';
+import 'package:metaphysics_core/enums.dart';
+import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:qimendunjia/enums/enum_three_yuan.dart';
