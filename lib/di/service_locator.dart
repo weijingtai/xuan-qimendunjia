@@ -153,6 +153,9 @@ class ServiceLocator {
   /// 提供官方规则读取器给传统页面（遗留静态调用迁移点，见 §10）。
   ReadDataUtils get officialRuleReader => get<ReadDataUtils>();
 
+  /// 提供奇门数据仓储给传统页面（替代 officialRuleReader 的逐条查询）。
+  QiMenDataRepository get qiMenDataRepository => get<QiMenDataRepository>();
+
   /// 清理所有服务
   void dispose() {
     _services.clear();

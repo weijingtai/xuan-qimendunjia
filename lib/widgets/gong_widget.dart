@@ -20,7 +20,7 @@ import '../model/shi_jia_qi_men.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../utils/constant_ui_resources_of_qi_men.dart';
 import 'package:qimendunjia/di/service_locator.dart';
-import '../utils/read_data_utils.dart';
+import '../domain/repositories/qimen_data_repository.dart';
 import 'BounceDialog.dart';
 import 'QiMenGongContentBackground.dart';
 
@@ -709,14 +709,15 @@ class _GongWidgetWidgetState extends State<GongWidget> {
 
   Future<TenGanKeYing> getTenGanKeYing(
       BuildContext context, TianGan tianPanGan, TianGan diPanGan) async {
-    Map<TianGan, Map<TianGan, TenGanKeYing>> tenGanKeYingMapper =
-        await serviceLocator.officialRuleReader.readTenGanKeYing();
-    return tenGanKeYingMapper[tianPanGan]![diPanGan]!;
+    return await serviceLocator.qiMenDataRepository.getTenGanKeYing(
+      tianPan: tianPanGan,
+      diPan: diPanGan,
+    );
   }
 
   void tianPanGanTapped(BuildContext context, TianGan gan) async {
-    Map<TianGan, Map<TianGan, TenGanKeYing>> tenGanKeYingMapper =
-        await serviceLocator.officialRuleReader.readTenGanKeYing();
+    // TODO(Q2c-remaining): tenGanKeYingMapper loaded but unused (dialog is placeholder).
+    // Will be replaced when the dialog is implemented.
 
     showGeneralDialog(
       context: context,
