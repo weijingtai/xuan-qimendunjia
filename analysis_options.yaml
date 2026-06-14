@@ -1,6 +1,9 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  exclude:
+    - "example/**"
+    - "test/**"
   errors:
     must_be_immutable: ignore
     dead_null_aware_expression: ignore
@@ -30,5 +33,4 @@ linter:
     deprecated_member_use_from_same_package: false
     collection_methods_unrelated_type: false
     strict_top_level_inference: false
-    deprecated_member_use: false
     avoid_print: false
