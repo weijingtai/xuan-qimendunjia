@@ -114,3 +114,33 @@
   - Actual binding of QiMenUiState/QiMenInputState to pages deferred to Q5 (page modification phase)
 - [x] Q4.5 Update tasks.md (this file)
 - [x] Q4.6 Commit
+
+---
+
+## Q5: Row-Level Equivalence Freeze + Legacy Deletion ✅
+
+- [x] Q5.1 Verify remaining boundary violations
+  - Calculator refs (ChaiBu/ZhiRun/MaoShan/YinPan): 5 matches in `scalable_shi_jia_qi_men_view_page.dart`
+  - `officialRuleReader`: 0 matches — CLEAN
+  - `ShiJiaQiMen(`: 7 matches in 5 legacy files
+  - Note: calculator violations remain in kept file (actively used by navigator `/qimendunjia` route)
+- [x] Q5.2 Assess legacy page deletion safety
+  - **Deleted (safe — no active references):**
+    - `lib/pages/beatiful_page.dart` (172.8K) — only imported by shi_jia_qi_men_view_page (also deleted)
+    - `lib/pages/scalable_beatiful_page.dart` (173.8K) — no code imports (only comments)
+    - `lib/pages/shi_jia_qi_men_view_page.dart` (148.3K) — not used by navigator (uses scalable version)
+    - `lib/pages/primary_page.bak.dart` (49.8K) — backup file
+    - `lib/widgets/each_gong_widget.dart` (74.2K) — only imported by deleted legacy pages
+    - `lib/widgets/new_each_gong_widget.dart` (74.5K) — only imported by deleted shi_jia_qi_men_view_page
+    - `lib/widgets/gong_widget.dart` (53.4K) — not imported anywhere
+  - **Kept (active references in navigator.dart):**
+    - `lib/pages/scalable_shi_jia_qi_men_view_page.dart` — used as `/qimendunjia` route child
+    - `lib/pages/shi_jia_qi_men_view_model.dart` — used as Provider in `/qimendunjia` route
+    - `lib/widgets/resizable_gong_widget.dart` — imported by kept scalable page
+- [x] Q5.3 Delete safe legacy files (7 files, ~697K removed)
+- [x] Q5.4 Run boundary verification
+  - Calculator refs: 5 remaining (all in kept scalable_shi_jia_qi_men_view_page.dart)
+  - officialRuleReader: 0 — CLEAN
+- [x] Q5.5 Run tests — 50 passed, 1 failed (pre-existing boundary test compile error)
+- [x] Q5.6 Update tasks.md (this file)
+- [x] Q5.7 Commit
