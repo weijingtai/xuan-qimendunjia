@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:qimendunjia/pages/primary_page.dart';
+import 'package:qimendunjia/domain/usecases/calculate_ju_usecase.dart';
 import 'package:qimendunjia/pages/scalable_shi_jia_qi_men_view_page.dart';
 import 'package:qimendunjia/pages/shi_jia_qi_men_view_model.dart';
 import 'package:qimendunjia/presentation/pages/qimen_mvvm_page.dart';
@@ -21,6 +22,8 @@ class NavigatorGenerator {
           providers: [
             ChangeNotifierProvider<ShiJiaQiMenViewModel>(
                 create: (context) => ShiJiaQiMenViewModel(context, serviceLocator.qiMenDataRepository)),
+            Provider<CalculateJuUseCase>.value(
+                value: serviceLocator.get<CalculateJuUseCase>()),
           ],
           child: ScalableShiJiaQiMenViewPage(),
           // child: ShiJiaQiMenViewPage(),

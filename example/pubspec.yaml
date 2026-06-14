@@ -24,8 +24,6 @@ dependencies:
       ref: main
   flutter_ai_toolkit: ^0.9.1
   logging: ^1.2.0
-  persistence_assets:
-    path: ../../xuan-storage/assets
   timezone: ^0.9.4
 
   lottie: ^3.3.2
@@ -39,6 +37,10 @@ dependency_overrides:
     path: ../../xuan-ai
   persistence_core:
     path: ../../xuan-storage/core
+  persistence_drift:
+    path: ../../xuan-storage/drift
+  repository_interface_ai:
+    path: ../../repository-interface-ai
   qimendunjia:
     path: ../
 

@@ -54,7 +54,6 @@ import '../utils/three_yuan_utils.dart';
 import '../widgets/resizable_gong_widget.dart';
 import '../domain/usecases/calculate_ju_usecase.dart';
 import '../enums/enum_qi_men_jia.dart';
-import 'package:qimendunjia/di/service_locator.dart';
 
 class ScalableShiJiaQiMenViewPage extends StatefulWidget {
   DateTime? panDateTime;
@@ -3597,7 +3596,7 @@ class _ScalableShiJiaQiMenViewPageState
       case ArrangeType.ZHI_RUN:
       case ArrangeType.MAO_SHAN:
       case ArrangeType.YIN_PAN:
-        final useCase = serviceLocator.get<CalculateJuUseCase>();
+        final useCase = context.read<CalculateJuUseCase>();
         final result = await useCase.execute(CalculateJuParams(
           dateTime: panDatetime,
           arrangeType: arrangeTypeNotifier.value,
