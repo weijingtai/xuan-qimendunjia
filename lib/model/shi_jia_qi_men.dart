@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'center_gong_ji_gong_type.dart';
+export 'center_gong_ji_gong_type.dart';
 import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_six_geng_ge_ju.dart';
@@ -141,25 +144,25 @@ class ShiJiaQiMen {
 
     ganAtCenterGong =
         currentJunGanGongMapper.entries.firstWhere((e) => e.value == 5).key;
-    print("当前中宫天干 ${ganAtCenterGong.name}");
+    debugPrint("当前中宫天干 ${ganAtCenterGong.name}");
     // print(currentJunGanGongMapper.entries.map((e)=>"${e.key.name}${e.value}").toList().join(" "));
     // 3. 根据天干统帅找到对应的后天八卦宫数
     // 确定天干统帅所在宫位
-    print("当前为${yinYangDun.isYang ? "阳" : "阴"} $juNumber局");
+    debugPrint("当前为${yinYangDun.isYang ? "阳" : "阴"} $juNumber局");
     zhiFuGongNumber = currentJunGanGongMapper[xunHeaderTianGan]!;
     int findZhiFuGongNumber = zhiFuGongNumber;
-    print("天干统帅所在宫位 $zhiFuGongNumber");
+    debugPrint("天干统帅所在宫位 $zhiFuGongNumber");
     // 根据宫位找到对应的"值使门"
     zhiShiDoor = EightDoorEnum.mapNumberToEnum[findZhiFuGongNumber]!;
 
-    print("值使门 ${zhiShiDoor.name}");
+    debugPrint("值使门 ${zhiShiDoor.name}");
     // 根据宫位找到对应的“九星”
     zhiFuStar = NineStarsEnum.mapNumberToEnum[findZhiFuGongNumber]!;
-    print("值符星 ${zhiFuStar.name}");
+    debugPrint("值符星 ${zhiFuStar.name}");
     // print("${zhiFuStar.name} -- ${nineStar.name}");
-    print(zhiFuGan.name);
+    debugPrint(zhiFuGan.name);
     int zhiFuAtGongNumber = currentJunGanGongMapper[zhiFuGan]!;
-    print("值符落宫 $zhiFuAtGongNumber 宫");
+    debugPrint("值符落宫 $zhiFuAtGongNumber 宫");
     zhiFuStarAtGong = HouTianGua.getGua(zhiFuAtGongNumber);
 
     // 根据制度落宫找到转盘的八神开始的位置
@@ -167,7 +170,7 @@ class ShiJiaQiMen {
     // print("$zhuanPanSeq  $zhiFuAtGongNumber $currentJuZhuanPanStartIndex");
     var zhuanPanSeqNew = ChangeSequenceUtils.changeNumberSeq(zhiFuAtGongNumber,
         yinYangDun.isYang ? feiPanSeq : feiPanSeq.reversed.toList());
-    print("---- $zhuanPanSeqNew");
+    debugPrint("---- $zhuanPanSeqNew");
     // print("当前局转盘开始位置 ${currentJuZhuanPanStartIndex}");
     // 调整 zhuanPanSeq 的顺序使得 zhiFuAtGongNumber 在第一个
     // var per = zhuanPanSeq.sublist(0,currentJuZhuanPanStartIndex);
@@ -185,18 +188,17 @@ class ShiJiaQiMen {
         ChangeSequenceUtils.changeNineStarsSeq(
             zhiFuStar, NineStarsEnum.listFeiPanOrderedByGongNumber);
     // print(star.name);
-    print(forCurrentPanSeq.map((e) => e.name).toList());
+    debugPrint(forCurrentPanSeq.map((e) => e.name).toList().toString());
     Map<int, NineStarsEnum> nineStarsGongNumberMapper =
         Map.fromIterables(zhuanPanSeqNew, forCurrentPanSeq);
-    print(nineStarsGongNumberMapper.entries
-        .map((e) => "${e.key}${e.value.name}"));
+    debugPrint(nineStarsGongNumberMapper.entries
+        .map((e) => "${e.key}${e.value.name}").join(", "));
     Map<int, EightGodsEnum> tianPanGodsGongNumberMapper = Map.fromIterables(
         zhuanPanSeqNew,
         currentPanYinYang.isYang
             ? EightGodsEnum.feiPanYangDunList
             : EightGodsEnum.feiPanYinDunList);
-    print(tianPanGodsGongNumberMapper.entries
-        .map((e) => "${e.key}${e.value.name}"));
+    debugPrint(tianPanGodsGongNumberMapper.entries.map((e) => "\${e.key}\${e.value.name}").join("\n"));
     // 根据当前是时辰干支与六甲旬首间隔的顺序，再根据阳顺阴逆从天干统帅，顺后天八卦宫顺序确定值使门位置
     int totalStep = shiJiaZi.number - xunShou.number;
     // 旬首所在后天八卦宫位
@@ -213,12 +215,12 @@ class ShiJiaQiMen {
       var res = ChangeSequenceUtils.changeNumberSeq(
           xunShouAtGongNumber, List.generate(9, (i) => i + 1));
       res = [res.first, ...res.skip(1).toList().reversed, res.first];
-      print(res);
-      print("totalStep $totalStep");
+      debugPrint(res.toString());
+      debugPrint("totalStep $totalStep");
       zhiShiDoorAtGongNumber = res[totalStep];
       // zhiShiDoorAtGongNumber = xunShouAtGongNumber - totalStep;
     }
-    print("值使门落宫 $zhiShiDoorAtGongNumber ${zhiShiDoor.name}");
+    debugPrint("值使门落宫 $zhiShiDoorAtGongNumber ${zhiShiDoor.name}");
     if (zhiShiDoorAtGongNumber == 5) {
       // print("值使门落在中五宫，需要寄宫到坤二");
       // 根据寄宫策略 选择对应的寄宫
@@ -233,14 +235,14 @@ class ShiJiaQiMen {
         zhiShiDoor, EightDoorEnum.listOrderedByGongNumber);
     Map<int, EightDoorEnum> zhuanPanEigthDoorMapper =
         Map.fromIterables(zhuanPanDaoSeq, currentEightDoorSeq);
-    print(
-        zhuanPanEigthDoorMapper.entries.map((e) => "${e.key}${e.value.name}"));
+    debugPrint(
+        zhuanPanEigthDoorMapper.entries.map((e) => "\${e.key}\${e.value.name}").join(", "));
 
     // 确定地盘天干
     // currentJunMapper key 变 value， value 变 key
     Map<int, TianGan> diPanGanWithGongMapper = Map.fromEntries(
         currentJunGanGongMapper.entries.map((e) => MapEntry(e.value, e.key)));
-    print(
+    debugPrint(
         "地盘：${diPanGanWithGongMapper.entries.map((e) => "${e.key}${e.value.name}")}");
     // TianGan ganAtCenterGong = _diPanGanWithGongMapper[5]!;
 
@@ -249,7 +251,7 @@ class ShiJiaQiMen {
 
     // 确定地盘天干顺序，并将天干统帅作为第一个
     // 根据转盘奇门，地盘天干在盘中顺时针顺序
-    print("旬首所在宫$xunShouAtGongNumber");
+    debugPrint("旬首所在宫$xunShouAtGongNumber");
     if (xunShouAtGongNumber == 5) {
       xunShouAtGongNumber = findZhiFuGongNumber;
     }
@@ -263,7 +265,7 @@ class ShiJiaQiMen {
     // print(tianPanTianGanSeq.map((e)=>e.name));
     Map<int, TianGan> tianPanTianGanMapper =
         Map.fromIterables(zhuanPanSeqNew, tianPanTianGanSeq);
-    print(
+    debugPrint(
         "天盘：${tianPanTianGanMapper.entries.map((e) => "${e.key}${e.value.name}")}");
     // 隐干： 布局后，值使门落宫，把起局时间天干作为本门的隐干头，并由此按照三奇六仪进行九宫八卦顺序排布
     // 如：壬申时，阳遁1局，休门值使，落离九，休门隐干为“壬”：坎宫隐干为癸，坤宫隐干为丁
@@ -287,22 +289,22 @@ class ShiJiaQiMen {
         yinYangDun.isYang
             ? EightGodsEnum.feiPanYangDunList
             : EightGodsEnum.feiPanYinDunList);
-    print(
+    debugPrint(
         "地盘神：${diGodsGongNumberMapper.entries.map((e) => "${e.key}${e.value.name}")}");
 
     // 天盘隐干
     Map<int, TianGan> tianPanAnGanMapper =
         orderTianPanAnGan(nineStarsGongNumberMapper, diPanGanWithGongMapper);
-    print(
+    debugPrint(
         "天盘隐干：${tianPanAnGanMapper.entries.map((e) => "${e.key}${e.value.name}")}");
     // 人盘隐干
     Map<int, TianGan> renPanAnGanMapper =
         orderRenPanAnGan(zhuanPanEigthDoorMapper, diPanGanWithGongMapper);
-    print(
+    debugPrint(
         "人盘隐干：${renPanAnGanMapper.entries.map((e) => "${e.key}${e.value.name}")}");
 
     Map<int, TianGan> yinGanMapper = orderYinGan(diPanGanWithGongMapper);
-    print("隐干：${yinGanMapper.entries.map((e) => "${e.key}${e.value.name}")}");
+    debugPrint("隐干：${yinGanMapper.entries.map((e) => "${e.key}${e.value.name}")}");
 
     Map<HouTianGua, EachGong> gongRes = {};
 

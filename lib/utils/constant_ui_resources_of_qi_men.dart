@@ -12,7 +12,7 @@ class ConstantUiResourcesOfQiMen {
       height: 1.0,
       shadows: [
         Shadow(
-            color: Colors.grey.withOpacity(.5),
+            color: Colors.grey.withValues(alpha: .5),
             blurRadius: 2,
             offset: const Offset(0, 0))
       ]);
@@ -39,7 +39,7 @@ class ConstantUiResourcesOfQiMen {
       height: 1,
       shadows: [
         Shadow(
-            color: Colors.grey.withOpacity(.5),
+            color: Colors.grey.withValues(alpha: .5),
             blurRadius: 2,
             offset: const Offset(0, 0))
       ]);
@@ -49,7 +49,7 @@ class ConstantUiResourcesOfQiMen {
       height: 1,
       shadows: [
         Shadow(
-            color: Colors.grey.withOpacity(.5),
+            color: Colors.grey.withValues(alpha: .5),
             blurRadius: 2,
             offset: const Offset(0, 0))
       ]);
@@ -61,7 +61,7 @@ class ConstantUiResourcesOfQiMen {
       fontWeight: FontWeight.w300,
       shadows: [
         Shadow(
-            color: Colors.grey.withOpacity(.5),
+            color: Colors.grey.withValues(alpha: .5),
             blurRadius: 2,
             offset: const Offset(0, 0))
       ]);
@@ -74,7 +74,7 @@ class ConstantUiResourcesOfQiMen {
   static const TextStyle wangShuaiTextStyle =
       TextStyle(fontSize: 10, height: 1.0, fontWeight: FontWeight.w400);
   static const TextStyle nineGongNameTextStyle = TextStyle(
-    // color: Colors.grey.withOpacity(.3),
+    // color: Colors.grey.withValues(alpha: .3),
     color: Colors.grey,
     fontSize: 70,
     height: 1,

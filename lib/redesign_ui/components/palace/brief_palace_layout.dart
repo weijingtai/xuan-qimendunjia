@@ -23,7 +23,7 @@ class BriefPalaceLayout extends StatelessWidget {
   final BriefPalaceConfig config;
   final double size;
 
-  BriefPalaceLayout({
+  const BriefPalaceLayout({
     super.key,
     required this.data,
     required this.config,
@@ -155,15 +155,15 @@ class BriefPalaceLayout extends StatelessWidget {
                                     Color bgColor =
                                         theme.geJuTagBackgroundColor;
                                     Color textColor = theme.primaryTextColor
-                                        .withOpacity(0.8);
+                                        .withValues(alpha: 0.8);
 
                                     if (geJuText == '值符') {
                                       bgColor = const Color(0xFFD32F2F)
-                                          .withOpacity(0.1);
+                                          .withValues(alpha: 0.1);
                                       textColor = const Color(0xFFD32F2F);
                                     } else if (geJuText == '旬首') {
                                       bgColor = const Color(0xFF1976D2)
-                                          .withOpacity(0.1);
+                                          .withValues(alpha: 0.1);
                                       textColor = const Color(0xFF1976D2);
                                     }
 
@@ -177,7 +177,7 @@ class BriefPalaceLayout extends StatelessWidget {
                                                 geJuText == '旬首')
                                             ? Border.all(
                                                 color: textColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 width: 0.5)
                                             : null,
                                       ),
@@ -353,7 +353,7 @@ class BriefPalaceLayout extends StatelessWidget {
       double wangShuaiWidgetWidth,
       {required bool withJi}) {
     double heightSize = 12;
-    return Container(
+    return SizedBox(
       width: columnWidth,
       // color: Colors.grey.withAlpha(50),
       child: Column(
@@ -398,7 +398,7 @@ class BriefPalaceLayout extends StatelessWidget {
 
   Widget _yinAnGanWangShuaiWidget(String gan, String? jiGan, TextStyle style,
       double columnWidth, double heightSize) {
-    return Container(
+    return SizedBox(
         width: columnWidth,
         // color: Colors.yellow.withAlpha(50),
         child: Column(
@@ -430,7 +430,7 @@ class BriefPalaceLayout extends StatelessWidget {
       double heightSize,
       double wangShuaiWidgetWidth,
       {required bool withJi}) {
-    return Container(
+    return SizedBox(
       width: columnWidth,
       child: Column(
         children: [
@@ -482,7 +482,7 @@ class BriefPalaceLayout extends StatelessWidget {
       bool isJiDunjia = false,
       bool isJiXing = false,
       bool isJiJiXing = false}) {
-    return Container(
+    return SizedBox(
       width: columnWidth,
       child: Column(
         children: [
@@ -934,17 +934,12 @@ class BriefPalaceLayout extends StatelessWidget {
           if (gong != null)
             AnimatedContainer(
               duration: Animations.durationNormal,
-              width: gong == null
-                  ? wangShuaiWidgetWidth
-                  : theme.wangShuaiBadgeWidth + 2,
+              width: theme.wangShuaiBadgeWidth + 2,
               height: theme.wangShuaiBadgeHeight,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   color: theme.wangShuaiGongBg,
-                  borderRadius: gong == null
-                      ? BorderRadius.all(
-                          Radius.circular(theme.wangShuaiBadgeRadius))
-                      : BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(theme.wangShuaiBadgeRadius),
                           bottomLeft:
                               Radius.circular(theme.wangShuaiBadgeRadius))),
@@ -998,8 +993,8 @@ class BriefPalaceLayout extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: theme.secondaryTextColor.withOpacity(0.2)),
-          color: theme.secondaryTextColor.withOpacity(0.05),
+          border: Border.all(color: theme.secondaryTextColor.withValues(alpha: 0.2)),
+          color: theme.secondaryTextColor.withValues(alpha: 0.05),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1016,7 +1011,7 @@ class BriefPalaceLayout extends StatelessWidget {
               '五宫',
               style: (secondaryStyle ?? const TextStyle()).copyWith(
                 fontSize: 10,
-                color: (theme.secondaryTextColor ?? Colors.grey).withOpacity(0.6),
+                color: (theme.secondaryTextColor ?? Colors.grey).withValues(alpha: 0.6),
               ),
             ),
           ],
@@ -1055,7 +1050,7 @@ class BriefPalaceLayout extends StatelessWidget {
                             data.godEnum.singleCharName,
                             config.showSimpleLayout,
                             jiStyle.copyWith(
-                                color: theme.secondaryTextColor.withOpacity(0.8)),
+                                color: theme.secondaryTextColor.withValues(alpha: 0.8)),
                           )
                         : const SizedBox.shrink(),
                   ),
@@ -1225,7 +1220,7 @@ class BriefPalaceLayout extends StatelessWidget {
                                     config.showSimpleLayout,
                                     jiStyle.copyWith(
                                         color: theme.secondaryTextColor
-                                            .withOpacity(0.8)),
+                                            .withValues(alpha: 0.8)),
                                   ),
                                 ),
                               ],

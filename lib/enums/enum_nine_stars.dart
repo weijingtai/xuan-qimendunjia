@@ -25,11 +25,16 @@ enum NineStarsEnum implements QiMenStar {
   QIN(5, "天禽", "禽", FiveXing.TU, YinYang.YIN,
       HouTianGua.Kun); // 没有阴阳是 天芮星与天任星合体，相较于其他九星 属阴
 
+  @override
   final String name;
+  @override
   final int number;
+  @override
   final String singleCharName;
+  @override
   final FiveXing fiveXing;
   final YinYang yinyang;
+  @override
   final HouTianGua originalGong;
   const NineStarsEnum(this.number, this.name, this.singleCharName,
       this.fiveXing, this.yinyang, this.originalGong);

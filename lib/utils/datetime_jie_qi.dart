@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 // 写一个 DateTime 的扩展类，用于获取节气
 import 'dart:math';
 
@@ -75,5 +76,5 @@ extension SolarTerm on DateTime {
 }
 
 // void main() {
-//   print(DateTime.parse("2022-12-14").getSolarTerm());  // Expected: 大雪
+//   debugPrint(DateTime.parse("2022-12-14").getSolarTerm());  // Expected: 大雪
 // }

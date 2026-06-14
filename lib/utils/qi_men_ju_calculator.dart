@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:metaphysics_core/enums.dart';
 import 'package:intl/intl.dart';
 import 'package:metaphysics_core/adapters/lunar_adapter.dart';
@@ -92,9 +93,8 @@ abstract class ShiJiaQiMenJuCalculator {
 // 拆补
 class ChaiBuCalculator extends ShiJiaQiMenJuCalculator {
   ChaiBuCalculator({
-    required DateTime dateTime,
+    required super.dateTime,
   }) : super(
-          dateTime: dateTime,
           arrangeType: ArrangeType.CHAI_BU,
         );
   @override
@@ -185,9 +185,8 @@ class ChaiBuCalculator extends ShiJiaQiMenJuCalculator {
 // 置润
 class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
   ZhiRunCalculator({
-    required DateTime dateTime,
+    required super.dateTime,
   }) : super(
-          dateTime: dateTime,
           arrangeType: ArrangeType.ZHI_RUN,
         );
   @override
@@ -247,13 +246,13 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
 
       // 相差的天数，用于构建符头那天
       int days = dayJiaZi.number - fuTou.number;
-      print("符头干支: ${fuTou.name}");
+      debugPrint("符头干支: ${fuTou.name}");
       fuTouDateTime = dateTime.subtract(Duration(days: days - 1));
-      print(dayJiaZi.name);
-      print(dateTime);
-      print("符头时间：$fuTouDateTime,当前节气为${jieQi.name}，开始于$jieQiStartAt");
+      debugPrint(dayJiaZi.name);
+      debugPrint(dateTime.toString());
+      debugPrint("符头时间：$fuTouDateTime,当前节气为${jieQi.name}，开始于$jieQiStartAt");
       fuTouLunar = LunarAdapter.fromDate(fuTouDateTime);
-      print(fuTouLunar.getDayInGanZhi());
+      debugPrint(fuTouLunar.getDayInGanZhi());
     }
     Tuple4<int, EnumThreeYuan, TwentyFourJieQi, int> tuple = doCa(dateTime);
 
@@ -516,12 +515,12 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
     int targetEnd = targetDateTime.year;
     // 需要判断是否对targetEnd 进行+1， 因为 targetDateTime可能实际属于下一年的冬至
 
-    print("正授冬至日为 $zhengShouDongZhi");
+    debugPrint("正授冬至日为 $zhengShouDongZhi");
     // 获取两个时间点中每一年的冬夏而至节气的日奇
     // WARNING 当前实现是基于两个时间但不在同一年内，进行的
     List<DateTime> dateTimes = [];
     for (var i = yearStart; i <= targetEnd; i++) {
-      print("第$i年");
+      debugPrint("第$i年");
       LunarAdapter tmpLunar= LunarAdapter.fromDate(DateTime(i, 1, 1));
       DateTime thisYearDongZhi =
           dateFormatter.parse(tmpLunar.getJieQiTable()["冬至"]!.toYmdHms());
@@ -538,8 +537,8 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
       dateTimes.add(thisYearDongZhi);
       dateTimes.add(thisYearXiaZhi);
 
-      print("第$i年 冬至 $thisYearDongZhi");
-      print("第$i年 夏至 $thisYearXiaZhi");
+      debugPrint("第$i年 冬至 $thisYearDongZhi");
+      debugPrint("第$i年 夏至 $thisYearXiaZhi");
     }
 
     // 检查targetDateTime 的前一个 二至节是冬至还是夏至
@@ -558,8 +557,8 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
     // 将时间调整为 前一天子时开始时间
     previousJieQiDateTime = DateTime(previousJieQiDateTime.year,
         previousJieQiDateTime.month, previousJieQiDateTime.day, 0, 1);
-    print("目标日期的前一个二至节为 ${previousTwoZhiJie.name} $previousJieQiDateTime");
-    print("目标日期为$targetDateTime");
+    debugPrint("目标日期的前一个二至节为 ${previousTwoZhiJie.name} $previousJieQiDateTime");
+    debugPrint("目标日期为$targetDateTime");
     if (targetDateTime.month == 12 && targetDateTime.day >= 18) {
       // 如果目标日期为12月，则判断日期是否在在下一年冬至开始后，
       DateTime tmp2 = DateTime(
@@ -578,15 +577,15 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
 
     // dateTimes.add(previousJieQiDateTime);
 
-    print(dateTimes.map((dt) => dt.toString()));
+    debugPrint(dateTimes.map((dt) => dt.toString()).join(", "));
 
     List<int> daysBetweenEachTwoZhi = [];
     for (int i = 1; i < dateTimes.length; i++) {
       daysBetweenEachTwoZhi
           .add(dateTimes[i].difference(dateTimes[i - 1]).inDays + 1);
     }
-    print(daysBetweenEachTwoZhi.map((d) => d));
-    print("-------------------");
+    debugPrint(daysBetweenEachTwoZhi.map((d) => d.toString()).join(", "));
+    debugPrint("-------------------");
     YinYang finishedDun = YinYang.YIN; // true为阳遁完成，false为阴遁完成，哪个遁完成则需要使用另一个完成
     int previousLoopBalance = 0; // 负数标识需要loop补全（从新的中减去），正数需要加上
     EnumZhiRunType nextDunShuldBe = EnumZhiRunType.ZHENG_SHOU;
@@ -599,25 +598,25 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
         } else if (nextDunShuldBe == EnumZhiRunType.CHAO_SHEN) {
           days = daysBetweenEachTwoZhi[i] + previousLoopBalance;
         }
-        print("阳遁 ---- $days 天 --- $i");
+        debugPrint("阳遁 ---- $days 天 --- $i");
         if (days == 180) {
-          print("正授结束，无超神，接气之类。阳遁正好180天");
+          debugPrint("正授结束，无超神，接气之类。阳遁正好180天");
           nextDunShuldBe = EnumZhiRunType.ZHENG_SHOU;
         } else if (days > 180) {
           if (days - 180 >= 9) {
             previousLoopBalance = 15 - (days - 180); //
-            print(
+            debugPrint(
                 "阳遁180天已经用完，然而并没有夏至没到，其时间超过9天（为${days - 180}），需要进行置润操作，重复芒种节三元15天，阴遁开始需要向后延 $previousLoopBalance 天");
             nextDunShuldBe = EnumZhiRunType.JIE_QI;
           } else {
             previousLoopBalance = days - 180; // 夏至开始之前 需要去除被冬至“借走”的这几天
-            print(
+            debugPrint(
                 "阳遁180天已经用完，然而并没有夏至没到，夏至需要超神补全 $previousLoopBalance 天（提前n天开始阴遁）");
             nextDunShuldBe = EnumZhiRunType.CHAO_SHEN;
           }
         } else {
           previousLoopBalance = 180 - days;
-          print("阳遁180天未用完，但夏至节已经到来，阴遁开始需要向后延 $previousLoopBalance 天");
+          debugPrint("阳遁180天未用完，但夏至节已经到来，阴遁开始需要向后延 $previousLoopBalance 天");
           nextDunShuldBe = EnumZhiRunType.JIE_QI;
         }
         finishedDun = YinYang.YANG;
@@ -629,25 +628,25 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
         } else if (nextDunShuldBe == EnumZhiRunType.CHAO_SHEN) {
           days = daysBetweenEachTwoZhi[i] + previousLoopBalance;
         }
-        print("阴遁 ---- $days 天 --- $i");
+        debugPrint("阴遁 ---- $days 天 --- $i");
         if (days == 180) {
-          print("正授结束，无超神，接气之类。阴遁正好180天");
+          debugPrint("正授结束，无超神，接气之类。阴遁正好180天");
           nextDunShuldBe = EnumZhiRunType.ZHENG_SHOU;
         } else if (days > 180) {
           if (days - 180 >= 9) {
             previousLoopBalance = 15 - (days - 180); //
-            print(
+            debugPrint(
                 "阴遁180天已经用完，然而并没有冬至，其时间超过9天（为${days - 180}），需要进行置润操作，重复大雪节三元15天，阳遁开始需要向后延 $previousLoopBalance 天");
             nextDunShuldBe = EnumZhiRunType.JIE_QI;
           } else {
             previousLoopBalance = days - 180; // 夏至开始之前 需要去除被冬至“借走”的这几天
-            print(
+            debugPrint(
                 "阴遁180天已经用完，然而并没有冬至，冬至需要超神补全 $previousLoopBalance 天（提前n天开始阳遁）");
             nextDunShuldBe = EnumZhiRunType.CHAO_SHEN;
           }
         } else {
           previousLoopBalance = 180 - days;
-          print("阴遁180天未用完，但冬至节已经到来，阳遁开始需要向后延 $previousLoopBalance 天");
+          debugPrint("阴遁180天未用完，但冬至节已经到来，阳遁开始需要向后延 $previousLoopBalance 天");
           nextDunShuldBe = EnumZhiRunType.JIE_QI;
         }
         finishedDun = YinYang.YIN;
@@ -659,7 +658,7 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
     List<Tuple3<int, EnumThreeYuan, TwentyFourJieQi>> dunList;
     if (finishedDun.isYang) {
       // 阳遁list已经结束了
-      print("使用阴遁 $previousLoopBalance ${nextDunShuldBe.name}");
+      debugPrint("使用阴遁 $previousLoopBalance ${nextDunShuldBe.name}");
       dunList = ShiJiaQiMenJuCalculator.yinDunList;
       if (nextDunShuldBe == EnumZhiRunType.CHAO_SHEN) {
         dunList = ShiJiaQiMenJuCalculator.yinDunList
@@ -735,7 +734,7 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
         //     dunList.first.item1, dunList.first.item2, dunList.first.item3, 1);
       }
     } else {
-      print("使用阳遁 $previousLoopBalance ${nextDunShuldBe.name}");
+      debugPrint("使用阳遁 $previousLoopBalance ${nextDunShuldBe.name}");
       dunList = ShiJiaQiMenJuCalculator.yangDunList;
       if (nextDunShuldBe == EnumZhiRunType.CHAO_SHEN) {
         dunList = ShiJiaQiMenJuCalculator.yangDunList
@@ -804,7 +803,7 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
         }
         dunList.addAll(ShiJiaQiMenJuCalculator.yangDunList);
 
-        print(
+        debugPrint(
             "阴遁 置润 $previousLoopBalance $completedYuan ${previousLoopBalance % 5 + 1}");
         // throw UnimplementedError("使用阴遁 置润");
         // return Tuple4(
@@ -818,7 +817,7 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
       // targetLunar.getJieQi() ?? targetLunar.getPrevJieQi();
     }
     int finalDiffInDays = targetDateTime.difference(dateTimes.last).inDays;
-    print(
+    debugPrint(
         "diff in days targetDateTime - lastTwoZhi $finalDiffInDays, $previousLoopBalance = ${previousLoopBalance - finalDiffInDays}");
 
     int finishedYuan = finalDiffInDays ~/ 5;
@@ -831,7 +830,7 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
     } else if (EnumZhiRunType.CHAO_SHEN == nextDunShuldBe) {
       finalDiffInDays -= previousLoopBalance;
     }
-    print("${nextDunShuldBe.name} ${finalDiffInDays % 5} ");
+    debugPrint("${nextDunShuldBe.name} ${finalDiffInDays % 5} ");
 
     return Tuple4(dunList.first.item1, dunList.first.item2, dunList.first.item3,
         finalDiffInDays % 5 + 1);
@@ -847,7 +846,7 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
     var xiaZhi =
         dateFormatter.parse(dateTimeInLunar.getJieQiTable()["夏至"]!.toYmdHms());
     var xiaZhiJieDateOnly = DateTime(xiaZhi.year, xiaZhi.month, xiaZhi.day);
-    print(
+    debugPrint(
         "目标时间（$findLunarByDateTime） 当年 冬至节（$dongZhiJieDateOnly）, 夏至节（$xiaZhiJieDateOnly）");
     if (dateTime.isAtSameMomentAs(xiaZhiJieDateOnly) ||
         dateTime.isAfter(xiaZhiJieDateOnly)) {
@@ -858,15 +857,15 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
         afterThatYearDongZhiDays += 1;
       }
 
-      print("夏至节之后使用的阳遁 - 是年夏至节之后第$afterThatYearDongZhiDays");
+      debugPrint("夏至节之后使用的阳遁 - 是年夏至节之后第$afterThatYearDongZhiDays");
 
       var afterZhengShouInDays =
           xiaZhiJieDateOnly.difference(dongZhiJieDateOnly).inDays +
               1; // +1 为加上冬至节 这天
 
-      print("当年夏至节距离正授冬至节 $afterZhengShouInDays天");
+      debugPrint("当年夏至节距离正授冬至节 $afterZhengShouInDays天");
       if (afterZhengShouInDays == 180) {
-        print("正授");
+        debugPrint("正授");
       } else {
         // int leftToXiaZhi = afterZhengShouInDays - 180 - 1;
         int leftToXiaZhi = afterZhengShouInDays - 180;
@@ -878,10 +877,10 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
               ShiJiaQiMenJuCalculator.yangDunList.first.item3,
               1);
         } else if (leftToXiaZhi >= 9) {
-          print("前一个节气进行了置润，所以阴遁向后推延了${15 - leftToXiaZhi}天");
+          debugPrint("前一个节气进行了置润，所以阴遁向后推延了${15 - leftToXiaZhi}天");
           throw UnimplementedError("前一个节气进行了置润，所以阴遁向后推延了${15 - leftToXiaZhi}");
         } else {
-          print("前一个节气不需要置润，将阴遁超神几日$leftToXiaZhi");
+          debugPrint("前一个节气不需要置润，将阴遁超神几日$leftToXiaZhi");
           // print(diffInDays);
           diffInDays -= leftToXiaZhi;
           // print(diffInDays);
@@ -895,7 +894,7 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
       var yinDunList =
           ShiJiaQiMenJuCalculator.yinDunList.skip(completedFinishedYuan);
 
-      print("ok");
+      debugPrint("ok");
       return Tuple4(yinDunList.first.item1, yinDunList.first.item2,
           yinDunList.first.item3, completedDay + 1);
     } else {
@@ -905,14 +904,14 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
       if (dateTime.hour == 23) {
         afterThatYearDongZhiDays += 1;
       }
-      print("冬至节之后使用的阳遁 - 是年冬至节之后第$afterThatYearDongZhiDays");
+      debugPrint("冬至节之后使用的阳遁 - 是年冬至节之后第$afterThatYearDongZhiDays");
       if (diffInDays < 180) {
         // 在一个阴阳遁之内
         var completedFinishedYuan = diffInDays ~/ 5;
         var completedDay = diffInDays % 5;
-        print(
+        debugPrint(
             "相差与正授冬至相差 $diffInDays天 完成的过完$completedFinishedYuan个‘元’ 零 $completedDay 天");
-        print(ShiJiaQiMenJuCalculator.yangDunList.length);
+        debugPrint(ShiJiaQiMenJuCalculator.yangDunList.length.toString());
         var yangDunList =
             ShiJiaQiMenJuCalculator.yangDunList.skip(completedFinishedYuan);
 
@@ -966,9 +965,9 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
         // 在一个阴阳遁之内
         var completedFinishedYuan = diffInDays ~/ 5;
         var completedDay = diffInDays % 5;
-        print(
+        debugPrint(
             "相差与正授冬至相差 $diffInDays天 完成的过完$completedFinishedYuan个‘元’ 零 $completedDay 天");
-        print(ShiJiaQiMenJuCalculator.yangDunList.length);
+        debugPrint(ShiJiaQiMenJuCalculator.yangDunList.length.toString());
         var yangDunList =
             ShiJiaQiMenJuCalculator.yangDunList.skip(completedFinishedYuan);
 
@@ -993,7 +992,7 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
         var yangDunList =
             ShiJiaQiMenJuCalculator.yangDunList.skip(completedFinishedYuan);
 
-        print(
+        debugPrint(
             "当前为：${yangDunList.first.item3.name} ${yangDunList.first.item2.name} ${yangDunList.first.item1}局 第${completedDay + 1}天");
         return Tuple4(yangDunList.first.item1, yangDunList.first.item2,
             yangDunList.first.item3, completedDay + 1);
@@ -1041,9 +1040,8 @@ class ZhiRunCalculator extends ShiJiaQiMenJuCalculator {
 // 茅山
 class MaoShanCalculator extends ShiJiaQiMenJuCalculator {
   MaoShanCalculator({
-    required DateTime dateTime,
+    required super.dateTime,
   }) : super(
-          dateTime: dateTime,
           arrangeType: ArrangeType.MAO_SHAN,
         );
   static final DateFormat dateFormatter = DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1132,9 +1130,8 @@ class MaoShanCalculator extends ShiJiaQiMenJuCalculator {
 // 阴盘
 class YinPanCalculator extends ShiJiaQiMenJuCalculator {
   YinPanCalculator({
-    required DateTime dateTime,
+    required super.dateTime,
   }) : super(
-          dateTime: dateTime,
           arrangeType: ArrangeType.YIN_PAN,
         );
   static final DateFormat dateFormatter = DateFormat("yyyy-MM-dd HH:mm:ss");

@@ -60,17 +60,17 @@ class QiYiWangShuai extends StatelessWidget {
         child: Stack(alignment: Alignment.center, children: [
           if (isDunJia && showHint)
             buildDunJia(isYinAnGan
-                ? textStyle.color!.withOpacity(.4)
+                ? textStyle.color!.withValues(alpha: .4)
                 : ConstResourcesMapper.zodiacGanColors[TianGan.JIA]!),
           if (isSixYiJixing && showHint)
             buildJiXing(isYinAnGan
-                ? textStyle.color!.withOpacity(.4)
+                ? textStyle.color!.withValues(alpha: .4)
                 : const Color.fromRGBO(0, 33, 81, .8)),
           if (isGongRuMuOrKu != null && showHint)
             Positioned(
                 top: textSize.height * .5 - 2,
                 child: buildRuMu(isYinAnGan
-                    ? textStyle.color!.withOpacity(.4)
+                    ? textStyle.color!.withValues(alpha: .4)
                     : (isGongRuMuOrKu!
                         ? const Color.fromRGBO(81, 0, 0, .8)
                         : const Color.fromRGBO(0, 81, 62, .8)))),
@@ -87,8 +87,8 @@ class QiYiWangShuai extends StatelessWidget {
                       decoration: BoxDecoration(
                         // color: Color.fromRGBO(128, 0, 0, .1), // Adjust opacity as needed
                         color: isYinAnGan
-                            ? Colors.red.withOpacity(.1)
-                            : Colors.white.withOpacity(0.1),
+                            ? Colors.red.withValues(alpha: .1)
+                            : Colors.white.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(
                             textSize.width * .5), // Optional rounded corners
                       ),
@@ -110,7 +110,7 @@ class QiYiWangShuai extends StatelessWidget {
           // width: 32,
           height: 10,
           alignment: Alignment.center,
-          // color: Colors.blue.withOpacity(.1),
+          // color: Colors.blue.withValues(alpha: .1),
           child: showHint
               ? Text(monthlyZhangSheng.name, style: hintTextStyle)
               : const SizedBox(),
@@ -121,12 +121,12 @@ class QiYiWangShuai extends StatelessWidget {
             width: textSize.width,
             height: textSize.height,
             alignment: Alignment.center,
-            // color: Colors.red.withOpacity(.2),
+            // color: Colors.red.withValues(alpha: .2),
             child: AutoSizeText(
               tianGan.name,
               style: textStyle.copyWith(shadows: [
                 Shadow(
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                   blurRadius: 3,
                   offset: const Offset(0, 0),
                 )
@@ -139,7 +139,7 @@ class QiYiWangShuai extends StatelessWidget {
           // width: 32,
           width: textSize.width,
           height: 10,
-          // color: Colors.blue.withOpacity(.1),
+          // color: Colors.blue.withValues(alpha: .1),
           alignment: Alignment.center,
           child: showHint
               ? Text(gongZhangSheng.name, style: hintTextStyle)
@@ -171,12 +171,12 @@ class QiYiWangShuai extends StatelessWidget {
             width: 28,
             height: 28,
             alignment: Alignment.center,
-            // color: Colors.red.withOpacity(.6),
+            // color: Colors.red.withValues(alpha: .6),
             child: AutoSizeText(
               tianGan.name,
               style: textStyle.copyWith(shadows: [
                 Shadow(
-                  color: Colors.grey.withOpacity(.2),
+                  color: Colors.grey.withValues(alpha: .2),
                   blurRadius: 3,
                   offset: const Offset(0, 0),
                 )
@@ -188,7 +188,7 @@ class QiYiWangShuai extends StatelessWidget {
         Container(
           width: 10,
           height: 28,
-          // color: Colors.red.withOpacity(.1),
+          // color: Colors.red.withValues(alpha: .1),
           alignment: Alignment.bottomCenter,
           child: showHint
               ? Column(

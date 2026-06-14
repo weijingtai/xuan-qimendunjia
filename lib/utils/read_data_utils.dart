@@ -133,7 +133,7 @@ class ReadDataUtils {
         try {
           res[currentGan] = QiYiRuGong.fromJson(tmp);
         } catch (e) {
-          print(e);
+          debugPrint(e.toString());
         }
       }
       result[gongName] = res;

@@ -182,7 +182,7 @@ void main() {
   // ─────────────────────────────────────────────────────────
   group('RiJiaQiMen — 用户权威示例 (乙丑日 阳遁)', () {
     /// 默认 PanArrangeSettings
-    PanArrangeSettings _settings() => PanArrangeSettings(
+    PanArrangeSettings settings() => PanArrangeSettings(
           arrangeType: ArrangeType.CHAI_BU,
           jiGong: CenterGongJiGongType.ONLY_KUN_GONG,
           starMonthTokenType: MonthTokenTypeEnum.ZHU_QI,
@@ -193,7 +193,7 @@ void main() {
         );
 
     /// 构造 RiJiaJu —— 不走 LunarAdapter（绕开真实日期），直接给定核心字段
-    RiJiaJu _buildJu({
+    RiJiaJu buildJu({
       required JiaZi dayJiaZi,
       required YinYang yinYangDun,
       required HouTianGua xiuMenGong,
@@ -239,12 +239,12 @@ void main() {
     };
 
     test('乙丑日 阳遁 完整 9 宫分布', () {
-      final ju = _buildJu(
+      final ju = buildJu(
         dayJiaZi: JiaZi.getFromGanZhiValue('乙丑')!,
         yinYangDun: YinYang.YANG,
         xiuMenGong: HouTianGua.Kan, // 甲子组阳遁休门坎1
       );
-      final pan = RiJiaQiMen(ju: ju, settings: _settings());
+      final pan = RiJiaQiMen(ju: ju, settings: settings());
 
       userExample.forEach((gongNum, expected) {
         final gua = HouTianGua.getGua(gongNum);
@@ -259,12 +259,12 @@ void main() {
     });
 
     test('占位字段：值符=太乙、值使=休门、伏吟反吟=false', () {
-      final ju = _buildJu(
+      final ju = buildJu(
         dayJiaZi: JiaZi.getFromGanZhiValue('乙丑')!,
         yinYangDun: YinYang.YANG,
         xiuMenGong: HouTianGua.Kan,
       );
-      final pan = RiJiaQiMen(ju: ju, settings: _settings());
+      final pan = RiJiaQiMen(ju: ju, settings: settings());
       expect(pan.zhiFuStar, RiJiaStarEnum.TAI_YI);
       expect(pan.zhiFuStarAtGong, HouTianGua.Li); // 乙丑太乙在离9
       expect(pan.zhiShiDoor, EightDoorEnum.XIU);
@@ -272,12 +272,12 @@ void main() {
     });
 
     test('gongMapper 含完整 9 宫（含中5）', () {
-      final ju = _buildJu(
+      final ju = buildJu(
         dayJiaZi: JiaZi.getFromGanZhiValue('甲子')!,
         yinYangDun: YinYang.YANG,
         xiuMenGong: HouTianGua.Kan,
       );
-      final pan = RiJiaQiMen(ju: ju, settings: _settings());
+      final pan = RiJiaQiMen(ju: ju, settings: settings());
       expect(pan.gongMapper.length, 9);
       expect(pan.gongMapper.keys, contains(HouTianGua.Center));
     });
@@ -287,7 +287,7 @@ void main() {
   // §4 RiJiaQiMen.九星排布 - 旬头驱动 + 阴阳遁顺逆
   // ─────────────────────────────────────────────────────────
   group('RiJiaQiMen.九星排布', () {
-    PanArrangeSettings _settings() => PanArrangeSettings(
+    PanArrangeSettings settings() => PanArrangeSettings(
           arrangeType: ArrangeType.CHAI_BU,
           jiGong: CenterGongJiGongType.ONLY_KUN_GONG,
           starMonthTokenType: MonthTokenTypeEnum.ZHU_QI,
@@ -383,7 +383,7 @@ void main() {
     });
 
     /// 给定日柱与阴阳遁,构造一个最小 ju 并返回 9 星 → 宫号映射
-    Map<RiJiaStarEnum, int> _starGongMap({
+    Map<RiJiaStarEnum, int> starGongMap({
       required JiaZi dayJiaZi,
       required YinYang yinYangDun,
       required HouTianGua xiuMenGong,
@@ -398,7 +398,7 @@ void main() {
         jieQiAt: TwentyFourJieQi.DONG_ZHI,
         fourZhuEightChar: '甲子 丙子 ${dayJiaZi.name} 甲子',
       );
-      final pan = RiJiaQiMen(ju: ju, settings: _settings());
+      final pan = RiJiaQiMen(ju: ju, settings: settings());
       return {
         for (final entry in pan.gongMapper.entries)
           entry.value.star as RiJiaStarEnum: entry.value.gongNumber,
@@ -406,7 +406,7 @@ void main() {
     }
 
     test('阳遁乙丑(spec 主例):太乙在离9,顺排', () {
-      final map = _starGongMap(
+      final map = starGongMap(
         dayJiaZi: JiaZi.getFromGanZhiValue('乙丑')!,
         yinYangDun: YinYang.YANG,
         xiuMenGong: HouTianGua.Kan,
@@ -426,7 +426,7 @@ void main() {
     test('阴遁甲子(spec 主例):太乙在坤2,逆排', () {
       // spec 引文:"如甲子日坤宫太乙,坎宫摄提,离宫轩辕,艮宫招摇,
       //           兑宫天符,乾宫青龙,中宫咸池,巽宫太阴,震宫天乙"
-      final map = _starGongMap(
+      final map = starGongMap(
         dayJiaZi: JiaZi.getFromGanZhiValue('甲子')!,
         yinYangDun: YinYang.YIN,
         xiuMenGong: HouTianGua.Li, // 阴遁甲子组休门离9
@@ -444,7 +444,7 @@ void main() {
 
     test('阳遁庚午(d=6,旬内中位):太乙在中5', () {
       // 公式: ((7+0+6)%9)+1 = 13%9+1 = 4+1 = 5
-      final map = _starGongMap(
+      final map = starGongMap(
         dayJiaZi: JiaZi.getFromGanZhiValue('庚午')!,
         yinYangDun: YinYang.YANG,
         xiuMenGong: HouTianGua.Zhen, // 庚午组阳遁休门震3
@@ -460,7 +460,7 @@ void main() {
   // §5 RiJiaQiMen.八门排布 - 阳干 vs 阴干
   // ─────────────────────────────────────────────────────────
   group('RiJiaQiMen.八门排布', () {
-    PanArrangeSettings _settings() => PanArrangeSettings(
+    PanArrangeSettings settings() => PanArrangeSettings(
           arrangeType: ArrangeType.CHAI_BU,
           jiGong: CenterGongJiGongType.ONLY_KUN_GONG,
           starMonthTokenType: MonthTokenTypeEnum.ZHU_QI,
@@ -481,7 +481,7 @@ void main() {
         jieQiAt: TwentyFourJieQi.LI_XIA,
         fourZhuEightChar: '丙午 癸巳 甲辰 甲子',
       );
-      final pan = RiJiaQiMen(ju: ju, settings: _settings());
+      final pan = RiJiaQiMen(ju: ju, settings: settings());
       // 阳干甲辰，path = [1,8,3,4,9,2,7,6] 顺时针，从兑7 起
       // path.indexOf(7)=6，依次填: 7(休) 6(生) 1(伤) 8(杜) 3(景) 4(死) 9(惊) 2(开)
       const expected = {
@@ -507,7 +507,7 @@ void main() {
         jieQiAt: TwentyFourJieQi.LI_XIA,
         fourZhuEightChar: '甲子 丙子 乙卯 甲子',
       );
-      final pan = RiJiaQiMen(ju: ju, settings: _settings());
+      final pan = RiJiaQiMen(ju: ju, settings: settings());
       // 乙是阴干 → path = [1,6,7,2,9,4,3,8] 逆时针
       // path.indexOf(2)=3，从 idx=3 起: 2(休) 9(生) 4(伤) 3(杜) 8(景) 1(死) 6(惊) 7(开)
       const expected = {

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
+import 'package:qimendunjia/presentation/models/qimen_state.dart';
 import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/each_gong.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
@@ -50,13 +51,19 @@ class QiMenViewModel extends ChangeNotifier {
   final ArrangePanUseCase _arrangePanUseCase;
   final SelectGongUseCase _selectGongUseCase;
 
-  // 状态
+  // ==================== 密封状态（Q3 新增） ====================
+
+  /// 核心状态：idle → calculating → success / error
+  QiMenState _qiMenState = const QiMenIdle();
+
+  /// 当前密封状态，新代码优先使用此 getter + pattern matching。
+  QiMenState get qiMenState => _qiMenState;
+
+  // ==================== 向后兼容：详细子状态 ====================
   QiMenViewState _state = QiMenViewState.initial;
   String? _errorMessage;
 
-  // 数据
-  BaseJu? _currentJu;
-  QiMenPan? _currentPan;
+  // 宫位选择子状态（独立于核心状态）
   EachGong? _selectedGong;
   GongDetailInfo? _gongDetailInfo;
 
@@ -72,25 +79,40 @@ class QiMenViewModel extends ChangeNotifier {
 
   // Getters
   QiMenViewState get state => _state;
-  String? get errorMessage => _errorMessage;
-  ShiJiaJu? get currentJu =>
-      _currentJu is ShiJiaJu ? _currentJu as ShiJiaJu : null;
+  String? get errorMessage {
+    final s = _qiMenState;
+    if (s is QiMenError) return s.message;
+    return _errorMessage;
+  }
+
+  /// 时家局（向后兼容）；非时家盘返回 null。
+  ShiJiaJu? get currentJu {
+    final s = _qiMenState;
+    if (s is QiMenSuccess && s.ju is ShiJiaJu) return s.ju as ShiJiaJu;
+    return null;
+  }
 
   /// 当前局（任意家）。新代码优先使用此 getter，按 `ju.jia` 判断。
-  BaseJu? get currentBaseJu => _currentJu;
-  QiMenPan? get currentPan => _currentPan;
+  BaseJu? get currentBaseJu {
+    final s = _qiMenState;
+    return s is QiMenSuccess ? s.ju : null;
+  }
+
+  QiMenPan? get currentPan {
+    final s = _qiMenState;
+    return s is QiMenSuccess ? s.pan : null;
+  }
+
   EachGong? get selectedGong => _selectedGong;
   GongDetailInfo? get gongDetailInfo => _gongDetailInfo;
   PanSettings get panSettings => _panSettings;
   PanDisplayConfig get displayConfig => _displayConfig;
 
-  bool get isLoading =>
-      _state == QiMenViewState.calculating ||
-      _state == QiMenViewState.arranging ||
+  bool get isLoading => _qiMenState is QiMenCalculating ||
       _state == QiMenViewState.loadingGongDetail;
 
-  bool get hasError => _state == QiMenViewState.error;
-  bool get hasData => _currentPan != null;
+  bool get hasError => _qiMenState is QiMenError || _state == QiMenViewState.error;
+  bool get hasData => _qiMenState is QiMenSuccess;
 
   /// 更新排盘设置
   void updatePanSettings(PanSettings settings) {
@@ -109,8 +131,9 @@ class QiMenViewModel extends ChangeNotifier {
   /// 将当前盘信息转为 [AiContext] 供聊天窗口使用。
   /// 如果尚未排盘则返回 null。
   AiContext? buildAiContext() {
-    final pan = _currentPan;
-    if (pan == null) return null;
+    final s = _qiMenState;
+    if (s is! QiMenSuccess) return null;
+    final pan = s.pan;
 
     final entity = AiEntity(
       id: pan.id,
@@ -145,6 +168,7 @@ class QiMenViewModel extends ChangeNotifier {
   }) async {
     try {
       // 1. 计算局数
+      _qiMenState = const QiMenCalculating();
       _state = QiMenViewState.calculating;
       _errorMessage = null;
       notifyListeners();
@@ -158,7 +182,6 @@ class QiMenViewModel extends ChangeNotifier {
           fuTouScheme: fuTouScheme ?? _panSettings.fuTouScheme,
         ),
       );
-      _currentJu = ju;
 
       // 2. 排盘
       _state = QiMenViewState.arranging;
@@ -171,12 +194,13 @@ class QiMenViewModel extends ChangeNotifier {
           settings: _panSettings,
         ),
       );
-      _currentPan = pan;
 
       // 3. 成功
+      _qiMenState = QiMenSuccess(pan: pan, ju: ju);
       _state = QiMenViewState.success;
       notifyListeners();
     } catch (e) {
+      _qiMenState = QiMenError(e.toString());
       _state = QiMenViewState.error;
       _errorMessage = e.toString();
       notifyListeners();
@@ -193,13 +217,14 @@ class QiMenViewModel extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      if (_currentPan == null) {
+      final pan = currentPan;
+      if (pan == null) {
         throw Exception('请先排盘');
       }
 
       final detailInfo = await _selectGongUseCase.execute(
         SelectGongParams(
-          pan: _currentPan!,
+          pan: pan,
           gongGua: gong.gongGua,
         ),
       );
@@ -208,6 +233,7 @@ class QiMenViewModel extends ChangeNotifier {
       _state = QiMenViewState.success;
       notifyListeners();
     } catch (e) {
+      // 宫位详情加载失败不影响核心状态（pan 仍有效）
       _state = QiMenViewState.error;
       _errorMessage = e.toString();
       notifyListeners();
@@ -230,8 +256,7 @@ class QiMenViewModel extends ChangeNotifier {
         'id=${pan.id}, brief=${pan.brief}, '
         'time=${pan.panDateTime}, '
         'gongs=${pan.gongMapper.length}');
-    _currentPan = pan;
-    _currentJu = pan.shiJiaJu;
+    _qiMenState = QiMenSuccess(pan: pan, ju: pan.ju);
     _selectedGong = null;
     _gongDetailInfo = null;
     _errorMessage = null;
@@ -242,10 +267,9 @@ class QiMenViewModel extends ChangeNotifier {
 
   /// 重置状态
   void reset() {
+    _qiMenState = const QiMenIdle();
     _state = QiMenViewState.initial;
     _errorMessage = null;
-    _currentJu = null;
-    _currentPan = null;
     _selectedGong = null;
     _gongDetailInfo = null;
     notifyListeners();

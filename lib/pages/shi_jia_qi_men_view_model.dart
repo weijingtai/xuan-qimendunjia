@@ -5,8 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
-import 'package:qimendunjia/data/models/mappers/qimen_pan_mapper.dart';
-import 'package:qimendunjia/data/models/mappers/shi_jia_ju_mapper.dart';
+
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/enums/enum_most_popular_ge_ju.dart';
 import 'package:qimendunjia/ui_models/ui_each_gong_model.dart';
@@ -19,20 +18,21 @@ import '../model/each_gong.dart';
 import '../model/each_gong_ge_ju.dart';
 import '../model/eight_door_ke_ying.dart';
 import '../model/pan_arrange_settings.dart';
+import '../model/center_gong_ji_gong_type.dart';
 import '../model/qi_yi_ru_gong.dart';
-import '../model/shi_jia_ju.dart';
-import '../model/shi_jia_qi_men.dart';
+import '../presentation/adapters/qimen_legacy_display_bridge.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
 import '../ui_models/ui_pan_meta_model.dart';
 import '../ui_models/ui_ten_gan_key_ying_ge_ju.dart';
-import 'package:qimendunjia/di/service_locator.dart';
-import '../utils/read_data_utils.dart';
+import '../domain/entities/shi_jia_ju.dart' as entity;
+import '../domain/repositories/qimen_data_repository.dart';
 
 class ShiJiaQiMenViewModel extends ChangeNotifier {
   static final _log = Logger('ShiJiaQiMenViewModel');
 
   BuildContext context;
+  final QiMenDataRepository _qiMenDataRepository;
 
   // DateTime? _dateTime;
   // DateTime? get dateTime => _dateTime;
@@ -43,10 +43,10 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   UIPanMetaModel? _uiPanMetaModel;
   UIPanMetaModel? get uiPanMetaModel => _uiPanMetaModel;
 
-  ShiJiaQiMen? _shiJiaQiMen;
-  ShiJiaQiMen? get shiJiaQiMen => _shiJiaQiMen;
-  set shiJiaQiMen(ShiJiaQiMen? value) {
-    _shiJiaQiMen = value;
+  QiMenLegacyDisplayBridge? _bridge;
+  QiMenLegacyDisplayBridge? get shiJiaQiMen => _bridge;
+  set shiJiaQiMen(QiMenLegacyDisplayBridge? value) {
+    _bridge = value;
     notifyListeners();
   }
 
@@ -64,10 +64,10 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   ///
   /// 使用 [QiMenPanMapper] 将老 model 转为 domain entity 后序列化。
   AiContext? buildAiContext() {
-    final model = _shiJiaQiMen;
-    if (model == null) return null;
+    final bridge = _bridge;
+    if (bridge == null) return null;
 
-    final pan = QiMenPanMapper.fromModel(model);
+    final pan = bridge.pan!;
     final entity = AiEntity(
       id: pan.id,
       type: 'qimen_pan',
@@ -89,8 +89,8 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   /// 加载外部盘（从 AI Tool 排盘结果拉起）。
   ///
-  /// 将 [QiMenPan] entity 转换回 model 层的 [ShiJiaQiMen]，
-  /// 调用 [createShiJiaQiMen] 以完整填充 UI 数据。
+  /// 将 [QiMenPan] entity 转换回 [QiMenLegacyDisplayBridge]，
+  /// 调用 [createDisplayBridge] 以完整填充 UI 数据。
   void loadExternalPan(QiMenPan pan) {
     _log.info('[loadExternalPan] loading external pan: '
         'id=${pan.id}, brief=${pan.brief}, '
@@ -99,7 +99,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
     // Convert entity ShiJiaJu → model ShiJiaJu
     // 此 ViewModel 是传统时家专用页面；非时家盘不会到达此分支。
-    final modelJu = ShiJiaJuMapper.toModel(pan.shiJiaJu!);
+    final entityJu = pan.shiJiaJu!;
 
     // Use default PanArrangeSettings (matching PanSettings.defaultSettings())
     final defaultSettings = PanArrangeSettings(
@@ -112,12 +112,12 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       ganGongType: GanGongTypeEnum.WANG_MU,
     );
 
-    // Re-derive ShiJiaQiMen from model data — this populates
-    // _shiJiaQiMen, _uiPanMetaModel, _gongUIMapper, etc.
-    createShiJiaQiMen(
+    // Re-derive QiMenLegacyDisplayBridge from model data — this populates
+    // _bridge, _uiPanMetaModel, _gongUIMapper, etc.
+    createDisplayBridge(
       pan.plateType,
       pan.panDateTime,
-      modelJu,
+      entityJu,
       defaultSettings,
     );
   }
@@ -137,7 +137,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   UIEachGongModel? get duiGong => _gongUIMapper[HouTianGua.Dui];
   UIEachGongModel? get qianGong => _gongUIMapper[HouTianGua.Qian];
   UIEachGongModel? get zhongGong {
-    if (_shiJiaQiMen != null && _shiJiaQiMen!.plateType == PlateType.FEI_PAN) {
+    if (_bridge != null && _bridge!.plateType == PlateType.FEI_PAN) {
       return _gongUIMapper[HouTianGua.Center];
     } else {
       return null;
@@ -149,15 +149,15 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     if (shiJiaQiMen != null) {
       return UIEachGongModel(
           gua: gua,
-          gong: _shiJiaQiMen!.gongMapper[gua]!,
-          gongWangShuai: _shiJiaQiMen!.gongWangShuaiMapper[gua]!,
+          gong: _bridge!.gongModelMapper[gua]!,
+          gongWangShuai: _bridge!.gongWangShuaiMapper[gua]!,
           tenGanKeYingGeJu: tenGanKeYingGeJu,
           panMete: _uiPanMetaModel!,
           eachGongGeJu: EnumMostPopularGeJu.checkGeJuAtEachGong(
-              _shiJiaQiMen!.timeJiaZi,
-              _shiJiaQiMen!.sixJiaXunHeader,
-              _shiJiaQiMen!.zhiShiDoor,
-              _shiJiaQiMen!.gongMapper[gua]!),
+              _bridge!.timeJiaZi,
+              _bridge!.sixJiaXunHeader,
+              _bridge!.displayState.zhiShiDoor,
+              _bridge!.gongModelMapper[gua]!),
           qiYiRuGongList: qiYiRuGongList);
     }
     return null;
@@ -165,7 +165,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   // Map<HouTianGua,UITenGanKeYingGeJu> tenGanKeYingGeJuMapper = {};
 
-  ShiJiaQiMenViewModel(this.context);
+  ShiJiaQiMenViewModel(this.context, this._qiMenDataRepository);
 
   UIEachGongModel? getGongByGua(HouTianGua gongGua) {
     return _gongUIMapper[gongGua];
@@ -197,9 +197,9 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
         ]);
       }
       EachGongGeJu eachGongGeJu = EnumMostPopularGeJu.checkGeJuAtEachGong(
-          _shiJiaQiMen!.timeJiaZi,
-          _shiJiaQiMen!.sixJiaXunHeader,
-          _shiJiaQiMen!.zhiShiDoor,
+          _bridge!.timeJiaZi,
+          _bridge!.sixJiaXunHeader,
+          _bridge!.displayState.zhiShiDoor,
           gong);
       Future.wait(fixedList).then((values) {
         _selectedGongExplain = UIGongExplains(
@@ -257,28 +257,26 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createShiJiaQiMen(PlateType plateType, DateTime dateTime,
-      ShiJiaJu shiJiaJu, PanArrangeSettings settings) {
-    // _dateTime = dateTime;
-    List<String> eightCharList = shiJiaJu.fourZhuEightChar.split(" ").toList();
-    var shiJiaQiMen = ShiJiaQiMen(
+  void createDisplayBridge(PlateType plateType, DateTime dateTime,
+      entity.ShiJiaJu shiJiaJu, PanArrangeSettings settings) {
+    final bridge = QiMenLegacyDisplayBridge.fromRawComponents(
       plateType: plateType,
       shiJiaJu: shiJiaJu,
       settings: settings,
     );
     _uiPanMetaModel = UIPanMetaModel(
       yinYangDun: shiJiaJu.yinYangDun,
-      zhiShiDoor: shiJiaQiMen.zhiShiDoor,
-      zhiFuStar: shiJiaQiMen.zhiFuStar,
-      xunHeaderTianGan: shiJiaQiMen.xunHeaderTianGan,
-      timeXunKong: shiJiaQiMen.timeXunKong,
-      horseLocation: shiJiaQiMen.horseLocation,
-      monthToken: shiJiaQiMen.monthToken,
+      zhiShiDoor: bridge.displayState.zhiShiDoor,
+      zhiFuStar: bridge.displayState.zhiFuStar,
+      xunHeaderTianGan: bridge.xunHeaderTianGan,
+      timeXunKong: bridge.displayState.timeXunKong,
+      horseLocation: bridge.displayState.horseLocation,
+      monthToken: bridge.monthToken,
     );
-    _shiJiaQiMen = shiJiaQiMen;
+    _bridge = bridge;
     // 三奇入宫的三奇 与 宫Mapper
     Map<TianGan, HouTianGua> sanQiRuGongMapper = {};
-    for (var g in shiJiaQiMen.gongMapper.values) {
+    for (var g in bridge.gongModelMapper.values) {
       if (g.tianPan.isThreeQi) {
         sanQiRuGongMapper[g.tianPan] = g.gongGua;
       }
@@ -289,10 +287,10 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
     Future.wait([
       loadTenGanKeYingGeJu(
-          plateType, shiJiaQiMen.xunHeaderTianGan, shiJiaQiMen.gongMapper),
+          plateType, bridge.xunHeaderTianGan, bridge.gongModelMapper),
       listThreeQiRuGong(sanQiRuGongMapper)
     ]).then((resList) {
-      print("Logic: ten gan ke ying loadded ${resList.first.length}");
+      debugPrint("Logic: ten gan ke ying loadded ${resList.first.length}");
       for (var gua in HouTianGua.values) {
         if (gua == HouTianGua.Center && plateType == PlateType.ZHUAN_PAN) {
         } else {
@@ -311,7 +309,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   }
 
   void reset() {
-    _shiJiaQiMen = null;
+    _bridge = null;
     _uiPanMetaModel = null;
     // tenGanKeYingGeJuMapper = {};
     _gongUIMapper = {};
@@ -320,16 +318,18 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   Future<DoorStarKeYing?> loadDoorStarKeYing(
       EightDoorEnum door, NineStarsEnum star) async {
-    Map<EightDoorEnum, Map<NineStarsEnum, DoorStarKeYing>> loadResult =
-        await serviceLocator.officialRuleReader.readDoorStarKeYing();
-    return loadResult[door]?[star];
+    return await _qiMenDataRepository.getDoorStarKeYing(
+      door: door,
+      star: star,
+    );
   }
 
   Future<String?> loadEightDoorGanKeYing(
       EightDoorEnum door, TianGan tianPanGan) async {
-    Map<EightDoorEnum, Map<TianGan, String>> loadResult =
-        await serviceLocator.officialRuleReader.readDoorGanKeYing();
-    return loadResult[door]?[tianPanGan];
+    return await _qiMenDataRepository.getEightDoorGanKeYing(
+      door: door,
+      gan: tianPanGan,
+    );
   }
 
   // tuple1 天盘干、地盘干 十干克应
@@ -343,38 +343,45 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     TianGan? tianPanJiGan,
     TianGan? diPanJiGan,
   ) async {
-    print("loadAllTenGanKeYingForCurrentGong");
-    Map<TianGan, Map<TianGan, TenGanKeYing>> loadResult =
-        await serviceLocator.officialRuleReader.readTenGanKeYing();
-    TenGanKeYing tianDiPanKeYing = loadResult[tianPanGan]![diPanGan]!;
+    debugPrint("loadAllTenGanKeYingForCurrentGong");
+    final repo = _qiMenDataRepository;
+    TenGanKeYing tianDiPanKeYing = await repo.getTenGanKeYing(
+        tianPan: tianPanGan, diPan: diPanGan);
     TenGanKeYing? tianPanJiaDiPanKey;
     if (xunShouGan == tianPanGan) {
-      tianPanJiaDiPanKey = loadResult[TianGan.JIA]![diPanGan]!;
+      tianPanJiaDiPanKey =
+          await repo.getTenGanKeYing(tianPan: TianGan.JIA, diPan: diPanGan);
     }
     TenGanKeYing? tianPanJiDiPanKeYing;
     TenGanKeYing? tianPanJiJiaDiPanKeYing;
     if (tianPanJiGan != null) {
-      tianPanJiDiPanKeYing = loadResult[tianPanJiGan]![diPanGan]!;
+      tianPanJiDiPanKeYing =
+          await repo.getTenGanKeYing(tianPan: tianPanJiGan, diPan: diPanGan);
       if (xunShouGan == tianPanJiGan) {
-        tianPanJiJiaDiPanKeYing = loadResult[TianGan.JIA]![diPanGan]!;
+        tianPanJiJiaDiPanKeYing =
+            await repo.getTenGanKeYing(tianPan: TianGan.JIA, diPan: diPanGan);
       }
     }
 
     TenGanKeYing? tianPanDiPanJiGanKeYing;
     TenGanKeYing? tianPanDiPanJiJiaKeYing;
     if (diPanJiGan != null) {
-      tianPanDiPanJiGanKeYing = loadResult[tianPanGan]![diPanJiGan]!;
+      tianPanDiPanJiGanKeYing =
+          await repo.getTenGanKeYing(tianPan: tianPanGan, diPan: diPanJiGan);
       if (xunShouGan == diPanJiGan) {
-        tianPanDiPanJiJiaKeYing = loadResult[TianGan.JIA]![diPanJiGan]!;
+        tianPanDiPanJiJiaKeYing =
+            await repo.getTenGanKeYing(tianPan: TianGan.JIA, diPan: diPanJiGan);
       }
     }
 
     TenGanKeYing? tianPanJiDiPanJiGanKeYing;
     TenGanKeYing? tianPanJiaDiPanJiaGanKeYing;
     if (tianPanJiGan != null && diPanJiGan != null) {
-      tianPanJiDiPanJiGanKeYing = loadResult[tianPanJiGan]![diPanJiGan]!;
+      tianPanJiDiPanJiGanKeYing =
+          await repo.getTenGanKeYing(tianPan: tianPanJiGan, diPan: diPanJiGan);
       if (xunShouGan == tianPanJiGan) {
-        tianPanJiaDiPanJiaGanKeYing = loadResult[TianGan.JIA]![TianGan.JIA]!;
+        tianPanJiaDiPanJiaGanKeYing =
+            await repo.getTenGanKeYing(tianPan: TianGan.JIA, diPan: TianGan.JIA);
       }
     }
     return UIGongTenGanKeYing(
@@ -391,53 +398,50 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   Future<TenGanKeYing?> loadTenGanKeyYing(
       TianGan tianPanGan, TianGan diPanGan) async {
-    print("loadTenGanKeyYing");
-    Map<TianGan, Map<TianGan, TenGanKeYing>> loadResult =
-        await serviceLocator.officialRuleReader.readTenGanKeYing();
+    debugPrint("loadTenGanKeyYing");
+    return await _qiMenDataRepository.getTenGanKeYing(
+      tianPan: tianPanGan,
+      diPan: diPanGan,
+    );
     // if (tianPanGan == TianGan.JIA && diPanGan == TianGan.BING){
-    //   print(loadResult[tianPanGan]?[TianGan.BING]);
+    //   debugPrint(loadResult[tianPanGan]?[TianGan.BING]);
     // }
-    return loadResult[tianPanGan]?[diPanGan];
   }
 
   Future<Map<YinYang, EightDoorKeYing>?> loadEightDoorKeYing(
       EightDoorEnum door, EightDoorEnum fixDoor) async {
     /// YinYang  阳为动应，阴为静应
 
-    try {
-      Map<EightDoorEnum, Map<EightDoorEnum, Map<YinYang, EightDoorKeYing>>>
-          loadResult = await serviceLocator.officialRuleReader.readEightDoorKeYing();
-      return loadResult[door]?[fixDoor];
-    } catch (e) {
-      rethrow;
-    }
-    return null;
+    return await _qiMenDataRepository.getEightDoorKeYing(
+      door: door,
+      fixDoor: fixDoor,
+    );
   }
 
   /// 当前只有 三奇入宫
   Future<QiYiRuGong?> loadThreeQiRuGong(
       HouTianGua gongGua, TianGan tianPanGan) async {
     if (tianPanGan.isThreeQi) {
-      Map<HouTianGua, Map<TianGan, QiYiRuGong>> qiYiRuGongMapper =
-          await serviceLocator.officialRuleReader.readQiYiRuGong();
-      return qiYiRuGongMapper[gongGua]![tianPanGan]!;
+      return await _qiMenDataRepository.getQiYiRuGong(
+        gong: gongGua,
+        gan: tianPanGan,
+      );
     }
     return null;
   }
 
   Future<Map<HouTianGua, List<QiYiRuGong>>> listThreeQiRuGong(
       Map<TianGan, HouTianGua> mapper) async {
-    Map<HouTianGua, Map<TianGan, QiYiRuGong>> qiYiRuGongMapper =
-        await serviceLocator.officialRuleReader.readQiYiRuGong();
     Map<HouTianGua, List<QiYiRuGong>> res = {};
     for (var mapperEntry in mapper.entries) {
+      final item = await _qiMenDataRepository.getQiYiRuGong(
+        gong: mapperEntry.value,
+        gan: mapperEntry.key,
+      );
       if (!res.containsKey(mapperEntry.value)) {
-        res[mapperEntry.value] = [
-          qiYiRuGongMapper[mapperEntry.value]![mapperEntry.key]!
-        ];
+        res[mapperEntry.value] = [item!];
       } else {
-        res[mapperEntry.value]!
-            .add(qiYiRuGongMapper[mapperEntry.value]![mapperEntry.key]!);
+        res[mapperEntry.value]!.add(item!);
       }
     }
 
@@ -446,72 +450,69 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   Future<String?> loadTianPanGanRuGong(
       HouTianGua gongGua, TianGan tianPanGan) async {
-    Map<HouTianGua, Map<TianGan, String>> qiYiRuGongMapper =
-        await serviceLocator.officialRuleReader.readQiYiRuGongDisease();
-    return qiYiRuGongMapper[gongGua]?[tianPanGan];
+    return await _qiMenDataRepository.getTianGanRuGongDisease(
+      gong: gongGua,
+      gan: tianPanGan,
+    );
   }
 
   Future<Map<HouTianGua, UITenGanKeYingGeJu>> loadTenGanKeYingGeJu(
       PlateType plateType,
       TianGan xunShouGan,
       Map<HouTianGua, EachGong> gong) async {
-    Map<TianGan, Map<TianGan, TenGanKeYingGeJu>> loadResult =
-        await serviceLocator.officialRuleReader.readTenGanKeYingGeJu();
+    final repo = _qiMenDataRepository;
     Map<HouTianGua, UITenGanKeYingGeJu> result = {};
     for (var entry in gong.entries) {
       if (plateType == PlateType.ZHUAN_PAN && entry.key == HouTianGua.Center) {
         continue;
       }
       TenGanKeYingGeJu tianGeJu =
-          loadResult[entry.value.tianPan]![entry.value.diPan]!;
+          await repo.getTenGanKeYingGeJu(tianPan: entry.value.tianPan, diPan: entry.value.diPan);
       TenGanKeYingGeJu? tianDunJiaGeJu;
       if (entry.value.tianPan == xunShouGan) {
-        tianDunJiaGeJu = loadResult[TianGan.JIA]![entry.value.diPan]!;
+        tianDunJiaGeJu = await repo.getTenGanKeYingGeJu(tianPan: TianGan.JIA, diPan: entry.value.diPan);
       }
       TenGanKeYingGeJu? diDunJiaGeJu;
       if (entry.value.diPan == xunShouGan) {
-        diDunJiaGeJu = loadResult[entry.value.tianPan]![TianGan.JIA]!;
+        diDunJiaGeJu = await repo.getTenGanKeYingGeJu(tianPan: entry.value.tianPan, diPan: TianGan.JIA);
       }
       TenGanKeYingGeJu? diPanJiGeJu;
       TenGanKeYingGeJu? diPanJiJiaGeJu;
       TenGanKeYingGeJu? tianDunJiaDiPanJi;
       if (entry.value.diPanJiGan != null) {
-        diPanJiGeJu = loadResult[entry.value.tianPan]![entry.value.diPanJiGan]!;
+        diPanJiGeJu = await repo.getTenGanKeYingGeJu(tianPan: entry.value.tianPan, diPan: entry.value.diPanJiGan!);
         if (entry.value.diPanJiGan == xunShouGan) {
-          diPanJiJiaGeJu = loadResult[entry.value.tianPan]![TianGan.JIA]!;
+          diPanJiJiaGeJu = await repo.getTenGanKeYingGeJu(tianPan: entry.value.tianPan, diPan: TianGan.JIA);
         }
         if (entry.value.tianPan == xunShouGan) {
-          tianDunJiaDiPanJi = loadResult[TianGan.JIA]![entry.value.diPanJiGan]!;
+          tianDunJiaDiPanJi = await repo.getTenGanKeYingGeJu(tianPan: TianGan.JIA, diPan: entry.value.diPanJiGan!);
         }
       }
       TenGanKeYingGeJu? tianPanJiGeJu;
       TenGanKeYingGeJu? tianPanJiJiaGeJu;
       TenGanKeYingGeJu? tianPanJiGanDiPanJia;
       if (entry.value.tianPanJiGan != null) {
-        tianPanJiGeJu =
-            loadResult[entry.value.tianPanJiGan]![entry.value.diPan]!;
+        tianPanJiGeJu = await repo.getTenGanKeYingGeJu(tianPan: entry.value.tianPanJiGan!, diPan: entry.value.diPan);
         if (entry.value.tianPanJiGan == xunShouGan) {
-          tianPanJiJiaGeJu = loadResult[TianGan.JIA]![entry.value.diPan]!;
+          tianPanJiJiaGeJu = await repo.getTenGanKeYingGeJu(tianPan: TianGan.JIA, diPan: entry.value.diPan);
         }
         if (entry.value.diPan == xunShouGan) {
-          tianPanJiGanDiPanJia =
-              loadResult[entry.value.tianPanJiGan]![TianGan.JIA]!;
+          tianPanJiGanDiPanJia = await repo.getTenGanKeYingGeJu(tianPan: entry.value.tianPanJiGan!, diPan: TianGan.JIA);
         }
       }
-      TenGanKeYingGeJu? tianDiPanJia; // 天地盘相同，且同为“遁干”
+      TenGanKeYingGeJu? tianDiPanJia; // 天地盘相同，且同为"遁干"
       if (entry.value.tianPan == entry.value.diPan &&
           entry.value.tianPan == xunShouGan) {
-        tianDiPanJia = loadResult[TianGan.JIA]![TianGan.JIA]!;
+        tianDiPanJia = await repo.getTenGanKeYingGeJu(tianPan: TianGan.JIA, diPan: TianGan.JIA);
       }
       TenGanKeYingGeJu? tianDiJiGan;
       TenGanKeYingGeJu? tianDiJiaGanJiaGeJu;
       // print("${entry.value.tianPanJiGan != null}=====${entry.value.tianPanJiGan == entry.value.diPanJiGan}");
       if (entry.value.tianPanJiGan != null &&
           entry.value.tianPanJiGan == entry.value.diPanJiGan) {
-        tianDiJiGan =
-            loadResult[entry.value.tianPanJiGan]![entry.value.diPanJiGan]!;
+        tianDiJiGan = await repo.getTenGanKeYingGeJu(tianPan: entry.value.tianPanJiGan!, diPan: entry.value.diPanJiGan!);
         if (entry.value.tianPanJiGan == xunShouGan) {
-          tianDiJiaGanJiaGeJu = loadResult[TianGan.JIA]![TianGan.JIA]!;
+          tianDiJiaGanJiaGeJu = await repo.getTenGanKeYingGeJu(tianPan: TianGan.JIA, diPan: TianGan.JIA);
         }
       }
 

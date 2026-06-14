@@ -13,9 +13,7 @@ import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_ji_1.dart';
 import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_xiong_1.dart';
 import 'package:ai_core/ai_core.dart' hide AiPersona;
 import 'package:xuan_four_zhu_card/widgets/four_zhu_eight_char.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_shakemywidget/flutter_shakemywidget.dart';
 import 'package:flutter_sliding_toast/flutter_sliding_toast.dart';
@@ -24,7 +22,6 @@ import 'package:intl/intl.dart';
 import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/nine_dun.dart';
@@ -41,16 +38,19 @@ import '../enums/enum_arrange_plate_type.dart';
 import '../enums/enum_most_popular_ge_ju.dart';
 import '../enums/enum_nine_stars.dart';
 import '../enums/enum_san_zha_wu_jia.dart';
-import '../model/shi_jia_ju.dart';
+import '../domain/entities/shi_jia_ju.dart' as entity;
 import '../model/door_star_ke_ying.dart';
+import '../model/center_gong_ji_gong_type.dart';
 import '../model/pan_arrange_settings.dart';
 import '../model/qi_yi_ru_gong.dart';
-import '../model/shi_jia_qi_men.dart';
+import '../presentation/adapters/qimen_legacy_display_bridge.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
 import '../ui_models/ui_each_gong_model.dart';
-import '../utils/qi_men_ju_calculator.dart';
+import '../utils/fu_tou_utils.dart';
+import '../utils/three_yuan_utils.dart';
 import '../widgets/resizable_gong_widget.dart';
+import '../domain/usecases/calculate_ju_usecase.dart';
 
 class ScalableShiJiaQiMenViewPage extends StatefulWidget {
   DateTime? panDateTime;
@@ -101,7 +101,7 @@ class _ScalableShiJiaQiMenViewPageState
   late final ValueNotifier<bool> showHintNotifier = ValueNotifier(true);
 
   late final ValueNotifier<DateTime?> dateTimeValueNotifier;
-  // late final ValueNotifier<ShiJiaQiMen?> shiJiaZhuanPanQiMenValueNotifier;
+  // late final ValueNotifier<QiMenLegacyDisplayBridge?> shiJiaZhuanPanQiMenValueNotifier;
   // final ValueNotifier<Map<HouTianGua,Widget>?> guaGongMapperNotifier = ValueNotifier(null);
   // final ValueNotifier<HouTianGua?> showGongGuaNotifier= ValueNotifier(null);
   final ValueNotifier<Tuple3<Offset, MapEntry<HouTianGua, EachGong>, Widget>?>
@@ -150,7 +150,7 @@ class _ScalableShiJiaQiMenViewPageState
       fontWeight: FontWeight.w500,
       shadows: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.2),
+          color: Colors.grey.withValues(alpha: 0.2),
           blurRadius: 2.0,
           spreadRadius: 1.0,
         )
@@ -174,7 +174,7 @@ class _ScalableShiJiaQiMenViewPageState
       borderRadius: const BorderRadius.all(Radius.circular(16)),
       boxShadow: [
         BoxShadow(
-            color: Colors.grey.withOpacity(.2), blurRadius: 5, spreadRadius: 5),
+            color: Colors.grey.withValues(alpha: .2), blurRadius: 5, spreadRadius: 5),
       ]);
   ValueNotifier<DateTime?> selectedDateTimeNotifier =
       ValueNotifier(DateTime.now());
@@ -230,7 +230,7 @@ class _ScalableShiJiaQiMenViewPageState
     UIEachGongModel? selectedGong =
         Provider.of<ShiJiaQiMenViewModel>(context, listen: false).selectedGong;
     if (selectedGong != null) {
-      print("UI Listener gong selected");
+      debugPrint("UI Listener gong selected");
       selectedGongNotifier.value = selectedGong.gua;
       _movingStartAt = gongPositionOffset(selectedGong.gua);
       // Future.delayed(Duration(milliseconds: 50))
@@ -238,12 +238,12 @@ class _ScalableShiJiaQiMenViewPageState
       inDisplayedGong = selectedGongNotifier.value;
     } else {
       if (selectedGongNotifier.value != null) {
-        print("UI Listener gong unselected");
+        debugPrint("UI Listener gong unselected");
         AnimationController controller = _gongAnimationController;
         // selectedGongNotifier.value = null;
         resetSelectedGongNotifierToNull(AnimationStatus status) {
           if (status == AnimationStatus.dismissed) {
-            print("animation completed");
+            debugPrint("animation completed");
             selectedGongNotifier.value = null;
             controller.removeStatusListener(resetSelectedGongNotifierToNull);
             inDisplayedGong = null;
@@ -532,7 +532,7 @@ class _ScalableShiJiaQiMenViewPageState
                 children: [
                   Consumer<ShiJiaQiMenViewModel>(
                       builder: (context, viewModel, child) {
-                        print("UI: build pan when ${viewModel.shiJiaQiMen}");
+                        debugPrint("UI: build pan when ${viewModel.shiJiaQiMen}");
                         // return viewModel.shiJiaQiMen != null ? buildPanInfo(viewModel.shiJiaQiMen!):child!;
                         return viewModel.shiJiaQiMen != null
                             ? buildPanInfoRow(viewModel.shiJiaQiMen!)
@@ -729,7 +729,7 @@ class _ScalableShiJiaQiMenViewPageState
                                                 BorderRadius.circular(36),
                                             boxShadow: [
                                               BoxShadow(
-                                                  color: Colors.grey.withOpacity(
+                                                  color: Colors.grey.withValues(alpha: 
                                                       _gongShadowAnimationController
                                                               .value *
                                                           .1),
@@ -772,7 +772,7 @@ class _ScalableShiJiaQiMenViewPageState
                                 if (viewmodel.selectedGongExplain == null) {
                                   return Container();
                                 }
-                                print(
+                                debugPrint(
                                     "${MediaQuery.of(context).size.width} $offsetX $offsetY");
                                 return buildGongTenGanKeYing(
                                   viewmodel.selectedGong!,
@@ -944,12 +944,12 @@ class _ScalableShiJiaQiMenViewPageState
     );
   }
 
-  Widget buildPanInfoRow(ShiJiaQiMen pan) {
+  Widget buildPanInfoRow(QiMenLegacyDisplayBridge bridge) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        buildPanGeJu(pan),
+        buildPanGeJu(bridge),
         SizedBox(
           width: 220,
           height: 120,
@@ -963,21 +963,21 @@ class _ScalableShiJiaQiMenViewPageState
         SizedBox(
           width: 240,
           height: 160,
-          child: buildPanInfo(pan),
+          child: buildPanInfo(bridge),
         ),
         SizedBox(
           width: 260,
           height: 150,
-          child: buildCenterFourZhu(pan),
+          child: buildCenterFourZhu(bridge),
         ),
       ],
     );
   }
 
-  Widget buildPanGeJu(ShiJiaQiMen pan) {
+  Widget buildPanGeJu(QiMenLegacyDisplayBridge bridge) {
     List<Widget> list = [];
-    if (pan.panGeJuList != null && pan.panGeJuList!.isNotEmpty) {
-      for (var geJu in pan.panGeJuList!) {
+    if (bridge.panGeJuList != null && bridge.panGeJuList!.isNotEmpty) {
+      for (var geJu in bridge.panGeJuList!) {
         if (geJu.jiXiong.isJi()) {
           list.add(GeJuPanelTemplateJi1(
               name: geJu.name,
@@ -995,13 +995,13 @@ class _ScalableShiJiaQiMenViewPageState
         }
       }
     }
-    list.addAll(pan.bingGeList.map((geJu) => GeJuPanelTemplateXiong1(
+    list.addAll(bridge.bingGeList.map((geJu) => GeJuPanelTemplateXiong1(
           name: geJu.name,
           backgroundColor: const Color.fromRGBO(130, 78, 64, 1),
           foregroundColor: const Color.fromRGBO(33, 33, 33, 1),
           size: const Size(180, 42),
         )));
-    list.addAll(pan.gengGeList.map((geJu) => GeJuPanelTemplateXiong1(
+    list.addAll(bridge.gengGeList.map((geJu) => GeJuPanelTemplateXiong1(
           name: geJu.name,
           backgroundColor: const Color.fromRGBO(250, 237, 223, 1),
           foregroundColor: const Color.fromRGBO(240, 167, 46, 1),
@@ -1098,7 +1098,7 @@ class _ScalableShiJiaQiMenViewPageState
     return ValueListenableBuilder(
         valueListenable: selectedGongNotifier,
         builder: (ctx, popup, child) {
-          print("build glass ${popup != null}");
+          debugPrint("build glass ${popup != null}");
           return AnimatedCrossFade(
             duration: const Duration(milliseconds: 100),
             firstChild: Container(),
@@ -1114,7 +1114,7 @@ class _ScalableShiJiaQiMenViewPageState
                   height: MediaQuery.of(context).size.height,
                   decoration: BoxDecoration(
                     color: Colors.blue
-                        .withOpacity(0.1), // Adjust opacity as needed
+                        .withValues(alpha: 0.1), // Adjust opacity as needed
                   ),
                 )
                     .animate(
@@ -1145,7 +1145,7 @@ class _ScalableShiJiaQiMenViewPageState
             borderRadius: BorderRadius.circular(36),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: const Offset(1, 1), // changes position of shadow
@@ -1183,7 +1183,7 @@ class _ScalableShiJiaQiMenViewPageState
                       ],
                       containerBoxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
+                          color: Colors.grey.withValues(alpha: 0.2),
                           blurRadius: 2,
                           spreadRadius: 4,
                         )
@@ -1223,7 +1223,7 @@ class _ScalableShiJiaQiMenViewPageState
                       slidersColors: const [Color(0xfff7f5f7)],
                       containerBoxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
+                          color: Colors.grey.withValues(alpha: 0.2),
                           blurRadius: 2,
                           spreadRadius: 4,
                         )
@@ -1267,7 +1267,7 @@ class _ScalableShiJiaQiMenViewPageState
                                 valueListenable: jiGongHintNotifier,
                                 builder: (ctx, cgg, _) {
                                   return SlideSwitcher(
-                                      initialIndex: cgg.index,
+                                      initialIndex: cgg.index ?? 0,
                                       onSelect: (index) {
                                         jiGongHintNotifier.value =
                                             CenterGongJiGongType.values[index];
@@ -1279,7 +1279,7 @@ class _ScalableShiJiaQiMenViewPageState
                                       slidersColors: const [Color(0xfff7f5f7)],
                                       containerBoxShadow: [
                                         BoxShadow(
-                                          color: Colors.grey.withOpacity(0.4),
+                                          color: Colors.grey.withValues(alpha: 0.4),
                                         )
                                       ],
                                       children: CenterGongJiGongType.values
@@ -1336,14 +1336,14 @@ class _ScalableShiJiaQiMenViewPageState
                                                 closedShadow: [
                                                   BoxShadow(
                                                       color: Colors.grey
-                                                          .withOpacity(0.4),
+                                                          .withValues(alpha: 0.4),
                                                       spreadRadius: 1,
                                                       blurRadius: 2)
                                                 ],
                                                 expandedShadow: [
                                                   BoxShadow(
                                                       color: Colors.grey
-                                                          .withOpacity(0.4),
+                                                          .withValues(alpha: 0.4),
                                                       spreadRadius: 1,
                                                       blurRadius: 2)
                                                 ],
@@ -1382,14 +1382,14 @@ class _ScalableShiJiaQiMenViewPageState
                                                   closedShadow: [
                                                     BoxShadow(
                                                         color: Colors.grey
-                                                            .withOpacity(0.4),
+                                                            .withValues(alpha: 0.4),
                                                         spreadRadius: 1,
                                                         blurRadius: 2)
                                                   ],
                                                   expandedShadow: [
                                                     BoxShadow(
                                                         color: Colors.grey
-                                                            .withOpacity(0.4),
+                                                            .withValues(alpha: 0.4),
                                                         spreadRadius: 1,
                                                         blurRadius: 2)
                                                   ],
@@ -1478,7 +1478,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: MonthTokenTypeEnum.values
@@ -1589,7 +1589,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: GodWithGongTypeEnum.values
@@ -1662,7 +1662,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: GongTypeEnum.values
@@ -1735,7 +1735,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: GongTypeEnum.values
@@ -1806,7 +1806,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: GanGongTypeEnum.values
@@ -1884,13 +1884,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -1927,13 +1927,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -1970,13 +1970,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -2013,13 +2013,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -2056,13 +2056,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -2197,7 +2197,7 @@ class _ScalableShiJiaQiMenViewPageState
     // print("======= ${tenGanKeYing.juName}");
     geJuList.removeWhere((g) => g == null);
     // geJuList.forEach((e){
-    //   print("======= ${e!.geJuNames.first}");
+    //   debugPrint("======= ${e!.geJuNames.first}");
     // });
     return ValueListenableBuilder(
         valueListenable: widthNotifier,
@@ -2248,7 +2248,7 @@ class _ScalableShiJiaQiMenViewPageState
                       ...geJuList
                           .map((geJu) =>
                               buildTenGanKeYingGeJuDetail(geJu!, width))
-                          .toList(),
+                          ,
                     if (tenGanKeYing.yiXiang != null ||
                         tenGanKeYing.xiangList != null ||
                         tenGanKeYing.thingOnLocation != null)
@@ -2263,7 +2263,7 @@ class _ScalableShiJiaQiMenViewPageState
                                 const BorderRadius.all(Radius.circular(16)),
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.grey.withOpacity(.2),
+                                  color: Colors.grey.withValues(alpha: .2),
                                   blurRadius: 5,
                                   spreadRadius: 5),
                             ]),
@@ -2342,7 +2342,7 @@ class _ScalableShiJiaQiMenViewPageState
                                       Radius.circular(16)),
                                   boxShadow: [
                                     BoxShadow(
-                                        color: Colors.grey.withOpacity(.2),
+                                        color: Colors.grey.withValues(alpha: .2),
                                         blurRadius: 5,
                                         spreadRadius: 5),
                                   ]),
@@ -2371,7 +2371,7 @@ class _ScalableShiJiaQiMenViewPageState
                                 const BorderRadius.all(Radius.circular(16)),
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.grey.withOpacity(.2),
+                                  color: Colors.grey.withValues(alpha: .2),
                                   blurRadius: 5,
                                   spreadRadius: 5),
                             ]),
@@ -2406,7 +2406,7 @@ class _ScalableShiJiaQiMenViewPageState
           borderRadius: const BorderRadius.all(Radius.circular(16)),
           boxShadow: [
             BoxShadow(
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
                 blurRadius: 5,
                 spreadRadius: 5),
           ]),
@@ -2666,7 +2666,7 @@ class _ScalableShiJiaQiMenViewPageState
                             Shadow(
                                 color: ConstResourcesMapper
                                     .jiXiongColorMapper[qiYiGong.geJuJiXiong]!
-                                    .withOpacity(.4),
+                                    .withValues(alpha: .4),
                                 blurRadius: 4)
                           ]),
                     )
@@ -3037,7 +3037,7 @@ class _ScalableShiJiaQiMenViewPageState
       height: panSize.height + 2 - 36,
       // margin: EdgeInsets.only(top: 36),
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: Colors.orange.withOpacity(.1)),
+      decoration: BoxDecoration(color: Colors.orange.withValues(alpha: .1)),
     ));
   }
 
@@ -3054,7 +3054,7 @@ class _ScalableShiJiaQiMenViewPageState
             borderRadius: BorderRadius.circular(36),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: const Offset(1, 1), // changes position of shadow
@@ -3248,7 +3248,7 @@ class _ScalableShiJiaQiMenViewPageState
     if (yinYangDun.isYang) {
       if ([HouTianGua.Kan, HouTianGua.Gen, HouTianGua.Zhen, HouTianGua.Xun]
           .contains(gong)) {
-        // backgroundColor = Colors.grey.withOpacity(.2);
+        // backgroundColor = Colors.grey.withValues(alpha: .2);
         backgroundColor = Colors.grey.shade100;
       } else {
         backgroundColor = Colors.white;
@@ -3345,17 +3345,17 @@ class _ScalableShiJiaQiMenViewPageState
                 ])));
   }
 
-  Widget buildCenterFourZhu(ShiJiaQiMen pan) {
+  Widget buildCenterFourZhu(QiMenLegacyDisplayBridge bridge) {
     return Card(
         child: Align(
       alignment: Alignment.center,
       child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: FourZhuEightChar(
-            year: pan.yearJiaZi,
-            month: pan.monthJiaZi,
-            day: pan.dayJiaZi,
-            chen: pan.timeJiaZi,
+            year: bridge.yearJiaZi,
+            month: bridge.monthJiaZi,
+            day: bridge.dayJiaZi,
+            chen: bridge.timeJiaZi,
             isColorful: true,
             zodiacGanColors: ConstResourcesMapper.zodiacGanColors,
             zodiacZhiColors: ConstResourcesMapper.zodiacZhiColors,
@@ -3363,7 +3363,7 @@ class _ScalableShiJiaQiMenViewPageState
     ));
   }
 
-  Widget buildCenter(ShiJiaQiMen pan) {
+  Widget buildCenter(QiMenLegacyDisplayBridge bridge) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -3371,7 +3371,7 @@ class _ScalableShiJiaQiMenViewPageState
         // Text(
         //   "转盘·拆补 ${pan.yinYangDun.isYin?"阴":"阳"}${ConstResourcesMapper.chineseNumberMapper[pan.juNumber]}局",
         //   style: panInfoTextStyle),
-        buildPanInfo(pan),
+        buildPanInfo(bridge),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -3384,7 +3384,7 @@ class _ScalableShiJiaQiMenViewPageState
     );
   }
 
-  Widget buildPanInfo(ShiJiaQiMen pan) {
+  Widget buildPanInfo(QiMenLegacyDisplayBridge bridge) {
     return Card(
       child: Container(
         alignment: Alignment.center,
@@ -3401,7 +3401,7 @@ class _ScalableShiJiaQiMenViewPageState
                       children: [
                         TextSpan(
                             text:
-                                "${plateType.name}·${pan.arrangeType.name} ${pan.yinYangDun.name}${ConstResourcesMapper.chineseNumberMapper[pan.juNumber]}局"),
+                                "${plateType.name}·${bridge.arrangeType.name} ${bridge.yinYangDun.name}${ConstResourcesMapper.chineseNumberMapper[bridge.juNumber]}局"),
                       ],
                       style: panInfoTextStyle,
                     ));
@@ -3419,28 +3419,28 @@ class _ScalableShiJiaQiMenViewPageState
                               style: const TextStyle(fontSize: 18),
                               children: [
                             TextSpan(
-                                text: pan.xunShou.name.split("").first,
+                                text: bridge.xunShou.name.split("").first,
                                 style: tianGanTextStyle.copyWith(
                                     fontSize: 18,
                                     color: ConstResourcesMapper.zodiacGanColors[
-                                        TianGan.getFromValue(pan.xunShou.name
+                                        TianGan.getFromValue(bridge.xunShou.name
                                             .split("")
                                             .first)]!)),
                             TextSpan(
-                                text: pan.xunShou.name.split("").last,
+                                text: bridge.xunShou.name.split("").last,
                                 style: twelveDiZhiTextStyle.copyWith(
                                     fontSize: 19,
                                     color: ConstResourcesMapper.zodiacZhiColors[
-                                        DiZhi.getFromValue(pan.xunShou.name
+                                        DiZhi.getFromValue(bridge.xunShou.name
                                             .split("")
                                             .last)]!)),
                             TextSpan(
-                                text: " ${pan.xunHeaderTianGan.name}",
+                                text: " ${bridge.xunHeaderTianGan.name}",
                                 style: tianGanTextStyle.copyWith(
                                     fontSize: 18,
                                     color: ConstResourcesMapper.zodiacGanColors[
                                         TianGan.getFromValue(
-                                            pan.xunHeaderTianGan.name)]!))
+                                            bridge.xunHeaderTianGan.name)]!))
                           ]))),
                 ],
               ),
@@ -3453,18 +3453,18 @@ class _ScalableShiJiaQiMenViewPageState
                       flex: 6,
                       child: RichText(
                           text: TextSpan(
-                              text: pan.shiJiaJu.panJuJieQi?.name ??
-                                  pan.jieQi.name,
+                              text: bridge.panJuJieQi?.name ??
+                                  bridge.jieQi.name,
                               style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.blueGrey.shade800),
                               children: [
                             TextSpan(
-                                text: "  ${pan.shiJiaJu.atThreeYuan.name}"),
-                            pan.shiJiaJu.juDayNumber == null
+                                text: "  ${bridge.atThreeYuan.name}"),
+                            bridge.juDayNumber == null
                                 ? const TextSpan(text: "")
                                 : TextSpan(
-                                    text: " 第 ${pan.shiJiaJu.juDayNumber!} 天")
+                                    text: " 第 ${bridge.juDayNumber!} 天")
                           ]))),
                 ],
               ),
@@ -3495,7 +3495,7 @@ class _ScalableShiJiaQiMenViewPageState
                                       child: Image.asset(
                                         "assets/icons/wide-black-ink-radian-line2.png",
                                       ))),
-                              Text("${pan.zhiFuStar.name}星",
+                              Text("${bridge.displayState.zhiFuStar.name}星",
                                   style:
                                       nineStarTextStyle.copyWith(fontSize: 18)),
                             ],
@@ -3512,7 +3512,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   style: TextStyle(color: Colors.grey)),
                               TextSpan(
                                 text:
-                                    "${pan.zhiFuStarAtGong.name}${ConstResourcesMapper.chineseNumberMapper[pan.zhiFuStarAtGong.houTianOrder]}宫",
+                                    "${bridge.displayState.zhiFuStarAtGong.name}${ConstResourcesMapper.chineseNumberMapper[bridge.displayState.zhiFuStarAtGong.houTianOrder]}宫",
                               )
                             ]))
                       ]),
@@ -3544,7 +3544,7 @@ class _ScalableShiJiaQiMenViewPageState
                                     child: Image.asset(
                                       "assets/icons/wide-black-ink-radian-line2.png",
                                     ))),
-                            Text(pan.zhiShiDoor.name,
+                            Text(bridge.displayState.zhiShiDoor.name,
                                 style:
                                     eightDoorTextStyle.copyWith(fontSize: 18)),
                           ],
@@ -3560,8 +3560,8 @@ class _ScalableShiJiaQiMenViewPageState
                                 text: " 落 ",
                                 style: TextStyle(color: Colors.grey)),
                             TextSpan(
-                              text:
-                                  "${pan.zhiFuStarAtGong.name}${ConstResourcesMapper.chineseNumberMapper[pan.zhiFuStarAtGong.houTianOrder]}宫",
+                                text:
+                                    "${bridge.displayState.zhiFuStarAtGong.name}${ConstResourcesMapper.chineseNumberMapper[bridge.displayState.zhiFuStarAtGong.houTianOrder]}宫",
                             )
                           ]))
                     ]),
@@ -3586,23 +3586,22 @@ class _ScalableShiJiaQiMenViewPageState
         ganGongType: ganGongTypeNotifier.value);
   }
 
-  ShiJiaJu getShiJiaJu(DateTime panDatetime) {
-    ShiJiaJu shiJiaJu;
+  Future<entity.ShiJiaJu> getShiJiaJu(DateTime panDatetime) async {
+    entity.ShiJiaJu shiJiaJu;
     switch (arrangeTypeNotifier.value) {
       case ArrangeType.CHAI_BU:
-        shiJiaJu = ChaiBuCalculator(dateTime: panDatetime).calculate();
-        break;
       case ArrangeType.ZHI_RUN:
-        shiJiaJu = ZhiRunCalculator(dateTime: panDatetime).calculate();
-        break;
       case ArrangeType.MAO_SHAN:
-        shiJiaJu = MaoShanCalculator(dateTime: panDatetime).calculate();
-        break;
       case ArrangeType.YIN_PAN:
-        shiJiaJu = YinPanCalculator(dateTime: panDatetime).calculate();
+        final useCase = context.read<CalculateJuUseCase>();
+        final result = await useCase.execute(CalculateJuParams(
+          dateTime: panDatetime,
+          arrangeType: arrangeTypeNotifier.value,
+        ));
+        shiJiaJu = result as entity.ShiJiaJu;
         break;
       default:
-        JiaZi fuTou = ChaiBuCalculator.getFuTouByDayJiaZi(dayJiaZi!);
+        JiaZi fuTou = FuTouUtils.getFuTouByDayJiaZi(dayJiaZi!);
         if ([
           CenterGongJiGongType.ONLY_KUN_GONG,
           CenterGongJiGongType.KUN_GEN_GONG
@@ -3611,13 +3610,16 @@ class _ScalableShiJiaQiMenViewPageState
               ? TwentyFourJieQi.DONG_ZHI
               : TwentyFourJieQi.XIA_ZHI;
         }
-        shiJiaJu = ShiJiaJu(
+        shiJiaJu = entity.ShiJiaJu(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
           juNumber: juNumber!,
           fuTouJiaZi: fuTou,
           yinYangDun: yinYangDun!,
           jieQiAt: jieQi!,
+          jieQiStartAt: panDatetime,
           jieQiEnd: jieQi!,
-          atThreeYuan: ShiJiaQiMenJuCalculator.getThreeYuanByFuHead(fuTou),
+          jieQiEndAt: panDatetime,
+          atThreeYuan: ThreeYuanUtils.getThreeYuanByFuHead(fuTou),
           fourZhuEightChar:
               "${yearJiaZi?.name} ${monthJiaZi?.name} ${dayJiaZi?.name} ${timeJiaZi?.name}",
           panDateTime: panDatetime,
@@ -3626,11 +3628,11 @@ class _ScalableShiJiaQiMenViewPageState
     return shiJiaJu;
   }
 
-  void create(DateTime panDatetime) {
-    print("UI: do create");
-    var shiJiaJu = getShiJiaJu(panDatetime);
+  void create(DateTime panDatetime) async {
+    debugPrint("UI: do create");
+    var shiJiaJu = await getShiJiaJu(panDatetime);
     var settings = getPanArrageSettings(arrangeTypeNotifier.value);
-    Provider.of<ShiJiaQiMenViewModel>(context, listen: false).createShiJiaQiMen(
+    Provider.of<ShiJiaQiMenViewModel>(context, listen: false).createDisplayBridge(
         plateTypeNotifier.value, panDatetime, shiJiaJu, settings);
   }
 
@@ -3657,7 +3659,7 @@ class _ScalableShiJiaQiMenViewPageState
   Widget buildEachGong(UIEachGongModel uiGong) {
     return GestureDetector(
       onDoubleTap: () {
-        print("clicked ${uiGong.gua.name}");
+        debugPrint("clicked ${uiGong.gua.name}");
         if (Provider.of<ShiJiaQiMenViewModel>(context, listen: false)
                 .selectedGong ==
             null) {

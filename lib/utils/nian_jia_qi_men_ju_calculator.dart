@@ -37,7 +37,7 @@ class NianJiaQiMenJuCalculator {
     ].join(' ');
 
     return NianJiaJu(
-      id: 'nianjia-${solarYearForAnchor}-${dateTime.millisecondsSinceEpoch}',
+      id: 'nianjia-$solarYearForAnchor-${dateTime.millisecondsSinceEpoch}',
       panDateTime: dateTime,
       yearJiaZi: yearJiaZi,
       sanYuan: sanYuan,
