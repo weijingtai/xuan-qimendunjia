@@ -52,6 +52,31 @@
 
 ---
 
+## Q3: Sealed State Classes + ViewModel Unification ✅
+
+- [x] Q3.1 Create sealed state classes (`lib/presentation/models/qimen_state.dart`)
+  - `QiMenIdle` — initial state
+  - `QiMenCalculating` — in progress (calculating / arranging / loading detail)
+  - `QiMenSuccess(pan: QiMenPan, ju: BaseJu)` — holds domain entities directly
+  - `QiMenError(message: String)` — error state
+  - Uses `BaseJu` (not `ShiJiaJu`) for multi-jia support
+  - Note: Q4's `QiMenUiState` is UI-level (holds `QiMenDisplayState`); this is VM-level
+- [x] Q3.2 Refactor `QiMenViewModel` to use sealed state
+  - Added `_qiMenState` field + `qiMenState` getter
+  - Removed `_currentJu` / `_currentPan` fields — getters delegate to sealed state
+  - `currentPan`, `currentJu`, `currentBaseJu`, `errorMessage`, `hasData` all delegate to `_qiMenState`
+  - Backward-compatible `QiMenViewState` enum + `_state` field kept for `arranging` / `loadingGongDetail` sub-states
+  - `selectGong` error does NOT change `_qiMenState` (pan remains valid)
+- [x] Q3.3 Verify legacy VM delegation (Q3b audit)
+  - `ShiJiaQiMenViewModel` — 10 direct `serviceLocator.qiMenDataRepository.*` calls (NOT UseCases)
+  - `ScalableShiJiaQiMenViewPage` — imports `qi_men_ju_calculator.dart`
+  - These are legacy layer; NOT touched per task scope ("Do NOT touch legacy pages")
+  - Documented as known violations for future migration
+- [x] Q3.4 Update tasks.md (this file)
+- [x] Q3.5 Commit
+
+---
+
 ## Q4: Unify QiMen UI State And Intent Contract ✅
 
 - [x] Q4.1 Define QiMenInputState (`lib/presentation/models/qimen_input_state.dart`)
