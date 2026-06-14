@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'center_gong_ji_gong_type.dart';
+export 'center_gong_ji_gong_type.dart';
 import 'package:metaphysics_core/enums.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_six_geng_ge_ju.dart';

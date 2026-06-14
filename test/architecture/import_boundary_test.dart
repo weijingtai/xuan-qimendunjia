@@ -21,7 +21,6 @@ void main() {
     'serviceLocator',
     'ReadDataUtils',
     'officialRuleReader',
-    'model/shi_jia_qi_men.dart',
     'model/shi_jia_ju.dart',
     'ShiJiaQiMen(',
     // QPRE-4: DataSource deny-list additions
@@ -60,12 +59,10 @@ void main() {
   const baselineAllowList = [
     // Legacy VM adapter: constructs ShiJiaQiMen for WangShuai/GeJu computation
     'lib/pages/shi_jia_qi_men_view_model.dart:23:model/shi_jia_ju.dart',
-    'lib/pages/shi_jia_qi_men_view_model.dart:29:model/shi_jia_qi_men.dart',
     'lib/pages/shi_jia_qi_men_view_model.dart:118:ShiJiaQiMen(',
     'lib/pages/shi_jia_qi_men_view_model.dart:261:ShiJiaQiMen(',
     'lib/pages/shi_jia_qi_men_view_model.dart:266:ShiJiaQiMen(',
     // Legacy page: uses ShiJiaQiMen type for rendering + serviceLocator for UseCase
-    'lib/pages/scalable_shi_jia_qi_men_view_page.dart:53:model/shi_jia_qi_men.dart',
     'lib/pages/scalable_shi_jia_qi_men_view_page.dart:3600:serviceLocator',
     'lib/pages/scalable_shi_jia_qi_men_view_page.dart:3639:ShiJiaQiMen(',
   ];

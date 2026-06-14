@@ -40,6 +40,7 @@ import '../enums/enum_nine_stars.dart';
 import '../enums/enum_san_zha_wu_jia.dart';
 import '../domain/entities/shi_jia_ju.dart' as entity;
 import '../model/door_star_ke_ying.dart';
+import '../model/center_gong_ji_gong_type.dart';
 import '../model/pan_arrange_settings.dart';
 import '../model/qi_yi_ru_gong.dart';
 import '../presentation/adapters/qimen_legacy_display_bridge.dart';
@@ -50,7 +51,6 @@ import '../utils/fu_tou_utils.dart';
 import '../utils/three_yuan_utils.dart';
 import '../widgets/resizable_gong_widget.dart';
 import '../domain/usecases/calculate_ju_usecase.dart';
-import '../model/shi_jia_qi_men.dart';
 
 class ScalableShiJiaQiMenViewPage extends StatefulWidget {
   DateTime? panDateTime;

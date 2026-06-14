@@ -18,7 +18,9 @@ import '../model/each_gong.dart';
 import '../model/each_gong_ge_ju.dart';
 import '../model/eight_door_ke_ying.dart';
 import '../model/pan_arrange_settings.dart';
+import '../model/center_gong_ji_gong_type.dart';
 import '../model/qi_yi_ru_gong.dart';
+import '../model/shi_jia_ju.dart';
 import '../presentation/adapters/qimen_legacy_display_bridge.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
@@ -26,7 +28,6 @@ import '../ui_models/ui_pan_meta_model.dart';
 import '../ui_models/ui_ten_gan_key_ying_ge_ju.dart';
 import '../domain/entities/shi_jia_ju.dart' as entity;
 import '../domain/repositories/qimen_data_repository.dart';
-import '../model/shi_jia_qi_men.dart';
 
 class ShiJiaQiMenViewModel extends ChangeNotifier {
   static final _log = Logger('ShiJiaQiMenViewModel');
