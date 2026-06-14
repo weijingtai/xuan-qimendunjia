@@ -49,3 +49,43 @@
   - Initial state verification
 - [x] Q1.4 Update tasks.md (this file)
 - [x] Q1.5 Commit
+
+---
+
+## Q4: Unify QiMen UI State And Intent Contract ✅
+
+- [x] Q4.1 Define QiMenInputState (`lib/presentation/models/qimen_input_state.dart`)
+  - Fields: dateTime, arrangeType, plateType, family (QiMenJia)
+  - Derived: validationErrors (Map<String,String>), isReadyToSubmit (bool)
+  - Methods: copyWith, empty constructor, defaults factory
+  - Note: uses `QiMenJia` (domain enum) rather than a separate `QiMenFamily` alias
+- [x] Q4.2 Define QiMenDisplayState (`lib/presentation/models/qimen_display_state.dart`)
+  - Ju metadata: panDateTime, jia, yinYangDun, juNumber, jieQi, fourZhuEightChar, plateType
+  - ZhiFu/ZhiShi: zhiShiDoor, zhiFuStar, zhiFuGan, zhiFuStarAtGong, zhiShiDoorAtGong
+  - XunKong: xunHeaderTianGan, timeXunKong, dayXunKong, monthXunKong, yearXunKong
+  - Horse: horseLocation
+  - LiuJia: sixJiaXunHeader, isSixJiXing, monthToken, dayJiaZi, timeJiaZi
+  - Fu/FanYin: isStarFuYin, isStarFanYin, isDoorFuYin, isDoorFanYin, isGanFuYin, isGanFanYin
+  - Palaces: gongMapper (Map<HouTianGua, EachGong>), panGeJuList
+  - Selection: selectedGongGua, gongDetailInfo (GongDetailInfo)
+  - Derived: hasAnyFuYin, hasAnyFanYin, getGong(), brief
+  - Methods: copyWith
+  - Mirrors all fields from LegacyQiMenDisplayState + QiMenPan + EachGong + GongDetailInfo
+- [x] Q4.3 Define QiMenUiState (`lib/presentation/models/qimen_ui_state.dart`)
+  - Sealed class with 4 subtypes: empty, loading, success(QiMenDisplayState), error(String)
+  - Pattern-matching: when() helper for pages not using Dart 3 switch expressions
+  - Convenience: isEmpty, isLoading, isSuccess, isError
+- [x] Q4.4 Bind routes — route/state mapping documented:
+  - `/qimendunjia` (legacy) → ScalableShiJiaQiMenViewPage + ShiJiaQiMenViewModel
+    - State: uses internal _state enum + nullable fields; will migrate to QiMenUiState in Q5
+    - Input: local page state (_selectedDateTime, _plateTypeNotifer); will migrate to QiMenInputState
+  - `/qimendunjia/mvvm` (MVVM) → QiMenMvvmPage + QiMenViewModel
+    - State: QiMenViewState enum; will migrate to QiMenUiState
+    - Input: local page state (_selectedDateTime, _arrangeType, _plateType); will migrate to QiMenInputState
+  - `/qimendunjia/multi_jia` (multi-jia) → MultiJiaQiMenPage + QiMenViewModel
+    - State: same QiMenViewModel; will migrate to QiMenUiState
+    - Input: local page state (_jia, _arrangeType, _plateType, _selectedDateTime); will migrate to QiMenInputState
+  - `/redesign_ui/smart_grid_demo` → SmartGridDemo (standalone demo, no state contract needed)
+  - Actual binding of QiMenUiState/QiMenInputState to pages deferred to Q5 (page modification phase)
+- [x] Q4.5 Update tasks.md (this file)
+- [x] Q4.6 Commit
