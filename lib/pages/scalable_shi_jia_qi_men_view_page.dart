@@ -41,7 +41,7 @@ import '../enums/enum_arrange_plate_type.dart';
 import '../enums/enum_most_popular_ge_ju.dart';
 import '../enums/enum_nine_stars.dart';
 import '../enums/enum_san_zha_wu_jia.dart';
-import '../model/shi_jia_ju.dart';
+import '../domain/entities/shi_jia_ju.dart' as entity;
 import '../model/door_star_ke_ying.dart';
 import '../model/pan_arrange_settings.dart';
 import '../model/qi_yi_ru_gong.dart';
@@ -49,8 +49,12 @@ import '../model/shi_jia_qi_men.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
 import '../ui_models/ui_each_gong_model.dart';
-import '../utils/qi_men_ju_calculator.dart';
+import '../utils/fu_tou_utils.dart';
+import '../utils/three_yuan_utils.dart';
 import '../widgets/resizable_gong_widget.dart';
+import '../domain/usecases/calculate_ju_usecase.dart';
+import '../enums/enum_qi_men_jia.dart';
+import 'package:qimendunjia/di/service_locator.dart';
 
 class ScalableShiJiaQiMenViewPage extends StatefulWidget {
   DateTime? panDateTime;
@@ -3586,23 +3590,22 @@ class _ScalableShiJiaQiMenViewPageState
         ganGongType: ganGongTypeNotifier.value);
   }
 
-  ShiJiaJu getShiJiaJu(DateTime panDatetime) {
-    ShiJiaJu shiJiaJu;
+  Future<entity.ShiJiaJu> getShiJiaJu(DateTime panDatetime) async {
+    entity.ShiJiaJu shiJiaJu;
     switch (arrangeTypeNotifier.value) {
       case ArrangeType.CHAI_BU:
-        shiJiaJu = ChaiBuCalculator(dateTime: panDatetime).calculate();
-        break;
       case ArrangeType.ZHI_RUN:
-        shiJiaJu = ZhiRunCalculator(dateTime: panDatetime).calculate();
-        break;
       case ArrangeType.MAO_SHAN:
-        shiJiaJu = MaoShanCalculator(dateTime: panDatetime).calculate();
-        break;
       case ArrangeType.YIN_PAN:
-        shiJiaJu = YinPanCalculator(dateTime: panDatetime).calculate();
+        final useCase = serviceLocator.get<CalculateJuUseCase>();
+        final result = await useCase.execute(CalculateJuParams(
+          dateTime: panDatetime,
+          arrangeType: arrangeTypeNotifier.value,
+        ));
+        shiJiaJu = result as entity.ShiJiaJu;
         break;
       default:
-        JiaZi fuTou = ChaiBuCalculator.getFuTouByDayJiaZi(dayJiaZi!);
+        JiaZi fuTou = FuTouUtils.getFuTouByDayJiaZi(dayJiaZi!);
         if ([
           CenterGongJiGongType.ONLY_KUN_GONG,
           CenterGongJiGongType.KUN_GEN_GONG
@@ -3611,13 +3614,16 @@ class _ScalableShiJiaQiMenViewPageState
               ? TwentyFourJieQi.DONG_ZHI
               : TwentyFourJieQi.XIA_ZHI;
         }
-        shiJiaJu = ShiJiaJu(
+        shiJiaJu = entity.ShiJiaJu(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
           juNumber: juNumber!,
           fuTouJiaZi: fuTou,
           yinYangDun: yinYangDun!,
           jieQiAt: jieQi!,
+          jieQiStartAt: panDatetime,
           jieQiEnd: jieQi!,
-          atThreeYuan: ShiJiaQiMenJuCalculator.getThreeYuanByFuHead(fuTou),
+          jieQiEndAt: panDatetime,
+          atThreeYuan: ThreeYuanUtils.getThreeYuanByFuHead(fuTou),
           fourZhuEightChar:
               "${yearJiaZi?.name} ${monthJiaZi?.name} ${dayJiaZi?.name} ${timeJiaZi?.name}",
           panDateTime: panDatetime,
@@ -3626,9 +3632,9 @@ class _ScalableShiJiaQiMenViewPageState
     return shiJiaJu;
   }
 
-  void create(DateTime panDatetime) {
+  void create(DateTime panDatetime) async {
     print("UI: do create");
-    var shiJiaJu = getShiJiaJu(panDatetime);
+    var shiJiaJu = await getShiJiaJu(panDatetime);
     var settings = getPanArrageSettings(arrangeTypeNotifier.value);
     Provider.of<ShiJiaQiMenViewModel>(context, listen: false).createShiJiaQiMen(
         plateTypeNotifier.value, panDatetime, shiJiaJu, settings);

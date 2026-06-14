@@ -26,13 +26,14 @@ import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
 import '../ui_models/ui_pan_meta_model.dart';
 import '../ui_models/ui_ten_gan_key_ying_ge_ju.dart';
-import 'package:qimendunjia/di/service_locator.dart';
+import '../domain/entities/shi_jia_ju.dart' as entity;
 import '../domain/repositories/qimen_data_repository.dart';
 
 class ShiJiaQiMenViewModel extends ChangeNotifier {
   static final _log = Logger('ShiJiaQiMenViewModel');
 
   BuildContext context;
+  final QiMenDataRepository _qiMenDataRepository;
 
   // DateTime? _dateTime;
   // DateTime? get dateTime => _dateTime;
@@ -99,7 +100,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
     // Convert entity ShiJiaJu → model ShiJiaJu
     // 此 ViewModel 是传统时家专用页面；非时家盘不会到达此分支。
-    final modelJu = ShiJiaJuMapper.toModel(pan.shiJiaJu!);
+    final entityJu = pan.shiJiaJu!;
 
     // Use default PanArrangeSettings (matching PanSettings.defaultSettings())
     final defaultSettings = PanArrangeSettings(
@@ -117,7 +118,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     createShiJiaQiMen(
       pan.plateType,
       pan.panDateTime,
-      modelJu,
+      entityJu,
       defaultSettings,
     );
   }
@@ -165,7 +166,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   // Map<HouTianGua,UITenGanKeYingGeJu> tenGanKeYingGeJuMapper = {};
 
-  ShiJiaQiMenViewModel(this.context);
+  ShiJiaQiMenViewModel(this.context, this._qiMenDataRepository);
 
   UIEachGongModel? getGongByGua(HouTianGua gongGua) {
     return _gongUIMapper[gongGua];
@@ -258,12 +259,13 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   }
 
   void createShiJiaQiMen(PlateType plateType, DateTime dateTime,
-      ShiJiaJu shiJiaJu, PanArrangeSettings settings) {
+      entity.ShiJiaJu shiJiaJu, PanArrangeSettings settings) {
     // _dateTime = dateTime;
-    List<String> eightCharList = shiJiaJu.fourZhuEightChar.split(" ").toList();
+    final modelJu = ShiJiaJuMapper.toModel(shiJiaJu);
+    List<String> eightCharList = modelJu.fourZhuEightChar.split(" ").toList();
     var shiJiaQiMen = ShiJiaQiMen(
       plateType: plateType,
-      shiJiaJu: shiJiaJu,
+      shiJiaJu: modelJu,
       settings: settings,
     );
     _uiPanMetaModel = UIPanMetaModel(
@@ -320,7 +322,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   Future<DoorStarKeYing?> loadDoorStarKeYing(
       EightDoorEnum door, NineStarsEnum star) async {
-    return await serviceLocator.qiMenDataRepository.getDoorStarKeYing(
+    return await _qiMenDataRepository.getDoorStarKeYing(
       door: door,
       star: star,
     );
@@ -328,7 +330,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   Future<String?> loadEightDoorGanKeYing(
       EightDoorEnum door, TianGan tianPanGan) async {
-    return await serviceLocator.qiMenDataRepository.getEightDoorGanKeYing(
+    return await _qiMenDataRepository.getEightDoorGanKeYing(
       door: door,
       gan: tianPanGan,
     );
@@ -346,7 +348,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     TianGan? diPanJiGan,
   ) async {
     print("loadAllTenGanKeYingForCurrentGong");
-    final repo = serviceLocator.qiMenDataRepository;
+    final repo = _qiMenDataRepository;
     TenGanKeYing tianDiPanKeYing = await repo.getTenGanKeYing(
         tianPan: tianPanGan, diPan: diPanGan);
     TenGanKeYing? tianPanJiaDiPanKey;
@@ -401,7 +403,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   Future<TenGanKeYing?> loadTenGanKeyYing(
       TianGan tianPanGan, TianGan diPanGan) async {
     print("loadTenGanKeyYing");
-    return await serviceLocator.qiMenDataRepository.getTenGanKeYing(
+    return await _qiMenDataRepository.getTenGanKeYing(
       tianPan: tianPanGan,
       diPan: diPanGan,
     );
@@ -414,7 +416,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       EightDoorEnum door, EightDoorEnum fixDoor) async {
     /// YinYang  阳为动应，阴为静应
 
-    return await serviceLocator.qiMenDataRepository.getEightDoorKeYing(
+    return await _qiMenDataRepository.getEightDoorKeYing(
       door: door,
       fixDoor: fixDoor,
     );
@@ -424,7 +426,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   Future<QiYiRuGong?> loadThreeQiRuGong(
       HouTianGua gongGua, TianGan tianPanGan) async {
     if (tianPanGan.isThreeQi) {
-      return await serviceLocator.qiMenDataRepository.getQiYiRuGong(
+      return await _qiMenDataRepository.getQiYiRuGong(
         gong: gongGua,
         gan: tianPanGan,
       );
@@ -436,7 +438,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       Map<TianGan, HouTianGua> mapper) async {
     Map<HouTianGua, List<QiYiRuGong>> res = {};
     for (var mapperEntry in mapper.entries) {
-      final item = await serviceLocator.qiMenDataRepository.getQiYiRuGong(
+      final item = await _qiMenDataRepository.getQiYiRuGong(
         gong: mapperEntry.value,
         gan: mapperEntry.key,
       );
@@ -452,7 +454,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   Future<String?> loadTianPanGanRuGong(
       HouTianGua gongGua, TianGan tianPanGan) async {
-    return await serviceLocator.qiMenDataRepository.getTianGanRuGongDisease(
+    return await _qiMenDataRepository.getTianGanRuGongDisease(
       gong: gongGua,
       gan: tianPanGan,
     );
@@ -462,7 +464,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       PlateType plateType,
       TianGan xunShouGan,
       Map<HouTianGua, EachGong> gong) async {
-    final repo = serviceLocator.qiMenDataRepository;
+    final repo = _qiMenDataRepository;
     Map<HouTianGua, UITenGanKeYingGeJu> result = {};
     for (var entry in gong.entries) {
       if (plateType == PlateType.ZHUAN_PAN && entry.key == HouTianGua.Center) {

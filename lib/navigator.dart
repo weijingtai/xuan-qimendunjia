@@ -20,7 +20,7 @@ class NavigatorGenerator {
     "/qimendunjia": (context, {arguments}) => MultiProvider(
           providers: [
             ChangeNotifierProvider<ShiJiaQiMenViewModel>(
-                create: (context) => ShiJiaQiMenViewModel(context)),
+                create: (context) => ShiJiaQiMenViewModel(context, serviceLocator.qiMenDataRepository)),
           ],
           child: ScalableShiJiaQiMenViewPage(),
           // child: ShiJiaQiMenViewPage(),
