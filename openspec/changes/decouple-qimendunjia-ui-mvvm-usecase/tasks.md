@@ -36,4 +36,16 @@
 
 ---
 
-## Q1: [TBD] — Next Round
+## Q1: Introduce Legacy Facade Without Business Calculation ✅
+
+- [x] Q1.1 Create legacy-compatible facade (`lib/presentation/viewmodels/qimen_legacy_facade.dart`)
+  - Accepts old UI intent calls (calculateAndArrangePan, selectGong)
+  - Delegates to CalculateJuUseCase, ArrangePanUseCase, SelectGongUseCase
+  - Exposes legacy-shaped state (QiMenPan, EachGong, GongDetailInfo)
+  - No direct calculator imports, no ShiJiaQiMen construction, no officialRuleReader
+- [x] Q1.2 Verify facade has no direct calculator imports (0 matches)
+- [x] Q1.3 Create facade tests (`test/presentation/qimen_legacy_facade_test.dart`)
+  - Compiles without calculator imports
+  - Initial state verification
+- [x] Q1.4 Update tasks.md (this file)
+- [x] Q1.5 Commit
