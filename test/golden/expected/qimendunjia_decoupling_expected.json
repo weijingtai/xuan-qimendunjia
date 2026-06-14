@@ -1,0 +1,113 @@
+{
+  "version": "1.0.0",
+  "description": "QiMenDunJia decoupling expected values — STUB, to be populated before Round 1",
+  "created": "2026-06-13",
+  "status": "STUB",
+  "note": "Expected field values for each fixture in qimendunjia_decoupling_cases.json. Populate with: juNumber, yinYang, sanYuan, tianPan (9 gongs), diPan (9 gongs), renPan (9 gongs), eightGods, nineStars, eightDoors.",
+  "expected": [
+    {
+      "fixtureId": "QF-001",
+      "status": "TODO",
+      "fields": {
+        "juNumber": null,
+        "yinYang": null,
+        "sanYuan": null,
+        "jieQi": null,
+        "tianPan": null,
+        "diPan": null,
+        "renPan": null
+      }
+    },
+    {
+      "fixtureId": "QF-002",
+      "status": "TODO",
+      "fields": {
+        "juNumber": null,
+        "yinYang": null,
+        "sanYuan": null,
+        "jieQi": null,
+        "tianPan": null,
+        "diPan": null,
+        "renPan": null
+      }
+    },
+    {
+      "fixtureId": "QF-003",
+      "status": "TODO",
+      "fields": {
+        "juNumber": null,
+        "yinYang": null,
+        "sanYuan": null,
+        "jieQi": null,
+        "tianPan": null,
+        "diPan": null,
+        "renPan": null
+      }
+    },
+    {
+      "fixtureId": "QF-004",
+      "status": "TODO",
+      "fields": {
+        "juNumber": null,
+        "yinYang": null,
+        "sanYuan": null,
+        "jieQi": null,
+        "tianPan": null,
+        "diPan": null,
+        "renPan": null
+      }
+    },
+    {
+      "fixtureId": "QF-005",
+      "status": "TODO",
+      "fields": {
+        "juNumber": null,
+        "yinYang": null,
+        "sanYuan": null,
+        "jieQi": null,
+        "tianPan": null,
+        "diPan": null,
+        "renPan": null
+      }
+    },
+    {
+      "fixtureId": "QF-006",
+      "status": "TODO",
+      "fields": {
+        "juNumber": null,
+        "yinYang": null,
+        "sanYuan": null,
+        "jieQi": null,
+        "tianPan": null,
+        "diPan": null,
+        "renPan": null
+      }
+    },
+    {
+      "fixtureId": "QF-007",
+      "status": "TODO",
+      "fields": {
+        "juNumber": null,
+        "yinYang": null,
+        "sanYuan": null,
+        "jieQi": null,
+        "tianPan": null,
+        "diPan": null,
+        "renPan": null
+      }
+    },
+    {
+      "fixtureId": "QF-008",
+      "status": "TODO",
+      "fields": {
+        "juNumber": null,
+        "yinYang": null,
+        "sanYuan": null,
+        "jieQi": null,
+        "tianPan": null,
+        "diPan": null,
+        "renPan": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "version": "1.0.0",
+  "description": "QiMenDunJia decoupling golden test fixtures — 4 arrange types x 2 plate types = 8 cases",
+  "created": "2026-06-13",
+  "branch": "feature/decouple-ui-mvvm-qpre",
+  "baseline_commit": "b768baf",
+  "fixtures": [
+    {
+      "id": "QF-001",
+      "description": "拆补法 · 转盘 · 2025-01-06 小寒上元 阳遁二局",
+      "arrangeType": "CHAI_BU",
+      "plateType": "ZHUAN_PAN",
+      "input": {
+        "datetime": "2025-01-06T10:30:00",
+        "note": "小寒上元，阳遁二局，甲子日"
+      }
+    },
+    {
+      "id": "QF-002",
+      "description": "拆补法 · 飞盘 · 2025-01-06 小寒上元 阳遁二局",
+      "arrangeType": "CHAI_BU",
+      "plateType": "FEI_PAN",
+      "input": {
+        "datetime": "2025-01-06T10:30:00",
+        "note": "小寒上元，阳遁二局，甲子日"
+      }
+    },
+    {
+      "id": "QF-003",
+      "description": "置润法 · 转盘 · 2025-06-21 夏至上元 阴遁九局",
+      "arrangeType": "ZHI_RUN",
+      "plateType": "ZHUAN_PAN",
+      "input": {
+        "datetime": "2025-06-21T14:00:00",
+        "note": "夏至上元，阴遁九局"
+      }
+    },
+    {
+      "id": "QF-004",
+      "description": "置润法 · 飞盘 · 2025-06-21 夏至上元 阴遁九局",
+      "arrangeType": "ZHI_RUN",
+      "plateType": "FEI_PAN",
+      "input": {
+        "datetime": "2025-06-21T14:00:00",
+        "note": "夏至上元，阴遁九局"
+      }
+    },
+    {
+      "id": "QF-005",
+      "description": "茅山法 · 转盘 · 2025-03-20 春分中元 阳遁三局",
+      "arrangeType": "MAO_SHAN",
+      "plateType": "ZHUAN_PAN",
+      "input": {
+        "datetime": "2025-03-20T08:00:00",
+        "note": "春分中元，阳遁三局"
+      }
+    },
+    {
+      "id": "QF-006",
+      "description": "茅山法 · 飞盘 · 2025-03-20 春分中元 阳遁三局",
+      "arrangeType": "MAO_SHAN",
+      "plateType": "FEI_PAN",
+      "input": {
+        "datetime": "2025-03-20T08:00:00",
+        "note": "春分中元，阳遁三局"
+      }
+    },
+    {
+      "id": "QF-007",
+      "description": "阴盘 · 转盘 · 2025-08-07 立秋上元 阴遁二局",
+      "arrangeType": "YIN_PAN",
+      "plateType": "ZHUAN_PAN",
+      "input": {
+        "datetime": "2025-08-07T16:00:00",
+        "note": "立秋上元，阴遁二局"
+      }
+    },
+    {
+      "id": "QF-008",
+      "description": "阴盘 · 飞盘 · 2025-08-07 立秋上元 阴遁二局",
+      "arrangeType": "YIN_PAN",
+      "plateType": "FEI_PAN",
+      "input": {
+        "datetime": "2025-08-07T16:00:00",
+        "note": "立秋上元，阴遁二局"
+      }
+    }
+  ]
+}
