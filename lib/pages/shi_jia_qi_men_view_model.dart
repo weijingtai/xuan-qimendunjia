@@ -20,7 +20,6 @@ import '../model/eight_door_ke_ying.dart';
 import '../model/pan_arrange_settings.dart';
 import '../model/center_gong_ji_gong_type.dart';
 import '../model/qi_yi_ru_gong.dart';
-import '../model/shi_jia_ju.dart';
 import '../presentation/adapters/qimen_legacy_display_bridge.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
