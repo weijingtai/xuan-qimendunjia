@@ -38,7 +38,12 @@ import '../model/shi_jia_qi_men.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
 import '../ui_models/ui_ten_gan_key_ying_ge_ju.dart';
-import '../utils/qi_men_ju_calculator.dart';
+import '../utils/fu_tou_utils.dart';
+import '../utils/three_yuan_utils.dart';
+import '../domain/usecases/calculate_ju_usecase.dart';
+import '../data/models/mappers/shi_jia_ju_mapper.dart';
+import '../domain/entities/shi_jia_ju.dart' as entity;
+import '../domain/repositories/qimen_data_repository.dart';
 import '../widgets/each_gong_widget.dart';
 
 class BeautifulPage extends StatefulWidget {
@@ -164,10 +169,10 @@ class _BeautifulPageState extends State<BeautifulPage>
       shiJiaZhuanPanQiMenValueNotifier = ValueNotifier(null);
       guaGongMapperNotifier.value = null;
     }
-    dateTimeValueNotifier.addListener(() {
+    dateTimeValueNotifier.addListener(() async {
       if (dateTimeValueNotifier.value != null) {
         shiJiaZhuanPanQiMenValueNotifier.value =
-            create(dateTimeValueNotifier.value!);
+            await create(dateTimeValueNotifier.value!);
       } else {
         if (shiJiaZhuanPanQiMenValueNotifier.value != null) {
           shiJiaZhuanPanQiMenValueNotifier.value = null;
@@ -3822,23 +3827,24 @@ class _BeautifulPageState extends State<BeautifulPage>
         ganGongType: ganGongTypeNotifier.value);
   }
 
-  ShiJiaQiMen create(DateTime panDatetime) {
+  Future<ShiJiaQiMen> create(DateTime panDatetime) async {
     ShiJiaJu shiJiaJu;
     switch (arrangeTypeNotifier.value) {
       case ArrangeType.CHAI_BU:
-        shiJiaJu = ChaiBuCalculator(dateTime: panDatetime).calculate();
-        break;
       case ArrangeType.ZHI_RUN:
-        shiJiaJu = ZhiRunCalculator(dateTime: panDatetime).calculate();
-        break;
       case ArrangeType.MAO_SHAN:
-        shiJiaJu = MaoShanCalculator(dateTime: panDatetime).calculate();
-        break;
       case ArrangeType.YIN_PAN:
-        shiJiaJu = YinPanCalculator(dateTime: panDatetime).calculate();
+        final baseJu =
+            await serviceLocator.get<CalculateJuUseCase>().execute(
+                  CalculateJuParams(
+                    dateTime: panDatetime,
+                    arrangeType: arrangeTypeNotifier.value,
+                  ),
+                );
+        shiJiaJu = ShiJiaJuMapper.toModel(baseJu as entity.ShiJiaJu);
         break;
       default:
-        JiaZi fuTou = ChaiBuCalculator.getFuTouByDayJiaZi(dayJiaZi!);
+        JiaZi fuTou = FuTouUtils.getFuTouByDayJiaZi(dayJiaZi!);
         if ([
           CenterGongJiGongType.ONLY_KUN_GONG,
           CenterGongJiGongType.KUN_GEN_GONG
@@ -3853,7 +3859,7 @@ class _BeautifulPageState extends State<BeautifulPage>
           yinYangDun: yinYangDun!,
           jieQiAt: jieQi!,
           jieQiEnd: jieQi!,
-          atThreeYuan: ShiJiaQiMenJuCalculator.getThreeYuanByFuHead(fuTou),
+          atThreeYuan: ThreeYuanUtils.getThreeYuanByFuHead(fuTou),
           fourZhuEightChar:
               "${yearJiaZi?.name} ${monthJiaZi?.name} ${dayJiaZi?.name} ${timeJiaZi?.name}",
           panDateTime: panDatetime,
