@@ -60,19 +60,19 @@ void main() {
   const baselineAllowList = [
     // Legacy VM adapter: constructs ShiJiaQiMen for WangShuai/GeJu computation
     'lib/pages/shi_jia_qi_men_view_model.dart:23:model/shi_jia_ju.dart',
-    'lib/pages/shi_jia_qi_men_view_model.dart:24:model/shi_jia_qi_men.dart',
+    'lib/pages/shi_jia_qi_men_view_model.dart:29:model/shi_jia_qi_men.dart',
     'lib/pages/shi_jia_qi_men_view_model.dart:118:ShiJiaQiMen(',
     'lib/pages/shi_jia_qi_men_view_model.dart:261:ShiJiaQiMen(',
     'lib/pages/shi_jia_qi_men_view_model.dart:266:ShiJiaQiMen(',
     // Legacy page: uses ShiJiaQiMen type for rendering + serviceLocator for UseCase
-    'lib/pages/scalable_shi_jia_qi_men_view_page.dart:48:model/shi_jia_qi_men.dart',
+    'lib/pages/scalable_shi_jia_qi_men_view_page.dart:53:model/shi_jia_qi_men.dart',
     'lib/pages/scalable_shi_jia_qi_men_view_page.dart:3600:serviceLocator',
     'lib/pages/scalable_shi_jia_qi_men_view_page.dart:3639:ShiJiaQiMen(',
   ];
 
   /// Scan .dart files under [dir] and check each line against [patterns].
   /// Returns a list of violation descriptions (excluding baseline allow-list).
-  List<String> _scanDirectory(String dir, List<String> patterns) {
+  List<String> scanDirectory(String dir, List<String> patterns) {
     final violations = <String>[];
     final directory = Directory(dir);
     if (!directory.existsSync()) return violations;
@@ -101,7 +101,7 @@ void main() {
 
   group('UI layer import boundaries', () {
     test('lib/pages/** does not import forbidden patterns', () {
-      final violations = _scanDirectory('lib/pages', uiDenyList);
+      final violations = scanDirectory('lib/pages', uiDenyList);
       expect(
         violations,
         isEmpty,
@@ -110,7 +110,7 @@ void main() {
     });
 
     test('lib/widgets/** does not import forbidden patterns', () {
-      final violations = _scanDirectory('lib/widgets', uiDenyList);
+      final violations = scanDirectory('lib/widgets', uiDenyList);
       expect(
         violations,
         isEmpty,
@@ -120,7 +120,7 @@ void main() {
 
     test('lib/presentation/pages/** does not import forbidden patterns', () {
       final violations =
-          _scanDirectory('lib/presentation/pages', uiDenyList);
+          scanDirectory('lib/presentation/pages', uiDenyList);
       expect(
         violations,
         isEmpty,
@@ -132,7 +132,7 @@ void main() {
     test('lib/presentation/viewmodels/** does not import forbidden patterns',
         () {
       final violations =
-          _scanDirectory('lib/presentation/viewmodels', viewModelDenyList);
+          scanDirectory('lib/presentation/viewmodels', viewModelDenyList);
       expect(
         violations,
         isEmpty,

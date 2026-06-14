@@ -1,9 +1,6 @@
-import 'package:metaphysics_core/enums.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:qimendunjia/data/repositories/qimen_calculator_repository_impl.dart';
 import 'package:qimendunjia/data/datasources/calculator/qimen_calculator_data_source.dart';
-import 'package:qimendunjia/domain/entities/ke_jia_ju.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';

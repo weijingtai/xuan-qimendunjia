@@ -15,14 +15,14 @@ class SmartQiMenGrid extends StatelessWidget {
   final BriefPalaceConfig briefConfig;
 
   const SmartQiMenGrid({
-    Key? key,
+    super.key,
     required this.palaces,
     required this.onPalaceTap,
     this.selectedIndex,
     this.maxGridSize = 480.0,
     this.padding = const EdgeInsets.all(16.0),
     this.briefConfig = const BriefPalaceConfig(),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,7 @@ class SmartPalaceWidget extends StatefulWidget {
   final VoidCallback onTap;
 
   const SmartPalaceWidget({
-    Key? key,
+    super.key,
     required this.index,
     required this.size,
     required this.data,
@@ -115,7 +115,7 @@ class SmartPalaceWidget extends StatefulWidget {
     this.isSelected = false,
     this.config = const BriefPalaceConfig(),
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<SmartPalaceWidget> createState() => _SmartPalaceWidgetState();

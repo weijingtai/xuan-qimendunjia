@@ -26,6 +26,7 @@ import '../ui_models/ui_pan_meta_model.dart';
 import '../ui_models/ui_ten_gan_key_ying_ge_ju.dart';
 import '../domain/entities/shi_jia_ju.dart' as entity;
 import '../domain/repositories/qimen_data_repository.dart';
+import '../model/shi_jia_qi_men.dart';
 
 class ShiJiaQiMenViewModel extends ChangeNotifier {
   static final _log = Logger('ShiJiaQiMenViewModel');
@@ -289,7 +290,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
           plateType, bridge.xunHeaderTianGan, bridge.gongModelMapper),
       listThreeQiRuGong(sanQiRuGongMapper)
     ]).then((resList) {
-      print("Logic: ten gan ke ying loadded ${resList.first.length}");
+      debugPrint("Logic: ten gan ke ying loadded ${resList.first.length}");
       for (var gua in HouTianGua.values) {
         if (gua == HouTianGua.Center && plateType == PlateType.ZHUAN_PAN) {
         } else {
@@ -342,7 +343,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     TianGan? tianPanJiGan,
     TianGan? diPanJiGan,
   ) async {
-    print("loadAllTenGanKeYingForCurrentGong");
+    debugPrint("loadAllTenGanKeYingForCurrentGong");
     final repo = _qiMenDataRepository;
     TenGanKeYing tianDiPanKeYing = await repo.getTenGanKeYing(
         tianPan: tianPanGan, diPan: diPanGan);
@@ -397,13 +398,13 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   Future<TenGanKeYing?> loadTenGanKeyYing(
       TianGan tianPanGan, TianGan diPanGan) async {
-    print("loadTenGanKeyYing");
+    debugPrint("loadTenGanKeyYing");
     return await _qiMenDataRepository.getTenGanKeYing(
       tianPan: tianPanGan,
       diPan: diPanGan,
     );
     // if (tianPanGan == TianGan.JIA && diPanGan == TianGan.BING){
-    //   print(loadResult[tianPanGan]?[TianGan.BING]);
+    //   debugPrint(loadResult[tianPanGan]?[TianGan.BING]);
     // }
   }
 

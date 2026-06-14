@@ -288,7 +288,7 @@ class AppTheme {
         enabledBorder: OutlineInputBorder(
           borderRadius: QiMenRadius.md,
           borderSide: BorderSide(
-            color: ColorSystem.textTertiary.withOpacity(0.3),
+            color: ColorSystem.textTertiary.withValues(alpha: 0.3),
           ),
         ),
         focusedBorder: OutlineInputBorder(

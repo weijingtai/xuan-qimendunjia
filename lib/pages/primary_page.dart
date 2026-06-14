@@ -1,12 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 import 'package:qimendunjia/data.dart';
 import 'package:tuple/tuple.dart';
 
-import '../widgets/OctagonPainter.dart';
-import "package:qimendunjia/utils/datetime_jie_qi.dart";
 
 class PrimaryPage extends StatefulWidget {
   const PrimaryPage({super.key});
@@ -21,12 +17,12 @@ class _PrimaryPageState extends State<PrimaryPage> {
   TextStyle background_gongName_TextStyle = TextStyle(
     fontSize: 96,
     height: 1,
-    color: Colors.grey.withOpacity(.2),
+    color: Colors.grey.withValues(alpha: .2),
   );
   TextStyle panTianGanTextStyle =
       TextStyle(fontSize: 24, color: Colors.white, height: 1, shadows: [
     Shadow(
-      color: Colors.grey.withOpacity(.6),
+      color: Colors.grey.withValues(alpha: .6),
       offset: const Offset(0, 2),
       blurRadius: 4,
     )
@@ -392,7 +388,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                       // if (previousIndex != null) {
                       //   updateCell(xianTianIndex[previousIndex!], xianTianIndex[previousIndex!], Colors.transparent);
                       // }
-                      // updateCell(indexName, indexName, Colors.blue.withOpacity(0.2));
+                      // updateCell(indexName, indexName, Colors.blue.withValues(alpha: 0.2));
                       // previousIndex = currentIndex;
                       // currentIndex++;
                       // if (currentIndex >= xianTianIndex.length - 1) {
@@ -413,7 +409,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                             houTianIndex[previousIndex!], Colors.transparent);
                       }
                       updateCell(
-                          indexName, indexName, Colors.blue.withOpacity(0.2));
+                          indexName, indexName, Colors.blue.withValues(alpha: 0.2));
 
                       previousIndex = currentIndex;
                       currentIndex++;
@@ -494,7 +490,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
         decoration: BoxDecoration(
           // border: Border.all(color: Colors.blueAccent, width: 2),
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: Colors.blueAccent.withOpacity(.2),
+          color: Colors.blueAccent.withValues(alpha: .2),
         ),
         child: Text(
           name,
@@ -511,7 +507,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
       height: 256,
       // padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        // color: Colors.lightBlueAccent.withOpacity(.2),
+        // color: Colors.lightBlueAccent.withValues(alpha: .2),
         border: Border.all(color: Colors.black, width: 1),
       ),
       child: Padding(
@@ -648,7 +644,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         //     borderRadius: BorderRadius.all(Radius.circular(24)),
                         //     boxShadow: [
                         //       BoxShadow(
-                        //         color: Colors.black.withOpacity(.3),
+                        //         color: Colors.black.withValues(alpha: .3),
                         //         offset: Offset(0, 1),
                         //         blurRadius: 4,
                         //         spreadRadius: 2,
@@ -663,7 +659,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         //         height: 1,
                         //         shadows: [
                         //           Shadow(
-                        //             color: Colors.white.withOpacity(.4),
+                        //             color: Colors.white.withValues(alpha: .4),
                         //             offset: Offset(0, 2),
                         //             blurRadius: 4,
                         //           )
@@ -688,7 +684,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         color: Colors.blue[800],
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.blue.withOpacity(.2),
+                            color: Colors.blue.withValues(alpha: .2),
                             offset: const Offset(0, 2),
                             blurRadius: 4,
                             spreadRadius: 2,
@@ -723,7 +719,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
           // color: Colors.blue,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.1),
+              color: Colors.black.withValues(alpha: .1),
               offset: const Offset(0, 2),
               blurRadius: 4,
               spreadRadius: 2,
@@ -753,7 +749,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                       style: panTianGanTextStyle
                           .copyWith(color: Colors.black87, shadows: [
                         Shadow(
-                          color: Colors.black87.withOpacity(.2),
+                          color: Colors.black87.withValues(alpha: .2),
                           offset: const Offset(0, 2),
                           blurRadius: 4,
                         )
@@ -766,7 +762,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                           color: Colors.black87,
                           shadows: [
                             Shadow(
-                              color: Colors.black87.withOpacity(.2),
+                              color: Colors.black87.withValues(alpha: .2),
                               offset: const Offset(0, 2),
                               blurRadius: 4,
                             )
@@ -780,13 +776,13 @@ class _PrimaryPageState extends State<PrimaryPage> {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.only(bottom: 2),
                 decoration: BoxDecoration(
-                  color: Colors.blueGrey.withOpacity(.5),
+                  color: Colors.blueGrey.withValues(alpha: .5),
                 ),
                 child: Text(moving.yinPan ?? "",
                     style: panTianGanTextStyle
                         .copyWith(color: Colors.deepPurple, shadows: [
                       Shadow(
-                        color: Colors.deepPurple.withOpacity(.2),
+                        color: Colors.deepPurple.withValues(alpha: .2),
                         offset: const Offset(0, 2),
                         blurRadius: 4,
                       )
@@ -809,7 +805,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         style: panTianGanTextStyle
                             .copyWith(color: Colors.white, shadows: [
                           Shadow(
-                            color: Colors.white.withOpacity(.2),
+                            color: Colors.white.withValues(alpha: .2),
                             offset: const Offset(0, 2),
                             blurRadius: 4,
                           )
@@ -821,7 +817,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                             color: Colors.white,
                             shadows: [
                               Shadow(
-                                color: Colors.white.withOpacity(.2),
+                                color: Colors.white.withValues(alpha: .2),
                                 offset: const Offset(0, 2),
                                 blurRadius: 4,
                               )
@@ -839,7 +835,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
       height: 256,
       // padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        // color: Colors.lightBlueAccent.withOpacity(.2),
+        // color: Colors.lightBlueAccent.withValues(alpha: .2),
         border: Border.all(color: Colors.black, width: 1),
       ),
       child: Padding(
@@ -883,10 +879,10 @@ class _PrimaryPageState extends State<PrimaryPage> {
                                   height: 48,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey.withOpacity(.8),
+                                    color: Colors.blueGrey.withValues(alpha: .8),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.blueGrey.withOpacity(.2),
+                                        color: Colors.blueGrey.withValues(alpha: .2),
                                         offset: const Offset(0, 2),
                                         blurRadius: 4,
                                         spreadRadius: 2,
@@ -952,7 +948,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                           color: Colors.blue,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.blue.withOpacity(.4),
+                              color: Colors.blue.withValues(alpha: .4),
                               offset: const Offset(0, 2),
                               blurRadius: 4,
                               spreadRadius: 2,
@@ -969,7 +965,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                               height: 1.2,
                               shadows: [
                                 Shadow(
-                                  color: Colors.grey.withOpacity(.6),
+                                  color: Colors.grey.withValues(alpha: .6),
                                   offset: const Offset(0, 2),
                                   blurRadius: 4,
                                 )
@@ -1006,7 +1002,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                                 const BorderRadius.all(Radius.circular(24)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(.3),
+                                color: Colors.black.withValues(alpha: .3),
                                 offset: const Offset(0, 1),
                                 blurRadius: 4,
                                 spreadRadius: 2,
@@ -1021,7 +1017,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                                 height: 1,
                                 shadows: [
                                   Shadow(
-                                    color: Colors.white.withOpacity(.4),
+                                    color: Colors.white.withValues(alpha: .4),
                                     offset: const Offset(0, 2),
                                     blurRadius: 4,
                                   )
@@ -1048,7 +1044,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
       height: 72 + 22,
       width: 86,
       alignment: Alignment.centerRight,
-      // color: Colors.redAccent.withOpacity(.2),
+      // color: Colors.redAccent.withValues(alpha: .2),
       child: Column(
         children: [
           eightShenTag(shenName),
@@ -1069,7 +1065,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
       decoration: BoxDecoration(
-        color: Colors.indigoAccent.withOpacity(.2),
+        color: Colors.indigoAccent.withValues(alpha: .2),
         borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
       child: Row(
@@ -1102,7 +1098,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: Colors.teal.withOpacity(.2),
+        color: Colors.teal.withValues(alpha: .2),
         borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
       child: Column(
@@ -1170,7 +1166,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
-        color: Colors.teal.withOpacity(.2),
+        color: Colors.teal.withValues(alpha: .2),
         borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
       child: withoutTianQin

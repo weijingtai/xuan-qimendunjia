@@ -5,7 +5,6 @@ import 'package:qimendunjia/enums/enum_ke_scheme.dart';
 import 'package:qimendunjia/utils/ke_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/model/shen_ke_qi_men_pan.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
-import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/model/pan_arrange_settings.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/model/shi_jia_qi_men.dart';

@@ -1,5 +1,4 @@
 import 'package:metaphysics_core/enums.dart';
-import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/each_gong.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/usecases/select_gong_usecase.dart';

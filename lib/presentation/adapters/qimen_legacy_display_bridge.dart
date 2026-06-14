@@ -5,7 +5,6 @@ import 'package:qimendunjia/data/models/mappers/shi_jia_ju_mapper.dart';
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/domain/entities/shi_jia_ju.dart' as entity;
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
-import 'package:qimendunjia/enums/enum_nine_stars.dart';
 import 'package:qimendunjia/enums/enum_six_bing_ge_ju.dart';
 import 'package:qimendunjia/enums/enum_six_geng_ge_ju.dart';
 import 'package:qimendunjia/enums/enum_six_jia.dart';
@@ -15,7 +14,6 @@ import 'package:qimendunjia/model/each_gong_wang_shuai.dart';
 import 'package:qimendunjia/model/pan_arrange_settings.dart';
 import 'package:qimendunjia/model/shi_jia_ju.dart' as model_ju;
 import 'package:qimendunjia/model/shi_jia_qi_men.dart' as model_qm;
-import 'package:tuple/tuple.dart';
 
 import 'qimen_pan_adapter.dart';
 import 'package:qimendunjia/enums/enum_most_popular_ge_ju.dart';

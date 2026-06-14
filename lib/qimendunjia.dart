@@ -1,4 +1,4 @@
-library qimendunjia;
+library;
 
 // AI Integration
 export 'ai/pan_display_config.dart';

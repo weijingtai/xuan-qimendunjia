@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:qimendunjia/navigator.dart';
-import 'package:qimendunjia/di/service_locator.dart';
 
 // NOTE (storage-refactor/qimendunjia): the in-package demo entrypoint cannot
 // construct the assets backend without the product depending on

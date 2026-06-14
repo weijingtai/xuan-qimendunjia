@@ -21,11 +21,11 @@ class BriefPalaceLayout extends StatelessWidget {
   final double size;
 
   const BriefPalaceLayout({
-    Key? key,
+    super.key,
     required this.data,
     required this.config,
     required this.size,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

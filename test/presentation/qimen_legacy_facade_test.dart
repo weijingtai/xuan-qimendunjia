@@ -1,9 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qimendunjia/domain/entities/qimen_pan.dart';
-import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
-import 'package:qimendunjia/domain/usecases/arrange_pan_usecase.dart';
-import 'package:qimendunjia/domain/usecases/calculate_ju_usecase.dart';
-import 'package:qimendunjia/domain/usecases/select_gong_usecase.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_legacy_facade.dart';
 
 void main() {

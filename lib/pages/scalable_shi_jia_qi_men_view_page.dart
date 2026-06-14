@@ -13,9 +13,7 @@ import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_ji_1.dart';
 import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_xiong_1.dart';
 import 'package:ai_core/ai_core.dart' hide AiPersona;
 import 'package:xuan_four_zhu_card/widgets/four_zhu_eight_char.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_shakemywidget/flutter_shakemywidget.dart';
 import 'package:flutter_sliding_toast/flutter_sliding_toast.dart';
@@ -24,7 +22,6 @@ import 'package:intl/intl.dart';
 import 'package:metaphysics_core/adapters/lunar_adapter.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/nine_dun.dart';
@@ -53,7 +50,7 @@ import '../utils/fu_tou_utils.dart';
 import '../utils/three_yuan_utils.dart';
 import '../widgets/resizable_gong_widget.dart';
 import '../domain/usecases/calculate_ju_usecase.dart';
-import '../enums/enum_qi_men_jia.dart';
+import '../model/shi_jia_qi_men.dart';
 
 class ScalableShiJiaQiMenViewPage extends StatefulWidget {
   DateTime? panDateTime;
@@ -153,7 +150,7 @@ class _ScalableShiJiaQiMenViewPageState
       fontWeight: FontWeight.w500,
       shadows: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.2),
+          color: Colors.grey.withValues(alpha: 0.2),
           blurRadius: 2.0,
           spreadRadius: 1.0,
         )
@@ -177,7 +174,7 @@ class _ScalableShiJiaQiMenViewPageState
       borderRadius: const BorderRadius.all(Radius.circular(16)),
       boxShadow: [
         BoxShadow(
-            color: Colors.grey.withOpacity(.2), blurRadius: 5, spreadRadius: 5),
+            color: Colors.grey.withValues(alpha: .2), blurRadius: 5, spreadRadius: 5),
       ]);
   ValueNotifier<DateTime?> selectedDateTimeNotifier =
       ValueNotifier(DateTime.now());
@@ -233,7 +230,7 @@ class _ScalableShiJiaQiMenViewPageState
     UIEachGongModel? selectedGong =
         Provider.of<ShiJiaQiMenViewModel>(context, listen: false).selectedGong;
     if (selectedGong != null) {
-      print("UI Listener gong selected");
+      debugPrint("UI Listener gong selected");
       selectedGongNotifier.value = selectedGong.gua;
       _movingStartAt = gongPositionOffset(selectedGong.gua);
       // Future.delayed(Duration(milliseconds: 50))
@@ -241,12 +238,12 @@ class _ScalableShiJiaQiMenViewPageState
       inDisplayedGong = selectedGongNotifier.value;
     } else {
       if (selectedGongNotifier.value != null) {
-        print("UI Listener gong unselected");
+        debugPrint("UI Listener gong unselected");
         AnimationController controller = _gongAnimationController;
         // selectedGongNotifier.value = null;
         resetSelectedGongNotifierToNull(AnimationStatus status) {
           if (status == AnimationStatus.dismissed) {
-            print("animation completed");
+            debugPrint("animation completed");
             selectedGongNotifier.value = null;
             controller.removeStatusListener(resetSelectedGongNotifierToNull);
             inDisplayedGong = null;
@@ -535,7 +532,7 @@ class _ScalableShiJiaQiMenViewPageState
                 children: [
                   Consumer<ShiJiaQiMenViewModel>(
                       builder: (context, viewModel, child) {
-                        print("UI: build pan when ${viewModel.shiJiaQiMen}");
+                        debugPrint("UI: build pan when ${viewModel.shiJiaQiMen}");
                         // return viewModel.shiJiaQiMen != null ? buildPanInfo(viewModel.shiJiaQiMen!):child!;
                         return viewModel.shiJiaQiMen != null
                             ? buildPanInfoRow(viewModel.shiJiaQiMen!)
@@ -732,7 +729,7 @@ class _ScalableShiJiaQiMenViewPageState
                                                 BorderRadius.circular(36),
                                             boxShadow: [
                                               BoxShadow(
-                                                  color: Colors.grey.withOpacity(
+                                                  color: Colors.grey.withValues(alpha: 
                                                       _gongShadowAnimationController
                                                               .value *
                                                           .1),
@@ -775,7 +772,7 @@ class _ScalableShiJiaQiMenViewPageState
                                 if (viewmodel.selectedGongExplain == null) {
                                   return Container();
                                 }
-                                print(
+                                debugPrint(
                                     "${MediaQuery.of(context).size.width} $offsetX $offsetY");
                                 return buildGongTenGanKeYing(
                                   viewmodel.selectedGong!,
@@ -1101,7 +1098,7 @@ class _ScalableShiJiaQiMenViewPageState
     return ValueListenableBuilder(
         valueListenable: selectedGongNotifier,
         builder: (ctx, popup, child) {
-          print("build glass ${popup != null}");
+          debugPrint("build glass ${popup != null}");
           return AnimatedCrossFade(
             duration: const Duration(milliseconds: 100),
             firstChild: Container(),
@@ -1117,7 +1114,7 @@ class _ScalableShiJiaQiMenViewPageState
                   height: MediaQuery.of(context).size.height,
                   decoration: BoxDecoration(
                     color: Colors.blue
-                        .withOpacity(0.1), // Adjust opacity as needed
+                        .withValues(alpha: 0.1), // Adjust opacity as needed
                   ),
                 )
                     .animate(
@@ -1148,7 +1145,7 @@ class _ScalableShiJiaQiMenViewPageState
             borderRadius: BorderRadius.circular(36),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: const Offset(1, 1), // changes position of shadow
@@ -1186,7 +1183,7 @@ class _ScalableShiJiaQiMenViewPageState
                       ],
                       containerBoxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
+                          color: Colors.grey.withValues(alpha: 0.2),
                           blurRadius: 2,
                           spreadRadius: 4,
                         )
@@ -1226,7 +1223,7 @@ class _ScalableShiJiaQiMenViewPageState
                       slidersColors: const [Color(0xfff7f5f7)],
                       containerBoxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
+                          color: Colors.grey.withValues(alpha: 0.2),
                           blurRadius: 2,
                           spreadRadius: 4,
                         )
@@ -1270,7 +1267,7 @@ class _ScalableShiJiaQiMenViewPageState
                                 valueListenable: jiGongHintNotifier,
                                 builder: (ctx, cgg, _) {
                                   return SlideSwitcher(
-                                      initialIndex: cgg.index,
+                                      initialIndex: cgg.index ?? 0,
                                       onSelect: (index) {
                                         jiGongHintNotifier.value =
                                             CenterGongJiGongType.values[index];
@@ -1282,7 +1279,7 @@ class _ScalableShiJiaQiMenViewPageState
                                       slidersColors: const [Color(0xfff7f5f7)],
                                       containerBoxShadow: [
                                         BoxShadow(
-                                          color: Colors.grey.withOpacity(0.4),
+                                          color: Colors.grey.withValues(alpha: 0.4),
                                         )
                                       ],
                                       children: CenterGongJiGongType.values
@@ -1339,14 +1336,14 @@ class _ScalableShiJiaQiMenViewPageState
                                                 closedShadow: [
                                                   BoxShadow(
                                                       color: Colors.grey
-                                                          .withOpacity(0.4),
+                                                          .withValues(alpha: 0.4),
                                                       spreadRadius: 1,
                                                       blurRadius: 2)
                                                 ],
                                                 expandedShadow: [
                                                   BoxShadow(
                                                       color: Colors.grey
-                                                          .withOpacity(0.4),
+                                                          .withValues(alpha: 0.4),
                                                       spreadRadius: 1,
                                                       blurRadius: 2)
                                                 ],
@@ -1385,14 +1382,14 @@ class _ScalableShiJiaQiMenViewPageState
                                                   closedShadow: [
                                                     BoxShadow(
                                                         color: Colors.grey
-                                                            .withOpacity(0.4),
+                                                            .withValues(alpha: 0.4),
                                                         spreadRadius: 1,
                                                         blurRadius: 2)
                                                   ],
                                                   expandedShadow: [
                                                     BoxShadow(
                                                         color: Colors.grey
-                                                            .withOpacity(0.4),
+                                                            .withValues(alpha: 0.4),
                                                         spreadRadius: 1,
                                                         blurRadius: 2)
                                                   ],
@@ -1481,7 +1478,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: MonthTokenTypeEnum.values
@@ -1592,7 +1589,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: GodWithGongTypeEnum.values
@@ -1665,7 +1662,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: GongTypeEnum.values
@@ -1738,7 +1735,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: GongTypeEnum.values
@@ -1809,7 +1806,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   slidersColors: const [Color(0xfff7f5f7)],
                                   containerBoxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
+                                      color: Colors.grey.withValues(alpha: 0.4),
                                     )
                                   ],
                                   children: GanGongTypeEnum.values
@@ -1887,13 +1884,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -1930,13 +1927,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -1973,13 +1970,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -2016,13 +2013,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -2059,13 +2056,13 @@ class _ScalableShiJiaQiMenViewPageState
                 decoration: CustomDropdownDecoration(
                     closedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
                     expandedShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
+                          color: Colors.grey.withValues(alpha: 0.4),
                           spreadRadius: 1,
                           blurRadius: 2)
                     ],
@@ -2200,7 +2197,7 @@ class _ScalableShiJiaQiMenViewPageState
     // print("======= ${tenGanKeYing.juName}");
     geJuList.removeWhere((g) => g == null);
     // geJuList.forEach((e){
-    //   print("======= ${e!.geJuNames.first}");
+    //   debugPrint("======= ${e!.geJuNames.first}");
     // });
     return ValueListenableBuilder(
         valueListenable: widthNotifier,
@@ -2251,7 +2248,7 @@ class _ScalableShiJiaQiMenViewPageState
                       ...geJuList
                           .map((geJu) =>
                               buildTenGanKeYingGeJuDetail(geJu!, width))
-                          .toList(),
+                          ,
                     if (tenGanKeYing.yiXiang != null ||
                         tenGanKeYing.xiangList != null ||
                         tenGanKeYing.thingOnLocation != null)
@@ -2266,7 +2263,7 @@ class _ScalableShiJiaQiMenViewPageState
                                 const BorderRadius.all(Radius.circular(16)),
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.grey.withOpacity(.2),
+                                  color: Colors.grey.withValues(alpha: .2),
                                   blurRadius: 5,
                                   spreadRadius: 5),
                             ]),
@@ -2345,7 +2342,7 @@ class _ScalableShiJiaQiMenViewPageState
                                       Radius.circular(16)),
                                   boxShadow: [
                                     BoxShadow(
-                                        color: Colors.grey.withOpacity(.2),
+                                        color: Colors.grey.withValues(alpha: .2),
                                         blurRadius: 5,
                                         spreadRadius: 5),
                                   ]),
@@ -2374,7 +2371,7 @@ class _ScalableShiJiaQiMenViewPageState
                                 const BorderRadius.all(Radius.circular(16)),
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.grey.withOpacity(.2),
+                                  color: Colors.grey.withValues(alpha: .2),
                                   blurRadius: 5,
                                   spreadRadius: 5),
                             ]),
@@ -2409,7 +2406,7 @@ class _ScalableShiJiaQiMenViewPageState
           borderRadius: const BorderRadius.all(Radius.circular(16)),
           boxShadow: [
             BoxShadow(
-                color: Colors.grey.withOpacity(.2),
+                color: Colors.grey.withValues(alpha: .2),
                 blurRadius: 5,
                 spreadRadius: 5),
           ]),
@@ -2669,7 +2666,7 @@ class _ScalableShiJiaQiMenViewPageState
                             Shadow(
                                 color: ConstResourcesMapper
                                     .jiXiongColorMapper[qiYiGong.geJuJiXiong]!
-                                    .withOpacity(.4),
+                                    .withValues(alpha: .4),
                                 blurRadius: 4)
                           ]),
                     )
@@ -3040,7 +3037,7 @@ class _ScalableShiJiaQiMenViewPageState
       height: panSize.height + 2 - 36,
       // margin: EdgeInsets.only(top: 36),
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: Colors.orange.withOpacity(.1)),
+      decoration: BoxDecoration(color: Colors.orange.withValues(alpha: .1)),
     ));
   }
 
@@ -3057,7 +3054,7 @@ class _ScalableShiJiaQiMenViewPageState
             borderRadius: BorderRadius.circular(36),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: const Offset(1, 1), // changes position of shadow
@@ -3251,7 +3248,7 @@ class _ScalableShiJiaQiMenViewPageState
     if (yinYangDun.isYang) {
       if ([HouTianGua.Kan, HouTianGua.Gen, HouTianGua.Zhen, HouTianGua.Xun]
           .contains(gong)) {
-        // backgroundColor = Colors.grey.withOpacity(.2);
+        // backgroundColor = Colors.grey.withValues(alpha: .2);
         backgroundColor = Colors.grey.shade100;
       } else {
         backgroundColor = Colors.white;
@@ -3632,7 +3629,7 @@ class _ScalableShiJiaQiMenViewPageState
   }
 
   void create(DateTime panDatetime) async {
-    print("UI: do create");
+    debugPrint("UI: do create");
     var shiJiaJu = await getShiJiaJu(panDatetime);
     var settings = getPanArrageSettings(arrangeTypeNotifier.value);
     Provider.of<ShiJiaQiMenViewModel>(context, listen: false).createDisplayBridge(
@@ -3662,7 +3659,7 @@ class _ScalableShiJiaQiMenViewPageState
   Widget buildEachGong(UIEachGongModel uiGong) {
     return GestureDetector(
       onDoubleTap: () {
-        print("clicked ${uiGong.gua.name}");
+        debugPrint("clicked ${uiGong.gua.name}");
         if (Provider.of<ShiJiaQiMenViewModel>(context, listen: false)
                 .selectedGong ==
             null) {

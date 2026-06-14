@@ -110,12 +110,12 @@ class QiMenGongContentBackground extends StatelessWidget {
                   child: Container(
                     // padding: const EdgeInsets.all(4.0),
                     alignment: Alignment.center,
-                    // color: Colors.red.withOpacity(.1),
+                    // color: Colors.red.withValues(alpha: .1),
                     child: EightGuaWidget(
                       gua: HouTianGua.getGuaByName(qiMen.name),
                       yaoSize: const Size(56, 8),
                       intervalHeight: 2,
-                      color: Colors.grey.withOpacity(.5),
+                      color: Colors.grey.withValues(alpha: .5),
                       withShadow: false,
                     ),
                   ),
@@ -212,7 +212,7 @@ class QiMenGongContentBackground extends StatelessWidget {
                                   name: qiMen.jieQiTuple.item1,
                                   fontColor: color,
                                   borderColor: color,
-                                  backgroundColor: color.withOpacity(.2),
+                                  backgroundColor: color.withValues(alpha: .2),
                                   fontStyle: eightSeasonTextStyle,
                                 ))),
                         const Expanded(child: SizedBox()),
@@ -226,7 +226,7 @@ class QiMenGongContentBackground extends StatelessWidget {
                     // padding: const EdgeInsets.all(4.0),
                     padding: const EdgeInsets.only(right: 4, bottom: 4),
                     alignment: Alignment.center,
-                    // color: Colors.red.withOpacity(.1),
+                    // color: Colors.red.withValues(alpha: .1),
                     child: AutoSizeText(
                       qiMen.name,
                       maxLines: 1,

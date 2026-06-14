@@ -71,5 +71,5 @@ class NianJiaJu extends Equatable implements Entity, BaseJu {
       ];
 
   String get juDescription =>
-      '阴遁年家·${qiJuGong.name}${qiJuGong.houTianOrder}局（${sanYuan.name}第${yearIndexInYuan}年）';
+      '阴遁年家·${qiJuGong.name}${qiJuGong.houTianOrder}局（${sanYuan.name}第$yearIndexInYuan年）';
 }

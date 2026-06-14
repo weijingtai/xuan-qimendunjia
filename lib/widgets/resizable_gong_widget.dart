@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:metaphysics_core/enums.dart';
-import 'package:metaphysics_core/models/twelve_zhang_sheng.dart';
 import 'package:theme/const_resources_mapper.dart';
 import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_xiong_1.dart';
 import 'package:flutter/material.dart';
@@ -169,7 +168,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                                                   .copyWith(
                                                       fontSize: fontSize * .6,
                                                       color: Colors.grey
-                                                          .withOpacity(.8)))
+                                                          .withValues(alpha: .8)))
                                         ],
                                       ))
                                 ],
@@ -575,7 +574,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                      // color:Colors.yellow.withOpacity(.1),
+                      // color:Colors.yellow.withValues(alpha: .1),
                       child: WangShuaiHint(
                     textTuple2: Tuple2(wangShuai.doorMonthWangShuai.name,
                         wangShuai.doorGongWangShuai.name),
@@ -624,7 +623,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                     height: centerBoxHeight,
                     width: showHint ? sideWidth : 0,
                     alignment: Alignment.centerLeft,
-                    color: Colors.blue.withOpacity(.1),
+                    color: Colors.blue.withValues(alpha: .1),
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 400),
                       transitionBuilder:
@@ -657,7 +656,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
           //   // height: 12,
           //   child: ColorFiltered(
           //       colorFilter: ColorFilter.mode(
-          //           Colors.blueGrey.withOpacity(.1),
+          //           Colors.blueGrey.withValues(alpha: .1),
           //           BlendMode.srcIn),
           //       child: Image.asset("assets/icons/mu.png")),
           // ),)
@@ -801,8 +800,8 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
       alignment: isHor ? Alignment.center : Alignment.centerLeft,
       width: isHor ? boxMaxWidth : boxMaxHeight,
       height: isHor ? boxMaxHeight : boxMaxWidth,
-      // color: Colors.red.withOpacity(.1),
-      // color: Colors.indigo.withOpacity(.1),
+      // color: Colors.red.withValues(alpha: .1),
+      // color: Colors.indigo.withValues(alpha: .1),
       // width:  isHor ?maxWidth + sideWidth*2:maxWidth+sizeWidth*2,
       child: Stack(
         children: [
@@ -940,7 +939,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                   duration: duration,
                   width: isHor ? maxBoxWidth + jiFontSize : jiFontSize,
                   height: isHor ? jiFontSize : jiFontSize * 2,
-                  // color: Colors.yellow.withOpacity(.4),
+                  // color: Colors.yellow.withValues(alpha: .4),
                   child: Stack(alignment: Alignment.topLeft, children: [
                     Container(
                       width: jiFontSize,
@@ -957,9 +956,9 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                         width: isHor ? jiFontSize * 2 : jiFontSize,
                         // height: maxWidth - animationWidth < 24?24:maxWidth-animationWidth+16,
                         height: isHor ? jiFontSize : jiFontSize * 2,
-                        // color: Colors.blue.withOpacity(.1),
+                        // color: Colors.blue.withValues(alpha: .1),
                         child: Container(
-                          // color: Colors.red.withOpacity(.1),
+                          // color: Colors.red.withValues(alpha: .1),
                           height: jiFontSize,
                           width: jiFontSize,
                           alignment: Alignment.center,
@@ -995,7 +994,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                             height: fontSize,
                             // width: baseWidth,
                             // height: baseWidth,
-                            // color: Colors.purple.withOpacity(.1),
+                            // color: Colors.purple.withValues(alpha: .1),
                             alignment: Alignment.center,
                             child: Text(starName.split("").first,
                                 style: starFontStyle),
@@ -1013,7 +1012,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                           fontSize >= minFontSize ? maxBoxWidth : fontSize * 2,
                       height: maxBoxHeight,
                       child: Container(
-                        // color: Colors.red.withOpacity(.1),
+                        // color: Colors.red.withValues(alpha: .1),
                         width: fontSize,
                         height: fontSize,
                         // height: baseWidth,
@@ -1027,7 +1026,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                     ? SizedBox(
                         width: hintSize,
                         height: maxBoxHeight,
-                        // color: Colors.grey.withOpacity(.5),
+                        // color: Colors.grey.withValues(alpha: .5),
                       )
                     : const SizedBox()
               ])),
@@ -1088,7 +1087,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
             // ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 1,
                 blurRadius: 2,
               )
@@ -1112,7 +1111,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                         height: 1,
                         shadows: [
                           Shadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withValues(alpha: 0.2),
                             blurRadius: 2,
                           )
                         ]),
@@ -1137,7 +1136,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                             height: 1,
                             shadows: [
                               Shadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 blurRadius: 2,
                               )
                             ]),
@@ -1158,7 +1157,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                             height: 1,
                             shadows: [
                               Shadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 blurRadius: 2,
                               )
                             ]),
@@ -1285,11 +1284,11 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                         shadows: [
                           Shadow(
                               color: ConstResourcesMapper.zodiacGanColors[gan]!
-                                  .withOpacity(.4),
+                                  .withValues(alpha: .4),
                               offset: const Offset(1, 1),
                               blurRadius: 2),
                           Shadow(
-                              color: Colors.white.withOpacity(.2),
+                              color: Colors.white.withValues(alpha: .2),
                               offset: const Offset(1, -1),
                               blurRadius: 2),
                         ])),
@@ -1300,7 +1299,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
               // height:showHint?hintSize:0,
               height: hintFontSize,
               alignment: Alignment.topCenter,
-              // color: Colors.red.withOpacity(.1),
+              // color: Colors.red.withValues(alpha: .1),
               child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
                   transitionBuilder: (child, animation) {
@@ -1431,7 +1430,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                     // height:hintFontSize,
                     height: hintFontSize,
                     alignment: Alignment.topCenter,
-                    // color: Colors.red.withOpacity(.1),
+                    // color: Colors.red.withValues(alpha: .1),
                     child: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 200),
                         transitionBuilder: (child, animation) {
@@ -1673,7 +1672,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
     return Container(
       width: size.width,
       height: size.height,
-      // color: Colors.red.withOpacity(.1),
+      // color: Colors.red.withValues(alpha: .1),
       alignment: Alignment.bottomCenter,
       child: diZhi == null
           ? Container()
@@ -1687,7 +1686,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                           .copyWith(
                               color: ConstResourcesMapper
                                   .zodiacZhiColors[diZhi]!
-                                  .withOpacity(.8)),
+                                  .withValues(alpha: .8)),
                       minFontSize: 10,
                       maxFontSize: 32,
                     ),
@@ -1709,7 +1708,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
       return Container(
         width: size.width,
         height: size.height,
-        // color: Colors.red.withOpacity(.1),
+        // color: Colors.red.withValues(alpha: .1),
         alignment: Alignment.topCenter,
         child: diZhi == null
             ? Container()
@@ -1725,7 +1724,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
     return Container(
       width: size.width,
       height: size.height,
-      // color: Colors.red.withOpacity(.1),
+      // color: Colors.red.withValues(alpha: .1),
       alignment: Alignment.topCenter,
       child: diZhi == null
           ? Container()
@@ -1739,7 +1738,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                           .copyWith(
                               color: ConstResourcesMapper
                                   .zodiacZhiColors[diZhi]!
-                                  .withOpacity(.8)),
+                                  .withValues(alpha: .8)),
                       minFontSize: 10,
                       maxFontSize: 32,
                     ),
@@ -1788,7 +1787,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                           .copyWith(
                               color: ConstResourcesMapper
                                   .zodiacZhiColors[diZhi]!
-                                  .withOpacity(.8)),
+                                  .withValues(alpha: .8)),
                       minFontSize: 10,
                       maxFontSize: 32,
                     ),
@@ -1810,7 +1809,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
       return Container(
         width: size.width,
         height: size.height,
-        // color: Colors.red.withOpacity(.1),
+        // color: Colors.red.withValues(alpha: .1),
         alignment: Alignment.centerLeft,
         child: diZhi == null
             ? Container()
@@ -1838,7 +1837,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                           .copyWith(
                               color: ConstResourcesMapper
                                   .zodiacZhiColors[diZhi]!
-                                  .withOpacity(.8)),
+                                  .withValues(alpha: .8)),
                       minFontSize: 10,
                       maxFontSize: 32,
                     ),
@@ -1859,7 +1858,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(.5),
+              color: color.withValues(alpha: .5),
               offset: const Offset(1, 1), //阴影xy轴偏移量
               blurRadius: 1, //阴影模糊程度
               spreadRadius: 1, //阴影扩散程度
@@ -1920,7 +1919,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                 boxShadow: [
                   BoxShadow(
                     // color: Colors.black26,
-                    color: color.withOpacity(.5),
+                    color: color.withValues(alpha: .5),
                     offset: const Offset(1, 1), //阴影xy轴偏移量
                     blurRadius: 1, //阴影模糊程度
                     spreadRadius: 1, //阴影扩散程度
@@ -1948,7 +1947,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
             // width: outerWidth - 18 - 9 - 8,
             width: width + innerDotSize - offset * 3,
             height: outerHeight,
-            // color: Colors.white.withOpacity(.6),
+            // color: Colors.white.withValues(alpha: .6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1998,7 +1997,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                           fontWeight: FontWeight.w600,
                           shadows: [
                             Shadow(
-                                color: Colors.white.withOpacity(.4),
+                                color: Colors.white.withValues(alpha: .4),
                                 blurRadius: 4)
                           ]),
                       maxLines: 1,
@@ -2140,7 +2139,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
         delegates: LottieDelegates(values: [
           ValueDelegate.colorFilter(
             ["**"],
-            value: ColorFilter.mode(color.withOpacity(1), BlendMode.src),
+            value: ColorFilter.mode(color.withValues(alpha: 1), BlendMode.src),
           )
         ]),
         repeat: true);

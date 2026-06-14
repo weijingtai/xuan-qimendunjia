@@ -15,15 +15,15 @@ class TenGanKeYing extends BaseTenGanKeYing {
   // TODO 取时 others 以及 位置上有什么事物
 
   TenGanKeYing({
-    required String juName,
-    required String shortExplain,
+    required super.juName,
+    required super.shortExplain,
     required this.longExplain,
     required this.zhu,
     required this.yiXiang,
     required this.diseaseAtGongMapper,
     required this.xiangList,
     required this.others,
-  }) : super(juName: juName, shortExplain: shortExplain);
+  });
 
   factory TenGanKeYing.fromJson(Map<String, dynamic> json) =>
       _$TenGanKeYingFromJson(json);
