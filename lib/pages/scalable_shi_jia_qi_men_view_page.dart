@@ -45,7 +45,7 @@ import '../domain/entities/shi_jia_ju.dart' as entity;
 import '../model/door_star_ke_ying.dart';
 import '../model/pan_arrange_settings.dart';
 import '../model/qi_yi_ru_gong.dart';
-import '../model/shi_jia_qi_men.dart';
+import '../presentation/adapters/qimen_legacy_display_bridge.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
 import '../ui_models/ui_each_gong_model.dart';
@@ -104,7 +104,7 @@ class _ScalableShiJiaQiMenViewPageState
   late final ValueNotifier<bool> showHintNotifier = ValueNotifier(true);
 
   late final ValueNotifier<DateTime?> dateTimeValueNotifier;
-  // late final ValueNotifier<ShiJiaQiMen?> shiJiaZhuanPanQiMenValueNotifier;
+  // late final ValueNotifier<QiMenLegacyDisplayBridge?> shiJiaZhuanPanQiMenValueNotifier;
   // final ValueNotifier<Map<HouTianGua,Widget>?> guaGongMapperNotifier = ValueNotifier(null);
   // final ValueNotifier<HouTianGua?> showGongGuaNotifier= ValueNotifier(null);
   final ValueNotifier<Tuple3<Offset, MapEntry<HouTianGua, EachGong>, Widget>?>
@@ -947,12 +947,12 @@ class _ScalableShiJiaQiMenViewPageState
     );
   }
 
-  Widget buildPanInfoRow(ShiJiaQiMen pan) {
+  Widget buildPanInfoRow(QiMenLegacyDisplayBridge bridge) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        buildPanGeJu(pan),
+        buildPanGeJu(bridge),
         SizedBox(
           width: 220,
           height: 120,
@@ -966,21 +966,21 @@ class _ScalableShiJiaQiMenViewPageState
         SizedBox(
           width: 240,
           height: 160,
-          child: buildPanInfo(pan),
+          child: buildPanInfo(bridge),
         ),
         SizedBox(
           width: 260,
           height: 150,
-          child: buildCenterFourZhu(pan),
+          child: buildCenterFourZhu(bridge),
         ),
       ],
     );
   }
 
-  Widget buildPanGeJu(ShiJiaQiMen pan) {
+  Widget buildPanGeJu(QiMenLegacyDisplayBridge bridge) {
     List<Widget> list = [];
-    if (pan.panGeJuList != null && pan.panGeJuList!.isNotEmpty) {
-      for (var geJu in pan.panGeJuList!) {
+    if (bridge.panGeJuList != null && bridge.panGeJuList!.isNotEmpty) {
+      for (var geJu in bridge.panGeJuList!) {
         if (geJu.jiXiong.isJi()) {
           list.add(GeJuPanelTemplateJi1(
               name: geJu.name,
@@ -998,13 +998,13 @@ class _ScalableShiJiaQiMenViewPageState
         }
       }
     }
-    list.addAll(pan.bingGeList.map((geJu) => GeJuPanelTemplateXiong1(
+    list.addAll(bridge.bingGeList.map((geJu) => GeJuPanelTemplateXiong1(
           name: geJu.name,
           backgroundColor: const Color.fromRGBO(130, 78, 64, 1),
           foregroundColor: const Color.fromRGBO(33, 33, 33, 1),
           size: const Size(180, 42),
         )));
-    list.addAll(pan.gengGeList.map((geJu) => GeJuPanelTemplateXiong1(
+    list.addAll(bridge.gengGeList.map((geJu) => GeJuPanelTemplateXiong1(
           name: geJu.name,
           backgroundColor: const Color.fromRGBO(250, 237, 223, 1),
           foregroundColor: const Color.fromRGBO(240, 167, 46, 1),
@@ -3348,17 +3348,17 @@ class _ScalableShiJiaQiMenViewPageState
                 ])));
   }
 
-  Widget buildCenterFourZhu(ShiJiaQiMen pan) {
+  Widget buildCenterFourZhu(QiMenLegacyDisplayBridge bridge) {
     return Card(
         child: Align(
       alignment: Alignment.center,
       child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: FourZhuEightChar(
-            year: pan.yearJiaZi,
-            month: pan.monthJiaZi,
-            day: pan.dayJiaZi,
-            chen: pan.timeJiaZi,
+            year: bridge.yearJiaZi,
+            month: bridge.monthJiaZi,
+            day: bridge.dayJiaZi,
+            chen: bridge.timeJiaZi,
             isColorful: true,
             zodiacGanColors: ConstResourcesMapper.zodiacGanColors,
             zodiacZhiColors: ConstResourcesMapper.zodiacZhiColors,
@@ -3366,7 +3366,7 @@ class _ScalableShiJiaQiMenViewPageState
     ));
   }
 
-  Widget buildCenter(ShiJiaQiMen pan) {
+  Widget buildCenter(QiMenLegacyDisplayBridge bridge) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -3374,7 +3374,7 @@ class _ScalableShiJiaQiMenViewPageState
         // Text(
         //   "转盘·拆补 ${pan.yinYangDun.isYin?"阴":"阳"}${ConstResourcesMapper.chineseNumberMapper[pan.juNumber]}局",
         //   style: panInfoTextStyle),
-        buildPanInfo(pan),
+        buildPanInfo(bridge),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -3387,7 +3387,7 @@ class _ScalableShiJiaQiMenViewPageState
     );
   }
 
-  Widget buildPanInfo(ShiJiaQiMen pan) {
+  Widget buildPanInfo(QiMenLegacyDisplayBridge bridge) {
     return Card(
       child: Container(
         alignment: Alignment.center,
@@ -3404,7 +3404,7 @@ class _ScalableShiJiaQiMenViewPageState
                       children: [
                         TextSpan(
                             text:
-                                "${plateType.name}·${pan.arrangeType.name} ${pan.yinYangDun.name}${ConstResourcesMapper.chineseNumberMapper[pan.juNumber]}局"),
+                                "${plateType.name}·${bridge.arrangeType.name} ${bridge.yinYangDun.name}${ConstResourcesMapper.chineseNumberMapper[bridge.juNumber]}局"),
                       ],
                       style: panInfoTextStyle,
                     ));
@@ -3422,28 +3422,28 @@ class _ScalableShiJiaQiMenViewPageState
                               style: const TextStyle(fontSize: 18),
                               children: [
                             TextSpan(
-                                text: pan.xunShou.name.split("").first,
+                                text: bridge.xunShou.name.split("").first,
                                 style: tianGanTextStyle.copyWith(
                                     fontSize: 18,
                                     color: ConstResourcesMapper.zodiacGanColors[
-                                        TianGan.getFromValue(pan.xunShou.name
+                                        TianGan.getFromValue(bridge.xunShou.name
                                             .split("")
                                             .first)]!)),
                             TextSpan(
-                                text: pan.xunShou.name.split("").last,
+                                text: bridge.xunShou.name.split("").last,
                                 style: twelveDiZhiTextStyle.copyWith(
                                     fontSize: 19,
                                     color: ConstResourcesMapper.zodiacZhiColors[
-                                        DiZhi.getFromValue(pan.xunShou.name
+                                        DiZhi.getFromValue(bridge.xunShou.name
                                             .split("")
                                             .last)]!)),
                             TextSpan(
-                                text: " ${pan.xunHeaderTianGan.name}",
+                                text: " ${bridge.xunHeaderTianGan.name}",
                                 style: tianGanTextStyle.copyWith(
                                     fontSize: 18,
                                     color: ConstResourcesMapper.zodiacGanColors[
                                         TianGan.getFromValue(
-                                            pan.xunHeaderTianGan.name)]!))
+                                            bridge.xunHeaderTianGan.name)]!))
                           ]))),
                 ],
               ),
@@ -3456,18 +3456,18 @@ class _ScalableShiJiaQiMenViewPageState
                       flex: 6,
                       child: RichText(
                           text: TextSpan(
-                              text: pan.shiJiaJu.panJuJieQi?.name ??
-                                  pan.jieQi.name,
+                              text: bridge.panJuJieQi?.name ??
+                                  bridge.jieQi.name,
                               style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.blueGrey.shade800),
                               children: [
                             TextSpan(
-                                text: "  ${pan.shiJiaJu.atThreeYuan.name}"),
-                            pan.shiJiaJu.juDayNumber == null
+                                text: "  ${bridge.atThreeYuan.name}"),
+                            bridge.juDayNumber == null
                                 ? const TextSpan(text: "")
                                 : TextSpan(
-                                    text: " 第 ${pan.shiJiaJu.juDayNumber!} 天")
+                                    text: " 第 ${bridge.juDayNumber!} 天")
                           ]))),
                 ],
               ),
@@ -3498,7 +3498,7 @@ class _ScalableShiJiaQiMenViewPageState
                                       child: Image.asset(
                                         "assets/icons/wide-black-ink-radian-line2.png",
                                       ))),
-                              Text("${pan.zhiFuStar.name}星",
+                              Text("${bridge.displayState.zhiFuStar.name}星",
                                   style:
                                       nineStarTextStyle.copyWith(fontSize: 18)),
                             ],
@@ -3515,7 +3515,7 @@ class _ScalableShiJiaQiMenViewPageState
                                   style: TextStyle(color: Colors.grey)),
                               TextSpan(
                                 text:
-                                    "${pan.zhiFuStarAtGong.name}${ConstResourcesMapper.chineseNumberMapper[pan.zhiFuStarAtGong.houTianOrder]}宫",
+                                    "${bridge.displayState.zhiFuStarAtGong.name}${ConstResourcesMapper.chineseNumberMapper[bridge.displayState.zhiFuStarAtGong.houTianOrder]}宫",
                               )
                             ]))
                       ]),
@@ -3547,7 +3547,7 @@ class _ScalableShiJiaQiMenViewPageState
                                     child: Image.asset(
                                       "assets/icons/wide-black-ink-radian-line2.png",
                                     ))),
-                            Text(pan.zhiShiDoor.name,
+                            Text(bridge.displayState.zhiShiDoor.name,
                                 style:
                                     eightDoorTextStyle.copyWith(fontSize: 18)),
                           ],
@@ -3563,8 +3563,8 @@ class _ScalableShiJiaQiMenViewPageState
                                 text: " 落 ",
                                 style: TextStyle(color: Colors.grey)),
                             TextSpan(
-                              text:
-                                  "${pan.zhiFuStarAtGong.name}${ConstResourcesMapper.chineseNumberMapper[pan.zhiFuStarAtGong.houTianOrder]}宫",
+                                text:
+                                    "${bridge.displayState.zhiFuStarAtGong.name}${ConstResourcesMapper.chineseNumberMapper[bridge.displayState.zhiFuStarAtGong.houTianOrder]}宫",
                             )
                           ]))
                     ]),
@@ -3635,7 +3635,7 @@ class _ScalableShiJiaQiMenViewPageState
     print("UI: do create");
     var shiJiaJu = await getShiJiaJu(panDatetime);
     var settings = getPanArrageSettings(arrangeTypeNotifier.value);
-    Provider.of<ShiJiaQiMenViewModel>(context, listen: false).createShiJiaQiMen(
+    Provider.of<ShiJiaQiMenViewModel>(context, listen: false).createDisplayBridge(
         plateTypeNotifier.value, panDatetime, shiJiaJu, settings);
   }
 

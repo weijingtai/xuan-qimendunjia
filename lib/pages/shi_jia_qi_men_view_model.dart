@@ -5,8 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
-import 'package:qimendunjia/data/models/mappers/qimen_pan_mapper.dart';
-import 'package:qimendunjia/data/models/mappers/shi_jia_ju_mapper.dart';
+
 import 'package:qimendunjia/domain/entities/qimen_pan.dart';
 import 'package:qimendunjia/enums/enum_most_popular_ge_ju.dart';
 import 'package:qimendunjia/ui_models/ui_each_gong_model.dart';
@@ -20,8 +19,7 @@ import '../model/each_gong_ge_ju.dart';
 import '../model/eight_door_ke_ying.dart';
 import '../model/pan_arrange_settings.dart';
 import '../model/qi_yi_ru_gong.dart';
-import '../model/shi_jia_ju.dart';
-import '../model/shi_jia_qi_men.dart';
+import '../presentation/adapters/qimen_legacy_display_bridge.dart';
 import '../model/ten_gan_ke_ying.dart';
 import '../model/ten_gan_ke_ying_ge_ju.dart';
 import '../ui_models/ui_pan_meta_model.dart';
@@ -44,10 +42,10 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   UIPanMetaModel? _uiPanMetaModel;
   UIPanMetaModel? get uiPanMetaModel => _uiPanMetaModel;
 
-  ShiJiaQiMen? _shiJiaQiMen;
-  ShiJiaQiMen? get shiJiaQiMen => _shiJiaQiMen;
-  set shiJiaQiMen(ShiJiaQiMen? value) {
-    _shiJiaQiMen = value;
+  QiMenLegacyDisplayBridge? _bridge;
+  QiMenLegacyDisplayBridge? get shiJiaQiMen => _bridge;
+  set shiJiaQiMen(QiMenLegacyDisplayBridge? value) {
+    _bridge = value;
     notifyListeners();
   }
 
@@ -65,10 +63,10 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   ///
   /// 使用 [QiMenPanMapper] 将老 model 转为 domain entity 后序列化。
   AiContext? buildAiContext() {
-    final model = _shiJiaQiMen;
-    if (model == null) return null;
+    final bridge = _bridge;
+    if (bridge == null) return null;
 
-    final pan = QiMenPanMapper.fromModel(model);
+    final pan = bridge.pan!;
     final entity = AiEntity(
       id: pan.id,
       type: 'qimen_pan',
@@ -90,8 +88,8 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
   /// 加载外部盘（从 AI Tool 排盘结果拉起）。
   ///
-  /// 将 [QiMenPan] entity 转换回 model 层的 [ShiJiaQiMen]，
-  /// 调用 [createShiJiaQiMen] 以完整填充 UI 数据。
+  /// 将 [QiMenPan] entity 转换回 [QiMenLegacyDisplayBridge]，
+  /// 调用 [createDisplayBridge] 以完整填充 UI 数据。
   void loadExternalPan(QiMenPan pan) {
     _log.info('[loadExternalPan] loading external pan: '
         'id=${pan.id}, brief=${pan.brief}, '
@@ -113,9 +111,9 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       ganGongType: GanGongTypeEnum.WANG_MU,
     );
 
-    // Re-derive ShiJiaQiMen from model data — this populates
-    // _shiJiaQiMen, _uiPanMetaModel, _gongUIMapper, etc.
-    createShiJiaQiMen(
+    // Re-derive QiMenLegacyDisplayBridge from model data — this populates
+    // _bridge, _uiPanMetaModel, _gongUIMapper, etc.
+    createDisplayBridge(
       pan.plateType,
       pan.panDateTime,
       entityJu,
@@ -138,7 +136,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   UIEachGongModel? get duiGong => _gongUIMapper[HouTianGua.Dui];
   UIEachGongModel? get qianGong => _gongUIMapper[HouTianGua.Qian];
   UIEachGongModel? get zhongGong {
-    if (_shiJiaQiMen != null && _shiJiaQiMen!.plateType == PlateType.FEI_PAN) {
+    if (_bridge != null && _bridge!.plateType == PlateType.FEI_PAN) {
       return _gongUIMapper[HouTianGua.Center];
     } else {
       return null;
@@ -150,15 +148,15 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     if (shiJiaQiMen != null) {
       return UIEachGongModel(
           gua: gua,
-          gong: _shiJiaQiMen!.gongMapper[gua]!,
-          gongWangShuai: _shiJiaQiMen!.gongWangShuaiMapper[gua]!,
+          gong: _bridge!.gongModelMapper[gua]!,
+          gongWangShuai: _bridge!.gongWangShuaiMapper[gua]!,
           tenGanKeYingGeJu: tenGanKeYingGeJu,
           panMete: _uiPanMetaModel!,
           eachGongGeJu: EnumMostPopularGeJu.checkGeJuAtEachGong(
-              _shiJiaQiMen!.timeJiaZi,
-              _shiJiaQiMen!.sixJiaXunHeader,
-              _shiJiaQiMen!.zhiShiDoor,
-              _shiJiaQiMen!.gongMapper[gua]!),
+              _bridge!.timeJiaZi,
+              _bridge!.sixJiaXunHeader,
+              _bridge!.displayState.zhiShiDoor,
+              _bridge!.gongModelMapper[gua]!),
           qiYiRuGongList: qiYiRuGongList);
     }
     return null;
@@ -198,9 +196,9 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
         ]);
       }
       EachGongGeJu eachGongGeJu = EnumMostPopularGeJu.checkGeJuAtEachGong(
-          _shiJiaQiMen!.timeJiaZi,
-          _shiJiaQiMen!.sixJiaXunHeader,
-          _shiJiaQiMen!.zhiShiDoor,
+          _bridge!.timeJiaZi,
+          _bridge!.sixJiaXunHeader,
+          _bridge!.displayState.zhiShiDoor,
           gong);
       Future.wait(fixedList).then((values) {
         _selectedGongExplain = UIGongExplains(
@@ -258,29 +256,26 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createShiJiaQiMen(PlateType plateType, DateTime dateTime,
+  void createDisplayBridge(PlateType plateType, DateTime dateTime,
       entity.ShiJiaJu shiJiaJu, PanArrangeSettings settings) {
-    // _dateTime = dateTime;
-    final modelJu = ShiJiaJuMapper.toModel(shiJiaJu);
-    List<String> eightCharList = modelJu.fourZhuEightChar.split(" ").toList();
-    var shiJiaQiMen = ShiJiaQiMen(
+    final bridge = QiMenLegacyDisplayBridge.fromRawComponents(
       plateType: plateType,
-      shiJiaJu: modelJu,
+      shiJiaJu: shiJiaJu,
       settings: settings,
     );
     _uiPanMetaModel = UIPanMetaModel(
       yinYangDun: shiJiaJu.yinYangDun,
-      zhiShiDoor: shiJiaQiMen.zhiShiDoor,
-      zhiFuStar: shiJiaQiMen.zhiFuStar,
-      xunHeaderTianGan: shiJiaQiMen.xunHeaderTianGan,
-      timeXunKong: shiJiaQiMen.timeXunKong,
-      horseLocation: shiJiaQiMen.horseLocation,
-      monthToken: shiJiaQiMen.monthToken,
+      zhiShiDoor: bridge.displayState.zhiShiDoor,
+      zhiFuStar: bridge.displayState.zhiFuStar,
+      xunHeaderTianGan: bridge.xunHeaderTianGan,
+      timeXunKong: bridge.displayState.timeXunKong,
+      horseLocation: bridge.displayState.horseLocation,
+      monthToken: bridge.monthToken,
     );
-    _shiJiaQiMen = shiJiaQiMen;
+    _bridge = bridge;
     // 三奇入宫的三奇 与 宫Mapper
     Map<TianGan, HouTianGua> sanQiRuGongMapper = {};
-    for (var g in shiJiaQiMen.gongMapper.values) {
+    for (var g in bridge.gongModelMapper.values) {
       if (g.tianPan.isThreeQi) {
         sanQiRuGongMapper[g.tianPan] = g.gongGua;
       }
@@ -291,7 +286,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
 
     Future.wait([
       loadTenGanKeYingGeJu(
-          plateType, shiJiaQiMen.xunHeaderTianGan, shiJiaQiMen.gongMapper),
+          plateType, bridge.xunHeaderTianGan, bridge.gongModelMapper),
       listThreeQiRuGong(sanQiRuGongMapper)
     ]).then((resList) {
       print("Logic: ten gan ke ying loadded ${resList.first.length}");
@@ -313,7 +308,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   }
 
   void reset() {
-    _shiJiaQiMen = null;
+    _bridge = null;
     _uiPanMetaModel = null;
     // tenGanKeYingGeJuMapper = {};
     _gongUIMapper = {};
