@@ -18,7 +18,7 @@ packages:
     source: hosted
     version: "1.3.59"
   ai_core:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "../../xuan-ai"
       relative: true
@@ -52,10 +52,10 @@ packages:
     dependency: transitive
     description:
       name: anthropic_sdk_dart
-      sha256: f74644f4638ae30d0dc25fcffd62fd917355834419a8d01a7e5a6b691e6a4874
+      sha256: "50a0cca4d9706114034e31e0a56d1d6571d5277c91292b59b811c1e28d3ddbf5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.3"
+    version: "0.2.2"
   archive:
     dependency: transitive
     description:
@@ -296,7 +296,7 @@ packages:
     source: hosted
     version: "2.1.1"
   divination_case:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "../../xuan-divination-case"
       relative: true
@@ -548,7 +548,7 @@ packages:
     source: hosted
     version: "0.3.4+1"
   flutter_ai_toolkit:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_ai_toolkit
       sha256: "7a260db899342647498c8ab0bd2ab052cec4747aec7532a018d248f3c8d71d60"
@@ -657,10 +657,10 @@ packages:
     dependency: transitive
     description:
       name: freezed_annotation
-      sha256: "7294967ff0a6d98638e7acb774aac3af2550777accd8149c90af5b014e6d44d8"
+      sha256: c2e2d632dd9b8a2b7751117abcfc2b4888ecfe181bd9fca7170d9ef02e595fe2
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "2.4.4"
   glob:
     dependency: transitive
     description:
@@ -926,7 +926,7 @@ packages:
     source: hosted
     version: "1.17.0"
   metaphysics_core:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "../../xuan-metaphysics-core"
       relative: true
@@ -944,10 +944,10 @@ packages:
     dependency: transitive
     description:
       name: mistralai_dart
-      sha256: c2f52c9e3d4e301958fe407e8cb97e1c845405007232aaa1d29329799d8d1770
+      sha256: fa3e36763a58ec803346a2aeaf5cb0906291026ed75ff27b6b8f33db1e7d0bf8
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.6"
+    version: "0.0.5"
   native_toolchain_c:
     dependency: transitive
     description:
@@ -976,18 +976,18 @@ packages:
     dependency: transitive
     description:
       name: ollama_dart
-      sha256: "55a45e381f3cf24791df510e287f353e776d376f556d34ba49b09bc918eee319"
+      sha256: df4acde50fc4a055134f91919505d801170c2e1e5df798056a18e2811f20307b
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.5"
+    version: "0.2.4"
   openai_dart:
     dependency: transitive
     description:
       name: openai_dart
-      sha256: "0b0b4c3d452d0369465fb5e23bb8ef33edb845496a2864660191df6f8096c323"
+      sha256: "947b4b1cd1f0eb8fe8d706d22becd0fcf1647f96a0a4062c70b30bb5e10dce2b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.5"
+    version: "0.5.4+1"
   package_config:
     dependency: transitive
     description:
@@ -1060,12 +1060,19 @@ packages:
     source: path
     version: "0.0.1"
   persistence_domain:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "../../xuan-domain"
       relative: true
     source: path
     version: "0.1.0"
+  persistence_drift:
+    dependency: transitive
+    description:
+      path: "../../xuan-storage/drift"
+      relative: true
+    source: path
+    version: "0.0.1"
   platform:
     dependency: transitive
     description:
@@ -1201,17 +1208,45 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.7"
-  repository_interface_four_zhu_card:
+  repository_interface_account:
     dependency: transitive
+    description:
+      path: "../../repository-interface-account"
+      relative: true
+    source: path
+    version: "0.0.0"
+  repository_interface_ai:
+    dependency: transitive
+    description:
+      path: "../../repository-interface-ai"
+      relative: true
+    source: path
+    version: "0.0.0"
+  repository_interface_four_zhu_card:
+    dependency: "direct overridden"
     description:
       path: "../../repository-interface-four-zhu-card"
       relative: true
     source: path
     version: "0.0.0"
-  repository_interface_qimendunjia:
+  repository_interface_meihuayishu:
     dependency: transitive
     description:
+      path: "../../repository-interface-meihuayishu"
+      relative: true
+    source: path
+    version: "0.0.0"
+  repository_interface_qimendunjia:
+    dependency: "direct overridden"
+    description:
       path: "../../repository-interface-qimendunjia"
+      relative: true
+    source: path
+    version: "0.0.0"
+  repository_interface_taiyishenshu:
+    dependency: transitive
+    description:
+      path: "../../repository-interface-taiyishenshu"
       relative: true
     source: path
     version: "0.0.0"
@@ -1396,6 +1431,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1+2.10.3"
+  taiyishenshu:
+    dependency: transitive
+    description:
+      path: "../../xuan-taiyishenshu"
+      relative: true
+    source: path
+    version: "1.1.0+2"
   term_glyph:
     dependency: transitive
     description:
@@ -1413,7 +1455,7 @@ packages:
     source: hosted
     version: "0.7.7"
   theme:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "../../theme"
       relative: true
@@ -1570,8 +1612,15 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
-  xuan_time_location:
+  xuan_gua_core:
     dependency: transitive
+    description:
+      path: "../../xuan-gua-core"
+      relative: true
+    source: path
+    version: "0.1.0"
+  xuan_time_location:
+    dependency: "direct overridden"
     description:
       path: "../../xuan-time-location"
       relative: true

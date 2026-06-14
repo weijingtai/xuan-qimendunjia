@@ -18,11 +18,6 @@ dependencies:
       url: http://xuan:***@192.168.0.165:3000/xuan/xuan-qimendunjia.git
       ref: main
   provider: ^6.1.1
-  ai_core:
-    git:
-      url: http://xuan:***@192.168.0.165:3000/xuan/xuan-ai.git
-      ref: main
-  flutter_ai_toolkit: ^0.9.1
   logging: ^1.2.0
   timezone: ^0.9.4
 
@@ -33,16 +28,26 @@ dependency_overrides:
   google_fonts: ^6.2.1
   xuan_four_zhu_card:
     path: ../../xuan-four-zhu-card
-  ai_core:
-    path: ../../xuan-ai
-  persistence_core:
-    path: ../../xuan-storage/core
-  persistence_drift:
-    path: ../../xuan-storage/drift
-  repository_interface_ai:
-    path: ../../repository-interface-ai
   qimendunjia:
     path: ../
+  # Mirror the overrides from qimendunjia's own pubspec so transitive
+  # path deps resolve correctly from the example/ directory.
+  persistence_core:
+    path: ../../xuan-storage/core
+  metaphysics_core:
+    path: ../../xuan-metaphysics-core
+  persistence_domain:
+    path: ../../xuan-domain
+  xuan_time_location:
+    path: ../../xuan-time-location
+  repository_interface_qimendunjia:
+    path: ../../repository-interface-qimendunjia
+  repository_interface_four_zhu_card:
+    path: ../../repository-interface-four-zhu-card
+  theme:
+    path: ../../theme
+  divination_case:
+    path: ../../xuan-divination-case
 
 dev_dependencies:
   flutter_test:

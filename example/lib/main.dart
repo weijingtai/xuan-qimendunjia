@@ -1,10 +1,3 @@
-import 'package:ai_core/ai_core.dart';
-import 'package:ai_core/utils/ai_bootstrap.dart';
-import 'package:ai_core/services/ai_service_impl.dart';
-import 'package:ai_core/services/llm/llm_service.dart';
-import 'package:qimendunjia/ai/qimen_ai_integration.dart';
-import 'package:qimendunjia/ai/qimen_ai_action.dart';
-import 'package:qimendunjia/ai/qimen_agent_tool.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -12,8 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:qimendunjia/navigator.dart';
 import 'package:qimendunjia/di/service_locator.dart';
-import 'package:persistence_assets/persistence_assets.dart';
-import 'package:provider/provider.dart';
+import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
 
 /// 初始化 dart `logging` 包，将日志桥接到 debugPrint。
 void _initDartLogging() {
@@ -29,14 +21,6 @@ void _initDartLogging() {
       debugPrint('  StackTrace: ${record.stackTrace}');
     }
   });
-}
-
-void initQimenModule() {
-  // 注册 Action 和 Tool
-  AiRegistry.register(
-    actions: [QiMenAnalyzeAction()],
-    tools: [QiMenAgentTool()],
-  );
 }
 
 Future<void> initServices() async {
@@ -55,7 +39,7 @@ Future<void> initServices() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 初始化服务定位器 (MVVM架构需要)
-  serviceLocator.init(const AssetsQimendunjiaOfficialRuleRepository());
+  serviceLocator.init(const _StubOfficialRuleRepository());
 
   // 记录启动日志
   Logger('qimendunjia.example').info("奇门遁甲模块已启动");
@@ -65,34 +49,30 @@ void main() async {
   // 初始化服务
   await initServices();
 
-  // 初始化奇门 AI 模块
-  initQimenModule();
-
-  // 初始化 AI 数据库
-  final db = AiDatabase();
-
-  // TODO: 使用实际的 API Key
-  const apiKey = 'sk-962c889316ff4799a87d4e82ef76d1bb';
-
-  // 确保数据库中有可用的 LLM Provider
-  await ensureDeepSeekProvider(db, apiKey: apiKey);
-
-  // 初始化 LLM 服务
-  final llmService = LlmService(db);
-
-  // 初始化 AI 服务实现
-  final aiService = AiServiceImpl(llmService: llmService, db: db);
-
-  // 注册奇门 AI 能力
-  QiMenAiIntegration.register(aiService);
-
   // 启动应用
-  runApp(
-    MultiProvider(
-      providers: [Provider<AiService>.value(value: aiService)],
-      child: const QiMenDunJiaApp(),
-    ),
-  );
+  runApp(const QiMenDunJiaApp());
+}
+
+/// 最小化 stub：example 仅演示排盘 UI，不加载官方规则 JSON。
+/// 正式 app 应注入 AssetsQimendunjiaOfficialRuleRepository（来自 persistence_assets）。
+class _StubOfficialRuleRepository
+    implements QimendunjiaOfficialRuleRepository {
+  const _StubOfficialRuleRepository();
+
+  @override
+  Future<String> loadTenGanKeYingJson() async => '[]';
+  @override
+  Future<String> loadTenGanKeYingGeJuJson() async => '[]';
+  @override
+  Future<String> loadDoorGanKeYingJson() async => '[]';
+  @override
+  Future<String> loadQiYiRuGongJson() async => '[]';
+  @override
+  Future<String> loadQiYiRuGongDiseaseJson() async => '[]';
+  @override
+  Future<String> loadDoorStarKeYingJson() async => '[]';
+  @override
+  Future<String> loadEightDoorKeYingJson() async => '[]';
 }
 
 class QiMenDunJiaApp extends StatelessWidget {
@@ -126,16 +106,6 @@ class SelectionPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('奇门遁甲架构选择'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.psychology),
-            onPressed: () {
-              // 打开 AI 聊天界面
-              final aiService = context.read<AiService>();
-              aiService.openChat(context: context);
-            },
-          ),
-        ],
       ),
       body: Center(
         child: Column(
