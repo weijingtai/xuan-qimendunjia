@@ -47,6 +47,10 @@ class SmartQiMenGrid extends StatelessWidget {
         final gridBorder = gridStyle?.border != null
             ? Border.all(color: gridStyle!.border!.color, width: gridStyle.border!.width)
             : null;
+        final gridShadow = gridStyle?.shadow ?? Shadows.md;
+        final gridRadius = gridStyle?.radius != null
+            ? BorderRadius.all(Radius.circular(gridStyle!.radius!))
+            : QiMenRadius.lg;
 
         return Container(
           width: gridSize,
@@ -54,9 +58,9 @@ class SmartQiMenGrid extends StatelessWidget {
           padding: padding,
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: QiMenRadius.lg,
+            borderRadius: gridRadius,
             border: gridBorder,
-            boxShadow: [Shadows.md],
+            boxShadow: [gridShadow],
           ),
           child: _buildGridView(palaceSize - padding.horizontal),
         );
@@ -202,24 +206,30 @@ class _SmartPalaceWidgetState extends State<SmartPalaceWidget>
     final cellStyle = XuanThemeData.maybeOf(context)?.component('qimen_palace_cell');
     final bg = cellStyle?.background;
     final border = cellStyle?.border;
+    final cellRadius = cellStyle?.radius != null
+        ? BorderRadius.all(Radius.circular(cellStyle!.radius!))
+        : const BorderRadius.all(Radius.circular(3));
+    final cellShadow = cellStyle?.shadow;
     return BoxDecoration(
       color: _getPalaceBackgroundColor(bg),
-      borderRadius: const BorderRadius.all(Radius.circular(3)),
+      borderRadius: cellRadius,
       border: Border.all(
         color: widget.isSelected
             ? (border?.color ?? const Color(0xFF4A90E2))
             : (border?.color ?? const Color(0xFFB8CCE0)),
-        width: widget.isSelected ? 1.5 : 0.8,
+        width: border?.width ?? (widget.isSelected ? 1.5 : 0.8),
       ),
       boxShadow: widget.isSelected
-          ? [
-              BoxShadow(
-                color: (border?.color ?? const Color(0xFF4A90E2))
-                    .withValues(alpha: 0.2),
-                blurRadius: _elevationAnimation.value,
-                offset: const Offset(0, 2),
-              ),
-            ]
+          ? (cellShadow != null
+              ? [cellShadow]
+              : [
+                  BoxShadow(
+                    color: (border?.color ?? const Color(0xFF4A90E2))
+                        .withValues(alpha: 0.2),
+                    blurRadius: _elevationAnimation.value,
+                    offset: const Offset(0, 2),
+                  ),
+                ])
           : const [],
     );
   }
