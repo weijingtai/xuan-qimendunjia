@@ -23,14 +23,22 @@ class BriefPalaceLayout extends StatelessWidget {
   final BriefPalaceConfig config;
   final double size;
 
-  const BriefPalaceLayout({
+  BriefPalaceLayout({
     super.key,
     required this.data,
     required this.config,
     required this.size,
   });
 
-  BriefPalaceTheme get theme => config.theme;
+  /// Resolves theme from token scope if available; falls back to config.theme.
+  static BriefPalaceTheme _resolveTheme(BriefPalaceConfig config, BuildContext context) {
+    final cellStyle = XuanThemeData.maybeOf(context)?.component('qimen_palace_cell');
+    if (cellStyle == null) return config.theme;
+    return BriefPalaceTheme.fromComponent(cellStyle);
+  }
+
+  BriefPalaceTheme get theme => _resolvedTheme;
+  var _resolvedTheme = const BriefPalaceTheme();
 
   double get pad => theme.palacePadding;
   double get fs => theme.primaryFontSize;
@@ -48,6 +56,7 @@ class BriefPalaceLayout extends StatelessWidget {
       fontSize: 9, color: jiColor, fontWeight: FontWeight.w100, height: 1);
   @override
   Widget build(BuildContext context) {
+    _resolvedTheme = _resolveTheme(config, context);
     final bool showLeftPart = (config.showYinGan && data.yinGanEnum != null) ||
         (config.showAnGan && data.tianPanAnGanEnum != null);
     final bool shouldTruncateStar =
@@ -158,13 +167,13 @@ class BriefPalaceLayout extends StatelessWidget {
                                         .withValues(alpha: 0.8);
 
                                     if (geJuText == '值符') {
-                                      bgColor = const Color(0xFFD32F2F)
+                                      bgColor = theme.zhifuBadgeColor
                                           .withValues(alpha: 0.1);
-                                      textColor = const Color(0xFFD32F2F);
+                                      textColor = theme.zhifuBadgeColor;
                                     } else if (geJuText == '旬首') {
-                                      bgColor = const Color(0xFF1976D2)
+                                      bgColor = theme.xunshouBadgeColor
                                           .withValues(alpha: 0.1);
-                                      textColor = const Color(0xFF1976D2);
+                                      textColor = theme.xunshouBadgeColor;
                                     }
 
                                     return Container(
@@ -789,9 +798,9 @@ class BriefPalaceLayout extends StatelessWidget {
                           style: subtitleStyle.copyWith(
                               height: 1.3,
                               color: month == "墓"
-                                  ? const Color(0xFF8B0000)
+                                  ? theme.wangShuaiMuMonthColor
                                   : (month == "禄"
-                                      ? Colors.green[700]
+                                      ? theme.wangShuaiLuMonthColor
                                       : theme.wangShuaiMonthTextColor),
                               fontSize: theme.wangShuaiFontSize)),
                     ),
@@ -818,10 +827,9 @@ class BriefPalaceLayout extends StatelessWidget {
                           style: subtitleStyle.copyWith(
                               height: 1.0,
                               color: gong == "墓"
-                                  ? const Color(
-                                      0xFFFF4D4D) // On dark background
+                                  ? theme.wangShuaiMuGongColor
                                   : (gong == "禄"
-                                      ? Colors.greenAccent
+                                      ? theme.wangShuaiLuGongColor
                                       : theme.wangShuaiGongTextColor),
                               fontSize: theme.wangShuaiFontSize)),
                     ),
@@ -881,9 +889,9 @@ class BriefPalaceLayout extends StatelessWidget {
                           style: subtitleStyle.copyWith(
                               height: 1.3,
                               color: month == "墓"
-                                  ? const Color(0xFF8B0000)
+                                  ? theme.wangShuaiMuMonthColor
                                   : (month == "禄"
-                                      ? Colors.green[700]
+                                      ? theme.wangShuaiLuMonthColor
                                       : Colors.black87),
                               fontSize: 8)),
                     ),
@@ -904,9 +912,9 @@ class BriefPalaceLayout extends StatelessWidget {
                           style: subtitleStyle.copyWith(
                               height: 1.0,
                               color: gong == "墓"
-                                  ? const Color(0xFFFF4D4D)
+                                  ? theme.wangShuaiMuGongColor
                                   : (gong == "禄"
-                                      ? Colors.greenAccent
+                                      ? theme.wangShuaiLuGongColor
                                       : Colors.white70),
                               fontSize: 8)),
                     ),
@@ -947,9 +955,9 @@ class BriefPalaceLayout extends StatelessWidget {
                   style: subtitleStyle.copyWith(
                       height: 1.2,
                       color: gong == "墓"
-                          ? const Color(0xFFFF4D4D)
+                          ? theme.wangShuaiMuGongColor
                           : (gong == "禄"
-                              ? Colors.greenAccent
+                              ? theme.wangShuaiLuGongColor
                               : theme.wangShuaiGongTextColor),
                       fontSize: theme.wangShuaiFontSize)),
             ),
@@ -975,9 +983,9 @@ class BriefPalaceLayout extends StatelessWidget {
                   style: subtitleStyle.copyWith(
                       height: 1.2,
                       color: month == "墓"
-                          ? const Color(0xFF8B0000)
+                          ? theme.wangShuaiMuMonthColor
                           : (month == "禄"
-                              ? Colors.green[700]
+                              ? theme.wangShuaiLuMonthColor
                               : theme.wangShuaiMonthTextColor),
                       fontSize: theme.wangShuaiFontSize)),
             )

@@ -7,6 +7,7 @@ import '../../enums/enum_eight_door.dart';
 import '../../enums/enum_eight_gods.dart';
 import '../../enums/enum_nine_stars.dart';
 import 'package:metaphysics_core/enums.dart';
+import 'package:theme/theme.dart';
 import '../../domain/entities/each_gong.dart';
 import '../../domain/entities/qi_men_star.dart';
 import '../../enums/enum_six_jia.dart';
@@ -41,13 +42,20 @@ class SmartQiMenGrid extends StatelessWidget {
         final gridSize = calculateOptimalGridSize(constraints);
         final palaceSize = gridSize / 3;
 
+        final gridStyle = XuanThemeData.maybeOf(context)?.component('qimen_palace_grid');
+        final bgColor = gridStyle?.background ?? ColorSystem.surface;
+        final gridBorder = gridStyle?.border != null
+            ? Border.all(color: gridStyle!.border!.color, width: gridStyle.border!.width)
+            : null;
+
         return Container(
           width: gridSize,
           height: gridSize,
           padding: padding,
           decoration: BoxDecoration(
-            color: ColorSystem.surface,
+            color: bgColor,
             borderRadius: QiMenRadius.lg,
+            border: gridBorder,
             boxShadow: [Shadows.md],
           ),
           child: _buildGridView(palaceSize - padding.horizontal),
@@ -191,19 +199,23 @@ class _SmartPalaceWidgetState extends State<SmartPalaceWidget>
 
   /// 构建装饰 — 浅蓝背景风格
   BoxDecoration _buildDecoration() {
+    final cellStyle = XuanThemeData.maybeOf(context)?.component('qimen_palace_cell');
+    final bg = cellStyle?.background;
+    final border = cellStyle?.border;
     return BoxDecoration(
-      color: _getPalaceBackgroundColor(),
+      color: _getPalaceBackgroundColor(bg),
       borderRadius: const BorderRadius.all(Radius.circular(3)),
       border: Border.all(
         color: widget.isSelected
-            ? const Color(0xFF4A90E2)
-            : const Color(0xFFB8CCE0),
+            ? (border?.color ?? const Color(0xFF4A90E2))
+            : (border?.color ?? const Color(0xFFB8CCE0)),
         width: widget.isSelected ? 1.5 : 0.8,
       ),
       boxShadow: widget.isSelected
           ? [
               BoxShadow(
-                color: const Color(0xFF4A90E2).withValues(alpha: 0.2),
+                color: (border?.color ?? const Color(0xFF4A90E2))
+                    .withValues(alpha: 0.2),
                 blurRadius: _elevationAnimation.value,
                 offset: const Offset(0, 2),
               ),
@@ -213,9 +225,9 @@ class _SmartPalaceWidgetState extends State<SmartPalaceWidget>
   }
 
   /// 获取宫位背景色 — 浅蓝，中宫略深
-  Color _getPalaceBackgroundColor() {
-    if (widget.isCenter) return const Color(0xFFDDE8F4); // 中宫：略深蓝
-    return const Color(0xFFE8F0F8); // 宣纸蓝
+  Color _getPalaceBackgroundColor(Color? tokenBg) {
+    if (widget.isCenter) return tokenBg ?? const Color(0xFFDDE8F4);
+    return tokenBg ?? const Color(0xFFE8F0F8);
   }
 
   /// 构建内容 — 简介模式三列布局

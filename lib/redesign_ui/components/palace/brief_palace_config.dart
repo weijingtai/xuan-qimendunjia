@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:theme/theme.dart';
 
 /// 宫位主题配置，用于统一管理视觉样式
 class BriefPalaceTheme {
@@ -99,7 +100,60 @@ class BriefPalaceTheme {
     this.relationFanYinColor = const Color(0xFF7B1FA2),
     this.wangShuaiGodSize = 12,
     this.wangShuaiScale = 0.8,
+    this.wangShuaiMuGongColor = const Color(0xFFFF4D4D),
+    this.wangShuaiMuMonthColor = const Color(0xFF8B0000),
+    this.wangShuaiLuGongColor = Colors.greenAccent,
+    this.wangShuaiLuMonthColor = const Color(0xFF388E3C),
+    this.zhifuBadgeColor = const Color(0xFFD32F2F),
+    this.xunshouBadgeColor = const Color(0xFF1976D2),
   });
+
+  factory BriefPalaceTheme.fromComponent(ComponentStyle style) {
+    final wangShuaiMonth = style.variant('wang_shuai_month');
+    final wangShuaiGong = style.variant('wang_shuai_gong');
+    final wangShuaiMuGong = wangShuaiGong.variant('mu');
+    final wangShuaiMuMonth = wangShuaiMonth.variant('mu');
+    final wangShuaiLuGong = wangShuaiGong.variant('lu');
+    final wangShuaiLuMonth = wangShuaiMonth.variant('lu');
+    final relation = style.variant('relation');
+    final badge = style.variant('badge');
+    return BriefPalaceTheme(
+      geJuTagBackgroundColor: style.variant('geju_tag').background ?? const Color(0x1F607D8B),
+      emptinessIconColor: style.variant('status_icon').background ?? const Color(0xFFE53935),
+      jiXingColor: style.variant('marker').variant('ji_xing').background ?? const Color(0xFFF44336),
+      dunjiaColor: style.variant('marker').variant('dunjia').background ?? const Color(0xFF4CAF50),
+      wangShuaiMonthBg: wangShuaiMonth.background ?? const Color(0xFFE0E0E0),
+      wangShuaiGongBg: wangShuaiGong.background ?? Colors.black54,
+      wangShuaiGongTextColor: wangShuaiGong.variant('text').background ?? Colors.white,
+      wangShuaiMonthTextColor: wangShuaiMonth.variant('text').background ?? Colors.black87,
+      primaryTextColor: style.variant('text').variant('primary').background ?? const Color(0xFF2C2C2C),
+      secondaryTextColor: style.variant('text').variant('secondary').background ?? const Color(0xFF6B7280),
+      relationMenPoColor: relation.variant('men_po').background ?? const Color(0xFFD32F2F),
+      relationShouZhiColor: relation.variant('shou_zhi').background ?? const Color(0xFFBF360C),
+      relationGoodColor: relation.variant('good').background ?? const Color(0xFF2E7D32),
+      relationFuYinColor: relation.variant('fu_yin').background ?? const Color(0xFF455A64),
+      relationFanYinColor: relation.variant('fan_yin').background ?? const Color(0xFF7B1FA2),
+      wangShuaiMuGongColor: wangShuaiMuGong.background ?? const Color(0xFFFF4D4D),
+      wangShuaiMuMonthColor: wangShuaiMuMonth.background ?? const Color(0xFF8B0000),
+      wangShuaiLuGongColor: wangShuaiLuGong.background ?? Colors.greenAccent,
+      wangShuaiLuMonthColor: wangShuaiLuMonth.background ?? const Color(0xFF388E3C),
+      zhifuBadgeColor: badge.variant('zhifu').background ?? const Color(0xFFD32F2F),
+      xunshouBadgeColor: badge.variant('xunshou').background ?? const Color(0xFF1976D2),
+    );
+  }
+
+  /// 旺衰 - 墓 — 宫底色（暗底上文字）
+  final Color wangShuaiMuGongColor;
+  /// 旺衰 - 墓 — 月底色（浅底上文字）
+  final Color wangShuaiMuMonthColor;
+  /// 旺衰 - 禄 — 宫底色
+  final Color wangShuaiLuGongColor;
+  /// 旺衰 - 禄 — 月底色
+  final Color wangShuaiLuMonthColor;
+  /// 值符角标底色
+  final Color zhifuBadgeColor;
+  /// 旬首角标底色
+  final Color xunshouBadgeColor;
 }
 
 /// 宫位简介模式配置
