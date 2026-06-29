@@ -34,7 +34,12 @@ class ServiceLocator {
   ///
   /// [officialRules] 由 host/app 装配层注入的官方规则资源仓储（assets 后端实现）。
   /// 产品包不直接依赖任何具体存储后端（见 EXECUTOR-RULES N3）。
-  void init(QimendunjiaOfficialRuleRepository officialRules) {
+  void init(
+    QimendunjiaOfficialRuleRepository officialRules,
+    QimenRecordRepository recordRepository,
+  ) {
+    _services[QimenRecordRepository] = recordRepository;
+
     // 1. 注册数据源
     _registerDataSources(officialRules);
 

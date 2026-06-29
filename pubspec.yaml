@@ -16,7 +16,8 @@ dependencies:
   ai_core:
     path: ../xuan-ai
   metaphysics_core:
-    path: ../xuan-metaphysics-core
+    git:
+      url: http://192.168.0.165:3000/xuan/metaphysics-core.git
   repository_interface_qimendunjia:
     path: ../repository-interface-qimendunjia
   flutter:
@@ -62,8 +63,12 @@ dependency_overrides:
     path: ../xuan-four-zhu-card
   persistence_core:
     path: ../xuan-storage/core
+  persistence_drift:
+    path: ../xuan-storage/drift
   metaphysics_core:
     path: ../xuan-metaphysics-core
+  xuan_gua_core:
+    path: ../xuan-gua-core
   persistence_domain:
     path: ../xuan-domain
   xuan_time_location:

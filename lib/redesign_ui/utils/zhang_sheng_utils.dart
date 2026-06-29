@@ -1,4 +1,4 @@
-import '../../../../xuan-common/lib/enums/enum_twelve_zhang_sheng.dart';
+import 'package:metaphysics_core/enums.dart';
 
 class ZhangShengUtils {
   ZhangShengUtils._();

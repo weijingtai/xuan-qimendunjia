@@ -23,6 +23,12 @@ dependencies:
 
   lottie: ^3.3.2
   cupertino_icons: ^1.0.8
+  persistence_drift:
+    path: ../../xuan-storage/drift
+  persistence_preferences:
+    path: ../../xuan-storage/preferences
+  shared_preferences: ^2.2.0
+  drift: ^2.30.1
 
 dependency_overrides:
   google_fonts: ^6.2.1
@@ -34,8 +40,14 @@ dependency_overrides:
   # path deps resolve correctly from the example/ directory.
   persistence_core:
     path: ../../xuan-storage/core
+  persistence_drift:
+    path: ../../xuan-storage/drift
+  persistence_preferences:
+    path: ../../xuan-storage/preferences
   metaphysics_core:
     path: ../../xuan-metaphysics-core
+  xuan_gua_core:
+    path: ../../xuan-gua-core
   persistence_domain:
     path: ../../xuan-domain
   xuan_time_location:

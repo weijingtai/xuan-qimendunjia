@@ -6,6 +6,11 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:qimendunjia/navigator.dart';
 import 'package:qimendunjia/di/service_locator.dart';
 import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
+import 'package:persistence_drift/persistence_drift.dart';
+import 'package:persistence_preferences/persistence_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:drift/native.dart';
+import 'package:persistence_drift/qimendunjia/qimendunjia_module_registry.dart';
 
 /// 初始化 dart `logging` 包，将日志桥接到 debugPrint。
 void _initDartLogging() {
@@ -38,8 +43,31 @@ Future<void> initServices() async {
   // 确保Flutter绑定已初始化
   WidgetsFlutterBinding.ensureInitialized();
 
+  final newDb = PersistenceDriftDatabase(NativeDatabase.memory());
+  final prefs = await SharedPreferences.getInstance();
+  final sessionRepo = PreferencesAccountSessionRepository(prefs);
+  final accountDb = AccountDatabase(NativeDatabase.memory());
+  final identityLinkRepo = DriftAccountIdentityLinkRepository(accountDb);
+  
+  final bootstrapStore = DriftScopeBootstrapStore(newDb);
+  final ledger = DriftScopeLedger(db: newDb, bootstrapStore: bootstrapStore);
+  final resolver = ScopeResolver(
+    sessionRepository: sessionRepo,
+    identityLinkRepository: identityLinkRepo,
+    ledger: ledger,
+  );
+  final resolvedScope = await resolver.resolve();
+  final scopeUid = resolvedScope.scopeUid;
+
+  final ds = DriftRecordDataSource(newDb, scopeUid: scopeUid);
+  final store = LocalRecordRepository(ds, RecordAdapterRegistry([QimendunjiaModuleRegistry.codec()]));
+  final recordBackedRepository = QimendunjiaModuleRegistry.repository(store: store);
+
   // 初始化服务定位器 (MVVM架构需要)
-  serviceLocator.init(const _StubOfficialRuleRepository());
+  serviceLocator.init(
+    const _StubOfficialRuleRepository(),
+    recordBackedRepository,
+  );
 
   // 记录启动日志
   Logger('qimendunjia.example').info("奇门遁甲模块已启动");
