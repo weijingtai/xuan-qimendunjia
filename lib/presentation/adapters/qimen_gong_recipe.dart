@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:metaphysics_chart_ui/src/gong/gong_recipe.dart';
+import 'package:metaphysics_chart_ui/metaphysics_chart_ui.dart';
 import 'qimen_gong_ids.dart';
 
 abstract final class QiMenGongRecipes {

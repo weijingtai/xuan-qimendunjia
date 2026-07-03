@@ -1,5 +1,4 @@
-import 'package:metaphysics_chart_ui/src/gong/gong_recipe.dart';
-import 'package:metaphysics_chart_ui/src/gong/gong_slot.dart';
+import 'package:metaphysics_chart_ui/metaphysics_chart_ui.dart';
 import 'package:qimendunjia/redesign_ui/components/palace/brief_palace_config.dart';
 import 'package:qimendunjia/redesign_ui/layouts/smart_grid.dart';
 import 'qimen_gong_ids.dart';
@@ -71,28 +70,28 @@ class QiMenGongAdapter {
     }
 
     // P1: hidden stems
-    if (data.yinGan.isNotEmpty) {
+    if (data.yinGan != null && data.yinGan!.isNotEmpty) {
       nodes.add(GongContentNode(
         id: '${QiMenGongIds.stemHidden}-$index',
-        content: GlyphContent(text: data.yinGan, shortText: data.yinGan),
+        content: GlyphContent(text: data.yinGan!, shortText: data.yinGan!),
         priority: Tier.p1,
       ));
     }
 
-    if (data.tianPanAnGan.isNotEmpty) {
+    if (data.tianPanAnGan != null && data.tianPanAnGan!.isNotEmpty) {
       nodes.add(GongContentNode(
         id: '${QiMenGongIds.stemHiddenHeaven}-$index',
         content:
-            GlyphContent(text: data.tianPanAnGan, shortText: data.tianPanAnGan),
+            GlyphContent(text: data.tianPanAnGan!, shortText: data.tianPanAnGan!),
         priority: Tier.p1,
       ));
     }
 
-    if (data.renPanAnGan.isNotEmpty) {
+    if (data.renPanAnGan != null && data.renPanAnGan!.isNotEmpty) {
       nodes.add(GongContentNode(
         id: '${QiMenGongIds.stemHiddenHuman}-$index',
         content:
-            GlyphContent(text: data.renPanAnGan, shortText: data.renPanAnGan),
+            GlyphContent(text: data.renPanAnGan!, shortText: data.renPanAnGan!),
         priority: Tier.p1,
       ));
     }
@@ -108,20 +107,20 @@ class QiMenGongAdapter {
     }
 
     // Host stems (P1)
-    if (data.tianPanJiGan.isNotEmpty) {
+    if (data.tianPanJiGan != null && data.tianPanJiGan!.isNotEmpty) {
       nodes.add(GongContentNode(
         id: '${QiMenGongIds.stemHostHeaven}-$index',
         content: GlyphContent(
-            text: data.tianPanJiGan, shortText: data.tianPanJiGan),
+            text: data.tianPanJiGan!, shortText: data.tianPanJiGan!),
         priority: Tier.p1,
       ));
     }
 
-    if (data.diPanJiGan.isNotEmpty) {
+    if (data.diPanJiGan != null && data.diPanJiGan!.isNotEmpty) {
       nodes.add(GongContentNode(
         id: '${QiMenGongIds.stemHostEarth}-$index',
         content: GlyphContent(
-            text: data.diPanJiGan, shortText: data.diPanJiGan),
+            text: data.diPanJiGan!, shortText: data.diPanJiGan!),
         priority: Tier.p1,
       ));
     }
