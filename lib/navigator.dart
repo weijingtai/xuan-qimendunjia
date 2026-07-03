@@ -32,7 +32,7 @@ class NavigatorGenerator {
     // 新版实现（MVVM + UseCase架构）
     "/qimendunjia/mvvm": (context, {arguments}) => ChangeNotifierProvider(
           create: (_) => serviceLocator.createQiMenViewModel(),
-          child: const QiMenMvvmPage(),
+          child: const QiMenMvvmPage(useGongRecipe: true),
         ),
 
     // 多家奇门（时/月/年家）

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../core/design_system.dart';
 import '../components/palace/brief_palace_config.dart';
+import '../components/palace/recipe_palace_layout.dart';
 import '../../enums/enum_eight_door.dart';
 import '../../enums/enum_eight_gods.dart';
 import '../../enums/enum_nine_stars.dart';
@@ -23,6 +24,7 @@ class SmartQiMenGrid extends StatelessWidget {
   final double maxGridSize;
   final EdgeInsetsGeometry padding;
   final BriefPalaceConfig briefConfig;
+  final bool useRecipeLayout;
 
   const SmartQiMenGrid({
     super.key,
@@ -32,6 +34,7 @@ class SmartQiMenGrid extends StatelessWidget {
     this.maxGridSize = 480.0,
     this.padding = const EdgeInsets.all(16.0),
     this.briefConfig = const BriefPalaceConfig(),
+    this.useRecipeLayout = false,
   });
 
   @override
@@ -110,6 +113,7 @@ class SmartQiMenGrid extends StatelessWidget {
           isSelected: isSelected,
           config: briefConfig,
           onTap: () => onPalaceTap(index),
+          useRecipeLayout: useRecipeLayout,
         );
       },
     );
@@ -125,6 +129,7 @@ class SmartPalaceWidget extends StatefulWidget {
   final bool isSelected;
   final BriefPalaceConfig config;
   final VoidCallback onTap;
+  final bool useRecipeLayout;
 
   const SmartPalaceWidget({
     super.key,
@@ -135,6 +140,7 @@ class SmartPalaceWidget extends StatefulWidget {
     this.isSelected = false,
     this.config = const BriefPalaceConfig(),
     required this.onTap,
+    this.useRecipeLayout = false,
   });
 
   @override
@@ -173,6 +179,7 @@ class _SmartPalaceWidgetState extends State<SmartPalaceWidget>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: ValueKey('qimen-palace-${widget.index}'),
       onTapDown: (_) {
         _controller.forward();
       },
@@ -242,6 +249,13 @@ class _SmartPalaceWidgetState extends State<SmartPalaceWidget>
 
   /// 构建内容 — 简介模式三列布局
   Widget _buildContent() {
+    if (widget.useRecipeLayout) {
+      return QiMenRecipePalaceLayout(
+        data: widget.data,
+        config: widget.config,
+        size: widget.size,
+      );
+    }
     return BriefPalaceLayout(
       data: widget.data,
       config: widget.config,
