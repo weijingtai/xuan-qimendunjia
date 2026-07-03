@@ -20,6 +20,8 @@ dependencies:
       url: http://192.168.0.165:3000/xuan/metaphysics-core.git
   repository_interface_qimendunjia:
     path: ../repository-interface-qimendunjia
+  metaphysics_chart_ui:
+    path: /Users/jingtaiwei/Git/Public/xuan-migration-worktrees/qimen-gong-recipe/metaphysics-chart-ui
   flutter:
     sdk: flutter
   logger: ^2.6.2
@@ -73,6 +75,12 @@ dependency_overrides:
     path: ../xuan-domain
   xuan_time_location:
     path: ../xuan-time-location
+  theme:
+    path: ../theme
+  repository_interface_four_zhu_card:
+    path: ../repository-interface-four-zhu-card
+  metaphysics_chart_ui:
+    path: /Users/jingtaiwei/Git/Public/xuan-migration-worktrees/qimen-gong-recipe/metaphysics-chart-ui
 
 # The following section is specific to Flutter packages.
 flutter:
