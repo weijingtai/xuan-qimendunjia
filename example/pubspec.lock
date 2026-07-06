@@ -928,7 +928,7 @@ packages:
     source: hosted
     version: "1.17.0"
   metaphysics_chart_ui:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "/Users/jingtaiwei/Git/Public/xuan-migration-worktrees/qimen-gong-recipe/metaphysics-chart-ui"
       relative: false

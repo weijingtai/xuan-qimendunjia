@@ -60,6 +60,8 @@ dependency_overrides:
     path: ../../theme
   divination_case:
     path: ../../xuan-divination-case
+  metaphysics_chart_ui:
+    path: /Users/jingtaiwei/Git/Public/xuan-migration-worktrees/qimen-gong-recipe/metaphysics-chart-ui
 
 dev_dependencies:
   flutter_test:
