@@ -10,15 +10,20 @@ environment:
 
 dependencies:
   theme:
-    path: ../theme
+    git:
+      url: http://192.168.0.165:3000/xuan/theme.git
   xuan_four_zhu_card:
-    path: ../xuan-four-zhu-card
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-four-zhu-card.git
   ai_core:
-    path: ../xuan-ai
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-ai.git
   metaphysics_core:
-    path: ../xuan-metaphysics-core
+    git:
+      url: http://192.168.0.165:3000/xuan/metaphysics-core.git
   repository_interface_qimendunjia:
-    path: ../repository-interface-qimendunjia
+    git:
+      url: http://192.168.0.165:3000/xuan/repository-interface-qimendunjia.git
   flutter:
     sdk: flutter
   logger: ^2.6.2
@@ -59,17 +64,22 @@ dev_dependencies:
 
 dependency_overrides:
   xuan_four_zhu_card:
-    path: ../xuan-four-zhu-card
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-four-zhu-card.git
   persistence_core:
     path: ../xuan-storage/core
   metaphysics_core:
-    path: ../xuan-metaphysics-core
+    git:
+      url: http://192.168.0.165:3000/xuan/metaphysics-core.git
   persistence_domain:
-    path: ../xuan-domain
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-domain.git
   xuan_time_location:
-    path: ../xuan-time-location
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-time-location.git
   theme:
-    path: ../theme
+    git:
+      url: http://192.168.0.165:3000/xuan/theme.git
 
 # The following section is specific to Flutter packages.
 flutter:
