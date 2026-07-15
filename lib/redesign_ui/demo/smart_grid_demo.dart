@@ -19,6 +19,7 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
   bool _showGeJu = false;
   bool _showWangShuai = false;
   bool _showSimpleLayout = false;
+  bool _showWASDLabels = false;
 
   final List<_SizePreset> _sizePresets = const [
     _SizePreset('小 (72px)', 240),
@@ -74,6 +75,7 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
                       palaces: PalaceData.generateSampleData(),
                       selectedIndex: _selectedPalaceIndex,
                       briefConfig: _config,
+                      showWASDLabels: _showWASDLabels,
                       maxGridSize:
                           _sizePresets[_selectedSizeIndex].gridSize.toDouble(),
                       onPalaceTap: (index) {
@@ -171,14 +173,23 @@ class _SmartGridDemoState extends State<SmartGridDemo> {
               ),
             ),
             const SizedBox(width: 12),
-            Expanded(
-              child: _buildToggle(
-                label: '简版显示',
-                subtitle: 'showSimpleLayout',
-                value: _showSimpleLayout,
-                onChanged: (v) => setState(() => _showSimpleLayout = v),
+              Expanded(
+                child: _buildToggle(
+                  label: '简版显示',
+                  subtitle: 'showSimpleLayout',
+                  value: _showSimpleLayout,
+                  onChanged: (v) => setState(() => _showSimpleLayout = v),
+                ),
               ),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildToggle(
+                  label: 'WASD标签',
+                  subtitle: 'showWASDLabels',
+                  value: _showWASDLabels,
+                  onChanged: (v) => setState(() => _showWASDLabels = v),
+                ),
+              ),
           ],
         ),
       ]),

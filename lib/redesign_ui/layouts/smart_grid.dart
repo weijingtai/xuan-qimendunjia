@@ -1,8 +1,10 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:metaphysics_chart_ui/metaphysics_chart_ui.dart';
 import '../core/design_system.dart';
 import '../components/palace/brief_palace_config.dart';
+import '../components/palace/recipe_palace_layout.dart';
 import '../../enums/enum_eight_door.dart';
 import '../../enums/enum_eight_gods.dart';
 import '../../enums/enum_nine_stars.dart';
@@ -23,6 +25,8 @@ class SmartQiMenGrid extends StatelessWidget {
   final double maxGridSize;
   final EdgeInsetsGeometry padding;
   final BriefPalaceConfig briefConfig;
+  final bool useRecipeLayout;
+  final bool showWASDLabels;
 
   const SmartQiMenGrid({
     super.key,
@@ -32,6 +36,8 @@ class SmartQiMenGrid extends StatelessWidget {
     this.maxGridSize = 480.0,
     this.padding = const EdgeInsets.all(16.0),
     this.briefConfig = const BriefPalaceConfig(),
+    this.useRecipeLayout = false,
+    this.showWASDLabels = false,
   });
 
   @override
@@ -62,7 +68,17 @@ class SmartQiMenGrid extends StatelessWidget {
             border: gridBorder,
             boxShadow: [gridShadow],
           ),
-          child: _buildGridView(palaceSize - padding.horizontal),
+          child: PalaceGrid(
+            gridSize: gridSize - padding.horizontal,
+            showWASDLabels: showWASDLabels,
+            selectedIndex: selectedIndex,
+            onPalaceTap: onPalaceTap,
+            crossAxisCount: 3,
+            padding: EdgeInsets.zero,
+            contentBuilder: (context, ctx) {
+              return _buildCellContent(context, ctx);
+            },
+          ),
         );
       },
     );
@@ -87,31 +103,39 @@ class SmartQiMenGrid extends StatelessWidget {
     }
   }
 
-  /// 构建网格视图
-  Widget _buildGridView(double palaceSize) {
-    return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1.0,
-        crossAxisSpacing: 0,
-        mainAxisSpacing: 0,
-      ),
-      itemCount: 9,
-      itemBuilder: (context, index) {
-        final isCenter = index == 4; // 中宫
-        final isSelected = selectedIndex == index;
+  /// 构建单个宫格的内容 — cell装饰 + 业务内容。
+  Widget _buildCellContent(BuildContext context, PalaceContext ctx) {
+    final cellStyle =
+        XuanThemeData.maybeOf(context)?.component('qimen_palace_cell');
+    final border = cellStyle?.border;
+    final cellRadius = cellStyle?.radius != null
+        ? BorderRadius.all(Radius.circular(cellStyle!.radius!))
+        : const BorderRadius.all(Radius.circular(3));
 
-        return SmartPalaceWidget(
-          index: index,
-          size: palaceSize,
-          data: palaces[index],
-          isCenter: isCenter,
-          isSelected: isSelected,
-          config: briefConfig,
-          onTap: () => onPalaceTap(index),
-        );
-      },
+    return Container(
+      decoration: BoxDecoration(
+        color: ctx.isCenter
+            ? (cellStyle?.background ?? const Color(0xFFDDE8F4))
+            : (cellStyle?.background ?? const Color(0xFFE8F0F8)),
+        borderRadius: cellRadius,
+        border: Border.all(
+          color: ctx.index == selectedIndex
+              ? (border?.color ?? const Color(0xFF4A90E2))
+              : (border?.color ?? const Color(0xFFB8CCE0)),
+          width: border?.width ?? (ctx.index == selectedIndex ? 1.5 : 0.8),
+        ),
+      ),
+      child: useRecipeLayout
+          ? QiMenRecipePalaceLayout(
+              data: palaces[ctx.index],
+              config: briefConfig,
+              size: ctx.cellSize,
+            )
+          : BriefPalaceLayout(
+              data: palaces[ctx.index],
+              config: briefConfig,
+              size: ctx.cellSize,
+            ),
     );
   }
 }
@@ -125,6 +149,7 @@ class SmartPalaceWidget extends StatefulWidget {
   final bool isSelected;
   final BriefPalaceConfig config;
   final VoidCallback onTap;
+  final bool useRecipeLayout;
 
   const SmartPalaceWidget({
     super.key,
@@ -135,6 +160,7 @@ class SmartPalaceWidget extends StatefulWidget {
     this.isSelected = false,
     this.config = const BriefPalaceConfig(),
     required this.onTap,
+    this.useRecipeLayout = false,
   });
 
   @override
@@ -173,6 +199,7 @@ class _SmartPalaceWidgetState extends State<SmartPalaceWidget>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: ValueKey('qimen-palace-${widget.index}'),
       onTapDown: (_) {
         _controller.forward();
       },
@@ -242,6 +269,13 @@ class _SmartPalaceWidgetState extends State<SmartPalaceWidget>
 
   /// 构建内容 — 简介模式三列布局
   Widget _buildContent() {
+    if (widget.useRecipeLayout) {
+      return QiMenRecipePalaceLayout(
+        data: widget.data,
+        config: widget.config,
+        size: widget.size,
+      );
+    }
     return BriefPalaceLayout(
       data: widget.data,
       config: widget.config,

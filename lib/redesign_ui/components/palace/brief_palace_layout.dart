@@ -98,7 +98,6 @@ class BriefPalaceLayout extends StatelessWidget {
     final double leftColWidth = showLeftPart ? expandedLeftColWidth : 0;
     // final double middleColWidth =
     //    size + (pad * 2) - leftColWidth - rightColWidth;
-    final double middleColWidth = size - leftColWidth - rightColWidth;
     // 格局高度
     final double geJuHeight = theme.geJuHeight;
     final double geJuContentHeight = config.showGeJu ? geJuHeight : 0;
@@ -281,22 +280,23 @@ class BriefPalaceLayout extends StatelessWidget {
                                 primaryStyle, expandedLeftColWidth, 12),
                           ),
                         ),
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          alignment: showLeftPart
-                              ? Alignment.center
-                              : Alignment.centerLeft,
-                          width: middleColWidth,
-                          child: SizedBox(
-                            width: starDoorGodTextBoxWidth + 20,
-                            child: _buildMainContent(
+                        Expanded(
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            alignment: showLeftPart
+                                ? Alignment.center
+                                : Alignment.centerLeft,
+                            child: SizedBox(
+                              width: starDoorGodTextBoxWidth + 20,
+                              child: _buildMainContent(
                                 starDoorGodTextBoxWidth + 20,
                                 starText,
                                 doorText,
                                 godText,
                                 diGodText,
                               ),
+                            ),
                           ),
                         ),
                         AnimatedContainer(
@@ -543,7 +543,6 @@ class BriefPalaceLayout extends StatelessWidget {
           Row(
             children: [
               _buildWangShuaiWidget(gong: "死", month: "沐"),
-              // Expanded(child: SizedBox()),
             ],
           ),
         ],

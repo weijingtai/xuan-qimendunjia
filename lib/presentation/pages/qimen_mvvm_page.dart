@@ -25,7 +25,12 @@ import 'package:intl/intl.dart';
 ///
 /// 使用新的 MVVM+UseCase 架构实现
 class QiMenMvvmPage extends StatefulWidget {
-  const QiMenMvvmPage({super.key});
+  const QiMenMvvmPage({
+    super.key,
+    this.useGongRecipe = false,
+  });
+
+  final bool useGongRecipe;
 
   @override
   State<QiMenMvvmPage> createState() => _QiMenMvvmPageState();
@@ -500,6 +505,7 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
               selectedIndex: viewModel.selectedGong == null
                   ? null
                   : _gridOrderedGuas.indexOf(viewModel.selectedGong!.gongGua),
+              useRecipeLayout: widget.useGongRecipe,
               briefConfig: BriefPalaceConfig(
                 showDiGod: config.showDiGod,
                 showYinGan: config.showYinGan,

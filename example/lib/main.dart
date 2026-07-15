@@ -6,10 +6,11 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:qimendunjia/navigator.dart';
 import 'package:qimendunjia/di/service_locator.dart';
 import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
+import 'package:drift_flutter/drift_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:persistence_drift/persistence_drift.dart';
 import 'package:persistence_preferences/persistence_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:drift/native.dart';
 import 'package:persistence_drift/qimendunjia/qimendunjia_module_registry.dart';
 
 /// 初始化 dart `logging` 包，将日志桥接到 debugPrint。
@@ -43,10 +44,32 @@ Future<void> initServices() async {
   // 确保Flutter绑定已初始化
   WidgetsFlutterBinding.ensureInitialized();
 
-  final newDb = PersistenceDriftDatabase(NativeDatabase.memory());
+  final newDb = PersistenceDriftDatabase(
+    driftDatabase(
+      name: 'persistence',
+      native: const DriftNativeOptions(
+        databaseDirectory: getApplicationSupportDirectory,
+      ),
+      web: DriftWebOptions(
+        sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+        driftWorker: Uri.parse('drift_worker.js'),
+      ),
+    ),
+  );
   final prefs = await SharedPreferences.getInstance();
   final sessionRepo = PreferencesAccountSessionRepository(prefs);
-  final accountDb = AccountDatabase(NativeDatabase.memory());
+  final accountDb = AccountDatabase(
+    driftDatabase(
+      name: 'account',
+      native: const DriftNativeOptions(
+        databaseDirectory: getApplicationSupportDirectory,
+      ),
+      web: DriftWebOptions(
+        sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+        driftWorker: Uri.parse('drift_worker.js'),
+      ),
+    ),
+  );
   final identityLinkRepo = DriftAccountIdentityLinkRepository(accountDb);
   
   final bootstrapStore = DriftScopeBootstrapStore(newDb);
