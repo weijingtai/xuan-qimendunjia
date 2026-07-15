@@ -68,6 +68,8 @@ dependency_overrides:
     path: ../xuan-domain
   xuan_time_location:
     path: ../xuan-time-location
+  theme:
+    path: ../theme
 
 # The following section is specific to Flutter packages.
 flutter:
