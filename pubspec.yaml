@@ -67,7 +67,9 @@ dependency_overrides:
     git:
       url: http://192.168.0.165:3000/xuan/xuan-four-zhu-card.git
   persistence_core:
-    path: ../xuan-storage/core
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-storage.git
+      path: core
   metaphysics_core:
     git:
       url: http://192.168.0.165:3000/xuan/metaphysics-core.git
