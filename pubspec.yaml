@@ -67,6 +67,8 @@ dependency_overrides:
     path: ../xuan-storage/core
   persistence_drift:
     path: ../xuan-storage/drift
+  repository_interface_qimendunjia:
+    path: ../repository-interface-qimendunjia
   metaphysics_core:
     path: ../xuan-metaphysics-core
   xuan_gua_core:

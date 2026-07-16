@@ -143,7 +143,14 @@ class ServiceLocator {
       get<CalculateJuUseCase>(),
       get<ArrangePanUseCase>(),
       get<SelectGongUseCase>(),
+      recordRepository: _tryGet<QimenRecordRepository>(),
     );
+  }
+
+  /// 安全获取可选服务（不存在时返回 null）
+  T? _tryGet<T>() {
+    final service = _services[T];
+    return service is T ? service : null;
   }
 
   /// 获取服务实例

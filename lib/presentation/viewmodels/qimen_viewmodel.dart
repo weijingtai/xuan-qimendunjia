@@ -17,6 +17,7 @@ import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
 import 'package:qimendunjia/enums/enum_ke_scheme.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
+import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
 
 /// 奇门遁甲视图状态
 enum QiMenViewState {
@@ -51,6 +52,9 @@ class QiMenViewModel extends ChangeNotifier {
   final ArrangePanUseCase _arrangePanUseCase;
   final SelectGongUseCase _selectGongUseCase;
 
+  // 记录仓储（A4 Phase 2 接线：排盘完成后保存记录）
+  final QimenRecordRepository? _recordRepository;
+
   // ==================== 密封状态（Q3 新增） ====================
 
   /// 核心状态：idle → calculating → success / error
@@ -74,8 +78,9 @@ class QiMenViewModel extends ChangeNotifier {
   QiMenViewModel(
     this._calculateJuUseCase,
     this._arrangePanUseCase,
-    this._selectGongUseCase,
-  );
+    this._selectGongUseCase, {
+    QimenRecordRepository? recordRepository,
+  }) : _recordRepository = recordRepository;
 
   // Getters
   QiMenViewState get state => _state;
@@ -199,12 +204,33 @@ class QiMenViewModel extends ChangeNotifier {
       _qiMenState = QiMenSuccess(pan: pan, ju: ju);
       _state = QiMenViewState.success;
       notifyListeners();
+
+      // 4. 保存排盘记录（A4 Phase 2 接线）
+      _saveRecordIfAvailable(pan: pan, ju: ju);
     } catch (e) {
       _qiMenState = QiMenError(e.toString());
       _state = QiMenViewState.error;
       _errorMessage = e.toString();
       notifyListeners();
     }
+  }
+
+  /// 保存排盘记录至仓储（fire-and-forget，不影响排盘流程）
+  void _saveRecordIfAvailable({required QiMenPan pan, required BaseJu ju}) {
+    final repo = _recordRepository;
+    if (repo == null) return;
+
+    final contract = QimenDivinationRecordContract(
+      uuid: pan.id,
+      createdAt: DateTime.now(),
+      datetimeJson: pan.panDateTime.toIso8601String(),
+      juType: ju.jia.name,
+      juNumber: ju.juNumber,
+    );
+    repo.saveRecord(contract).catchError((Object error, StackTrace stack) {
+      _log.warning('保存排盘记录失败，已忽略', error, stack);
+      return '';
+    });
   }
 
   /// 选择宫位并加载详情
