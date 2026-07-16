@@ -10,11 +10,14 @@ environment:
 
 dependencies:
   theme:
-    path: ../theme
+    git:
+      url: http://192.168.0.165:3000/xuan/theme.git
   xuan_four_zhu_card:
-    path: ../xuan-four-zhu-card
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-four-zhu-card.git
   ai_core:
-    path: ../xuan-ai
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-ai.git
   metaphysics_core:
     git:
       url: http://192.168.0.165:3000/xuan/metaphysics-core.git
@@ -62,7 +65,8 @@ dev_dependencies:
 
 dependency_overrides:
   xuan_four_zhu_card:
-    path: ../xuan-four-zhu-card
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-four-zhu-card.git
   persistence_core:
     path: ../xuan-storage/core
   persistence_drift:
@@ -74,7 +78,8 @@ dependency_overrides:
   xuan_gua_core:
     path: ../xuan-gua-core
   persistence_domain:
-    path: ../xuan-domain
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-domain.git
   xuan_time_location:
     path: ../xuan-time-location
   theme:
