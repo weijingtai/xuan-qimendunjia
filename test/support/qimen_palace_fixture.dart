@@ -68,8 +68,14 @@ const _stems = [
 List<PalaceData> buildQiMenPalaceFixture() {
   return List.generate(9, (i) {
     final gong = _guas[i];
+    // EachGong now uses gongNumber + gongGua (not the old gongEnum).
+    // star accepts QiMenStar (NineStarsEnum implements this).
+    // Removed fields from old API: gongEnum, tianJiGan, diJiGan, jiStar,
+    // isTianPanDunJia, isDiPanDunJia, isTianPanJiXing, isYangDun.
+    // New fields: gongNumber, tianPanJiGan, diPanJiGan, sixJiaXunHeader, isJiTianQin.
     final eachGong = EachGong(
-      gongEnum: gong,
+      gongNumber: i + 1,
+      gongGua: gong,
       star: _stars[i],
       door: _doors[i],
       god: _gods[i],
@@ -79,13 +85,9 @@ List<PalaceData> buildQiMenPalaceFixture() {
       yinGan: _stems[(i + 2) % _stems.length],
       renPanAnGan: _stems[(i + 4) % _stems.length],
       tianPanAnGan: _stems[(i + 1) % _stems.length],
-      tianJiGan: _stems[(i + 5) % _stems.length],
-      diJiGan: _stems[(i + 6) % _stems.length],
-      jiStar: _stars[(i + 1) % _stars.length],
-      isTianPanDunJia: i == 0,
-      isDiPanDunJia: i == 1,
-      isTianPanJiXing: i == 2,
-      isYangDun: true,
+      tianPanJiGan: _stems[(i + 5) % _stems.length],
+      diPanJiGan: _stems[(i + 6) % _stems.length],
+      isJiTianQin: i == 2,
     );
 
     final marks = <String>[];
@@ -93,11 +95,11 @@ List<PalaceData> buildQiMenPalaceFixture() {
     if (i == 2) marks.add('驿马');
     if (i == 7) marks.add('空亡');
 
+    // PalaceData.fromEachGong no longer takes external number/diGodEnum —
+    // those are derived internally from the EachGong instance.
     return PalaceData.fromEachGong(
       eachGong,
-      number: _guas[i].name,
       marks: marks,
-      diGodEnum: _gods[(i + 1) % _gods.length],
     );
   });
 }
