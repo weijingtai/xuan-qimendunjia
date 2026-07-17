@@ -333,10 +333,11 @@ class _PrimaryPageState extends State<PrimaryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('奇门遁甲'),
+        title: Text(l10n.qimendunjia),
       ),
       body: Center(
         child: Column(
@@ -395,7 +396,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                       //   currentIndex = 0;
                       // }
                     },
-                    child: const Text("先天"),
+                    child: Text(l10n.xianTian),
                   ),
                   const SizedBox(
                     width: 8,
@@ -417,7 +418,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         currentIndex = 0;
                       }
                     },
-                    child: const Text("后天"),
+                    child: Text(l10n.houTian),
                   )
                 ],
               ),
@@ -697,7 +698,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         duration: Duration(milliseconds: 500),
                         style: TextStyle(
                             fontSize: 24, color: Colors.white, height: 1.2),
-                        child: Text("甲子"),
+                        child: Text(l10n.jiaZi),
                       ),
                     ),
                   ),
@@ -1476,6 +1477,7 @@ class CellState extends State<Cell> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: color,

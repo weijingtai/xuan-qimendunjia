@@ -27,6 +27,8 @@ dependencies:
     path: ../metaphysics-chart-ui
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   logger: ^2.6.2
   tuple: ^2.0.2
 #  chinese_lunar_calendar: ^0.0.13
@@ -91,6 +93,7 @@ dependency_overrides:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
   assets:
     - assets/icons/
     - assets/qi_men_dun_jia/
