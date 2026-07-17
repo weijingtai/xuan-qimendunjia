@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:qimendunjia/redesign_ui/layouts/smart_grid.dart';
+import 'package:qimendunjia/redesign_ui/components/palace/brief_palace_config.dart';
 import 'package:qimendunjia/redesign_ui/components/palace/recipe_palace_layout.dart';
 
 import '../support/qimen_palace_fixture.dart';

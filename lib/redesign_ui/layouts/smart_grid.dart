@@ -16,6 +16,17 @@ import '../../enums/enum_six_jia.dart';
 
 part '../components/palace/brief_palace_layout.dart';
 
+class _GridCellContext {
+  final int index;
+  final double cellSize;
+  final bool isCenter;
+  const _GridCellContext({
+    required this.index,
+    required this.cellSize,
+    required this.isCenter,
+  });
+}
+
 /// 智能响应式九宫格布局
 /// 根据屏幕尺寸动态调整布局参数
 class SmartQiMenGrid extends StatelessWidget {
@@ -68,15 +79,27 @@ class SmartQiMenGrid extends StatelessWidget {
             border: gridBorder,
             boxShadow: [gridShadow],
           ),
-          child: PalaceGrid(
-            gridSize: gridSize - padding.horizontal,
-            showWASDLabels: showWASDLabels,
-            selectedIndex: selectedIndex,
-            onPalaceTap: onPalaceTap,
-            crossAxisCount: 3,
-            padding: EdgeInsets.zero,
-            contentBuilder: (context, ctx) {
-              return _buildCellContent(context, ctx);
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 0,
+              crossAxisSpacing: 0,
+            ),
+            itemCount: 9,
+            itemBuilder: (context, index) {
+              final cellSize = (gridSize - padding.horizontal) / 3;
+              return GestureDetector(
+                onTap: () => onPalaceTap(index),
+                child: _buildCellContent(
+                  context,
+                  _GridCellContext(
+                    index: index,
+                    cellSize: cellSize,
+                    isCenter: index == 4,
+                  ),
+                ),
+              );
             },
           ),
         );
@@ -104,7 +127,7 @@ class SmartQiMenGrid extends StatelessWidget {
   }
 
   /// 构建单个宫格的内容 — cell装饰 + 业务内容。
-  Widget _buildCellContent(BuildContext context, PalaceContext ctx) {
+  Widget _buildCellContent(BuildContext context, _GridCellContext ctx) {
     final cellStyle =
         XuanThemeData.maybeOf(context)?.component('qimen_palace_cell');
     final border = cellStyle?.border;
