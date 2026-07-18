@@ -8,6 +8,7 @@ import 'package:ai_core/ai/ai_chat_event.dart';
 import 'package:ai_core/ai_core.dart' hide AiPersona;
 import 'package:ai_core/ai/ai_persona.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
+import 'package:qimendunjia/l10n/app_localizations.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/enums/enum_arrange_plate_type.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
@@ -132,7 +133,7 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                 if (!vm.hasData) return const SizedBox.shrink();
                 return IconButton(
                   icon: const Icon(Icons.tune),
-                  tooltip: 'AI 上下文设置',
+                  tooltip: AppLocalizations.of(context)!.aiContextSettings,
                   onPressed: () => _showDisplayConfigSheet(context, vm),
                 );
               },
@@ -808,7 +809,7 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('架构说明'),
-        content: const SingleChildScrollView(
+        content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -823,14 +824,14 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text('• Entity: 业务实体类'),
-              Text('• Repository接口: 定义数据操作契约'),
+              Text(AppLocalizations.of(context)!.repositoryInterfaceDesc),
               Text('• UseCase: 业务用例逻辑'),
               SizedBox(height: 12),
               Text(
                 '📦 Data层（数据处理）',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              Text('• Repository实现: 实现数据操作'),
+              Text(AppLocalizations.of(context)!.repositoryImplDesc),
               Text('• DataSource: 数据源（JSON/计算器）'),
               SizedBox(height: 12),
               Text(

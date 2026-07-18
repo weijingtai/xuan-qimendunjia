@@ -5,5 +5,7 @@
   "houTian": "后天",
   "jiaZi": "甲子",
   "aiContextSettings": "AI 上下文设置",
-  "showHint": "显示提示"
+  "showHint": "显示提示",
+  "repositoryInterfaceDesc": "• Repository接口: 定义数据操作契约",
+  "repositoryImplDesc": "• Repository实现: 实现数据操作"
 }

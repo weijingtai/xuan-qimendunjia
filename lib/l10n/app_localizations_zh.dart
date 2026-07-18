@@ -25,4 +25,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get showHint => '显示提示';
+
+  @override
+  String get repositoryInterfaceDesc => '• Repository接口: 定义数据操作契约';
+
+  @override
+  String get repositoryImplDesc => '• Repository实现: 实现数据操作';
 }

@@ -129,6 +129,18 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'显示提示'**
   String get showHint;
+
+  /// No description provided for @repositoryInterfaceDesc.
+  ///
+  /// In zh, this message translates to:
+  /// **'• Repository接口: 定义数据操作契约'**
+  String get repositoryInterfaceDesc;
+
+  /// No description provided for @repositoryImplDesc.
+  ///
+  /// In zh, this message translates to:
+  /// **'• Repository实现: 实现数据操作'**
+  String get repositoryImplDesc;
 }
 
 class _AppLocalizationsDelegate
