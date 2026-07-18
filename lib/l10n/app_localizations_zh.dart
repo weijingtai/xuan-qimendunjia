@@ -19,4 +19,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get jiaZi => '甲子';
+
+  @override
+  String get aiContextSettings => 'AI 上下文设置';
+
+  @override
+  String get showHint => '显示提示';
 }

@@ -117,6 +117,18 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'甲子'**
   String get jiaZi;
+
+  /// No description provided for @aiContextSettings.
+  ///
+  /// In zh, this message translates to:
+  /// **'AI 上下文设置'**
+  String get aiContextSettings;
+
+  /// No description provided for @showHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'显示提示'**
+  String get showHint;
 }
 
 class _AppLocalizationsDelegate

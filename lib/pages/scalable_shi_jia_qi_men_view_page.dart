@@ -33,6 +33,7 @@ import 'package:qimendunjia/utils/constant_ui_resources_of_qi_men.dart';
 import 'package:qimendunjia/widgets/ten_gan_ke_ying_ge_ju_detail.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 import 'package:tuple/tuple.dart';
+import 'package:qimendunjia/l10n/app_localizations.dart';
 
 import '../enums/enum_arrange_plate_type.dart';
 import '../enums/enum_most_popular_ge_ju.dart';
@@ -478,7 +479,7 @@ class _ScalableShiJiaQiMenViewPageState
                   if (vm.shiJiaQiMen == null) return const SizedBox.shrink();
                   return IconButton(
                     icon: const Icon(Icons.tune),
-                    tooltip: 'AI 上下文设置',
+                    tooltip: AppLocalizations.of(context)!.aiContextSettings,
                     onPressed: () => _showDisplayConfigSheet(context, vm),
                   );
                 },
@@ -512,9 +513,9 @@ class _ScalableShiJiaQiMenViewPageState
               },
               itemBuilder: (ctx) {
                 return [
-                  const PopupMenuItem<String>(
+                  PopupMenuItem<String>(
                     value: "showhHint",
-                    child: Text('显示提示'),
+                    child: Text(AppLocalizations.of(ctx)!.showHint),
                   ),
                 ];
               },

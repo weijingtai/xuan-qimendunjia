@@ -3,5 +3,7 @@
   "qimendunjia": "奇门遁甲",
   "xianTian": "先天",
   "houTian": "后天",
-  "jiaZi": "甲子"
+  "jiaZi": "甲子",
+  "aiContextSettings": "AI 上下文设置",
+  "showHint": "显示提示"
 }
