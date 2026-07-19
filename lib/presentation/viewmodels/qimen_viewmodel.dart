@@ -1,7 +1,6 @@
-import 'package:ai_core/ai/ai_context.dart';
-import 'package:ai_core/ai/ai_entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
+import 'package:qimendunjia/ai/qimen_ai_service.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/presentation/models/qimen_state.dart';
@@ -133,14 +132,14 @@ class QiMenViewModel extends ChangeNotifier {
 
   /// 构建 AI 上下文
   ///
-  /// 将当前盘信息转为 [AiContext] 供聊天窗口使用。
+  /// 将当前盘信息转为 [QiMenAiContext] 供聊天窗口使用。
   /// 如果尚未排盘则返回 null。
-  AiContext? buildAiContext() {
+  QiMenAiContext? buildAiContext() {
     final s = _qiMenState;
     if (s is! QiMenSuccess) return null;
     final pan = s.pan;
 
-    final entity = AiEntity(
+    final entity = QiMenAiEntity(
       id: pan.id,
       type: 'qimen_pan',
       name: pan.brief,
@@ -148,7 +147,7 @@ class QiMenViewModel extends ChangeNotifier {
       rawData: PanSerializer.toMap(pan, config: _displayConfig),
     );
 
-    return AiContext(
+    return QiMenAiContext(
       moduleName: 'xuan-qimendunjia',
       intention: '用户已排好一个奇门局，请根据盘局信息进行分析。如需排其他时间的盘，可使用 qimen_tools 工具。',
       entities: [entity],

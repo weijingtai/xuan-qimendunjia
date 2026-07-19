@@ -6,12 +6,11 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:animated_read_more_text/animated_read_more_text.dart';
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:theme/const_resources_mapper.dart';
-import 'package:ai_core/ai/ai_chat_event.dart';
-import 'package:ai_core/ai/ai_persona.dart';
 import 'package:metaphysics_core/enums.dart';
+import 'package:qimendunjia/ai/qimen_ai_service.dart';
+import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_ji_1.dart';
 import 'package:xuan_four_zhu_card/widgets/ge_ju_panel_template_xiong_1.dart';
-import 'package:ai_core/ai_core.dart' hide AiPersona;
 import 'package:xuan_four_zhu_card/widgets/four_zhu_eight_char.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -397,8 +396,8 @@ class _ScalableShiJiaQiMenViewPageState
     );
   }
 
-  AiPersona? _selectedPersona;
-  StreamSubscription<AiChatEvent>? _chatEventSub;
+  QiMenAiPersona? _selectedPersona;
+  StreamSubscription<QiMenAiChatEvent>? _chatEventSub;
 
   @override
   void didChangeDependencies() {
@@ -406,15 +405,15 @@ class _ScalableShiJiaQiMenViewPageState
     _chatEventSub ??= _trySubscribeChatEvents();
   }
 
-  StreamSubscription<AiChatEvent>? _trySubscribeChatEvents() {
+  StreamSubscription<QiMenAiChatEvent>? _trySubscribeChatEvents() {
     try {
-      final aiService = context.read<AiService>();
+      final aiService = context.read<QiMenAiService>();
       _log.info('[_trySubscribeChatEvents] subscribing to chatEvents stream');
       debugPrint('📡 [ScalablePage] subscribing to chatEvents');
       return aiService.chatEvents
           .listen((event) {
         debugPrint('📡 [ScalablePage] received event: ${event.runtimeType}');
-        if (event is! ToolResultEvent) return;
+        if (event is! QiMenToolResultEvent) return;
         debugPrint('📡 [ScalablePage] ToolResultEvent: tool="${event.toolName}", hasError=${event.resultData.containsKey("error")}');
         if (event.toolName != 'qimen_tools') return;
         if (event.resultData.containsKey('error')) return;
@@ -441,9 +440,9 @@ class _ScalableShiJiaQiMenViewPageState
   Widget build(BuildContext context) {
     appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
 
-    AiService? aiService;
+    QiMenAiService? aiService;
     try {
-      aiService = context.read<AiService>();
+      aiService = context.read<QiMenAiService>();
     } catch (_) {}
 
     // return BeautifulPage();

@@ -15,12 +15,6 @@ dependencies:
   xuan_four_zhu_card:
     git:
       url: http://192.168.0.165:3000/xuan/xuan-four-zhu-card.git
-  ai_core:
-    git:
-      url: http://192.168.0.165:3000/xuan/xuan-ai.git
-  metaphysics_core:
-    git:
-      url: http://192.168.0.165:3000/xuan/metaphysics-core.git
   repository_interface_qimendunjia:
     path: ../repository-interface-qimendunjia
   metaphysics_chart_ui:

@@ -4,9 +4,7 @@ import 'package:metaphysics_core/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:ai_core/ai/ai_chat_event.dart';
-import 'package:ai_core/ai_core.dart' hide AiPersona;
-import 'package:ai_core/ai/ai_persona.dart';
+import 'package:qimendunjia/ai/qimen_ai_service.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/l10n/app_localizations.dart';
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
@@ -43,8 +41,8 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
   DateTime? _selectedDateTime;
   ArrangeType _arrangeType = ArrangeType.CHAI_BU;
   PlateType _plateType = PlateType.ZHUAN_PAN;
-  AiPersona? _selectedPersona;
-  StreamSubscription<AiChatEvent>? _chatEventSub;
+  QiMenAiPersona? _selectedPersona;
+  StreamSubscription<QiMenAiChatEvent>? _chatEventSub;
 
   @override
   void didChangeDependencies() {
@@ -52,14 +50,14 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
     _chatEventSub ??= _trySubscribeChatEvents();
   }
 
-  StreamSubscription<AiChatEvent>? _trySubscribeChatEvents() {
+  StreamSubscription<QiMenAiChatEvent>? _trySubscribeChatEvents() {
     try {
-      final aiService = context.read<AiService>();
+      final aiService = context.read<QiMenAiService>();
       _log.info('[_trySubscribeChatEvents] subscribing to chatEvents stream');
       debugPrint('📡 [QiMenMvvmPage] subscribing to chatEvents');
       return aiService.chatEvents.listen((event) {
         debugPrint('📡 [QiMenMvvmPage] received event: ${event.runtimeType}');
-        if (event is! ToolResultEvent) return;
+        if (event is! QiMenToolResultEvent) return;
         debugPrint(
             '📡 [QiMenMvvmPage] ToolResultEvent: tool="${event.toolName}", hasError=${event.resultData.containsKey("error")}');
         if (event.toolName != 'qimen_tools') return;
@@ -93,9 +91,9 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
 
   @override
   Widget build(BuildContext context) {
-    AiService? aiService;
+    QiMenAiService? aiService;
     try {
-      aiService = context.read<AiService>();
+      aiService = context.read<QiMenAiService>();
     } catch (_) {}
 
     return Scaffold(

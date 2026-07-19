@@ -1,10 +1,13 @@
 library;
 
-// AI Integration
+// AI Integration - Abstract interfaces (no ai_core dependency)
+export 'ai/qimen_ai_service.dart';
 export 'ai/pan_display_config.dart';
 export 'ai/pan_serializer.dart';
-export 'ai/qimen_ai_action.dart';
-export 'ai/qimen_agent_tool.dart';
+
+// AI Integration - Implementations (for shell layer use)
+export 'ai/qimen_ai_action_impl.dart';
+export 'ai/qimen_agent_tool_impl.dart';
 export 'ai/qimen_ai_integration.dart';
 
 // / A Calculator.

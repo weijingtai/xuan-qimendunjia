@@ -1,5 +1,4 @@
-import 'package:ai_core/ai/ai_context.dart';
-import 'package:ai_core/ai/ai_entity.dart';
+import 'package:qimendunjia/ai/qimen_ai_service.dart';
 import 'package:metaphysics_core/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logging/logging.dart';
@@ -63,12 +62,12 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
   /// 构建 AI 上下文
   ///
   /// 使用 [QiMenPanMapper] 将老 model 转为 domain entity 后序列化。
-  AiContext? buildAiContext() {
+  QiMenAiContext? buildAiContext() {
     final bridge = _bridge;
     if (bridge == null) return null;
 
     final pan = bridge.pan!;
-    final entity = AiEntity(
+    final entity = QiMenAiEntity(
       id: pan.id,
       type: 'qimen_pan',
       name: pan.brief,
@@ -76,7 +75,7 @@ class ShiJiaQiMenViewModel extends ChangeNotifier {
       rawData: PanSerializer.toMap(pan, config: _displayConfig),
     );
 
-    return AiContext(
+    return QiMenAiContext(
       moduleName: 'xuan-qimendunjia',
       intention: '用户已排好一个奇门局，请根据盘局信息进行分析。如需排其他时间的盘，可使用 qimen_tools 工具。',
       entities: [entity],
