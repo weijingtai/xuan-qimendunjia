@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:qimendunjia/data.dart';
 import 'package:tuple/tuple.dart';
+import '../l10n/app_localizations.dart';
 
 
 class PrimaryPage extends StatefulWidget {
@@ -503,6 +504,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
   }
 
   Widget buildGong(GongFixedContent fixed, QiMenDunJiaGong moving) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: 256,
       height: 256,
@@ -694,7 +696,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(16)),
                       ),
-                      child: const AnimatedDefaultTextStyle(
+                      child: AnimatedDefaultTextStyle(
                         duration: Duration(milliseconds: 500),
                         style: TextStyle(
                             fontSize: 24, color: Colors.white, height: 1.2),
