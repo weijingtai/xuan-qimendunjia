@@ -45,7 +45,7 @@ abstract final class QiMenGongRecipes {
     return GongRecipe.inset(
       const EdgeInsets.all(2),
       GongRecipe.column([
-        GongRecipe.optional('${QiMenGongIds.deityPrimary}-$index'),
+        GongRecipe.bind('${QiMenGongIds.deityPrimary}-$index'),
         GongRecipe.row([
           GongRecipe.bind('${QiMenGongIds.starPrimary}-$index'),
           GongRecipe.column([
@@ -53,7 +53,7 @@ abstract final class QiMenGongRecipes {
             GongRecipe.bind('${QiMenGongIds.stemEarth}-$index'),
           ]),
         ]),
-        GongRecipe.optional('${QiMenGongIds.doorPrimary}-$index'),
+        GongRecipe.bind('${QiMenGongIds.doorPrimary}-$index'),
         _secondaryWrap(index),
       ]),
     );
