@@ -90,6 +90,7 @@ class SmartQiMenGrid extends StatelessWidget {
             itemBuilder: (context, index) {
               final cellSize = (gridSize - padding.horizontal) / 3;
               return GestureDetector(
+                key: ValueKey('qimen-palace-$index'),
                 onTap: () => onPalaceTap(index),
                 child: _buildCellContent(
                   context,
