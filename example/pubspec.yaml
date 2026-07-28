@@ -15,8 +15,7 @@ dependencies:
 
   qimendunjia:
     git:
-      url: http://xuan:***@192.168.0.165:3000/xuan/xuan-qimendunjia.git
-      ref: main
+      url: http://192.168.0.165:3000/xuan/xuan-qimendunjia.git
   provider: ^6.1.1
   logging: ^1.2.0
   timezone: ^0.9.4
@@ -24,44 +23,68 @@ dependencies:
   lottie: ^3.3.2
   cupertino_icons: ^1.0.8
   persistence_drift:
-    path: ../../xuan-storage/drift
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-storage.git
+      path: drift
   persistence_preferences:
-    path: ../../xuan-storage/preferences
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-storage.git
+      path: preferences
   shared_preferences: ^2.2.0
   drift: ^2.30.1
+  enumeration:
+    git:
+      url: http://192.168.0.165:3000/xuan/enumeration.git
 
 dependency_overrides:
   google_fonts: ^6.2.1
   xuan_four_zhu_card:
-    path: ../../xuan-four-zhu-card
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-four-zhu-card.git
   qimendunjia:
-    path: ../
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-qimendunjia.git
   # Mirror the overrides from qimendunjia's own pubspec so transitive
   # path deps resolve correctly from the example/ directory.
   persistence_core:
-    path: ../../xuan-storage/core
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-storage.git
+      path: core
   persistence_drift:
-    path: ../../xuan-storage/drift
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-storage.git
+      path: drift
   persistence_preferences:
-    path: ../../xuan-storage/preferences
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-storage.git
+      path: preferences
   metaphysics_core:
-    path: ../../xuan-metaphysics-core
+    git:
+      url: http://192.168.0.165:3000/xuan/metaphysics-core.git
   xuan_gua_core:
-    path: ../../xuan-gua-core
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-gua-core.git
   persistence_domain:
-    path: ../../xuan-domain
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-domain.git
   xuan_time_location:
-    path: ../../xuan-time-location
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-time-location.git
   repository_interface_qimendunjia:
-    path: ../../repository-interface-qimendunjia
+    git:
+      url: http://192.168.0.165:3000/xuan/repository-interface-qimendunjia.git
   repository_interface_four_zhu_card:
-    path: ../../repository-interface-four-zhu-card
+    git:
+      url: http://192.168.0.165:3000/xuan/repository-interface-four-zhu-card.git
   theme:
-    path: ../../theme
+    git:
+      url: http://192.168.0.165:3000/xuan/theme.git
   divination_case:
-    path: ../../xuan-divination-case
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-divination-case.git
   metaphysics_chart_ui:
-    path: /Users/jingtaiwei/Git/Public/xuan-migration-worktrees/qimen-gong-recipe/metaphysics-chart-ui
+    git:
+      url: http://192.168.0.165:3000/xuan/metaphysics-chart-ui.git
 
 dev_dependencies:
   flutter_test:
