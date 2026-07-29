@@ -18,6 +18,9 @@ dependencies:
   xuan_four_zhu_card:
     git:
       url: http://192.168.0.165:3000/xuan/xuan-four-zhu-card.git
+  repository_interface_divination_pipeline:
+    git:
+      url: http://192.168.0.165:3000/xuan/repository-interface-divination-pipeline.git
   repository_interface_qimendunjia:
     git:
       url: http://192.168.0.165:3000/xuan/repository-interface-qimendunjia.git
