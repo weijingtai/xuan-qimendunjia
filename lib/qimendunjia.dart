@@ -10,6 +10,10 @@ export 'ai/qimen_ai_action_impl.dart';
 export 'ai/qimen_agent_tool_impl.dart';
 export 'ai/qimen_ai_integration.dart';
 
+// Module manifest & navigator (for shell module graph assembly)
+export 'src/module/qimendunjia_module_manifest.dart';
+export 'navigator.dart';
+
 // / A Calculator.
 // class Calculator {
 //   / Returns [value] plus 1.
