@@ -11,12 +11,17 @@ import 'package:qimendunjia/utils/nian_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/ri_jia_qi_men_ju_calculator.dart';
 import 'package:qimendunjia/utils/yue_jia_qi_men_ju_calculator.dart';
+import 'qimen_calculation_context.dart';
 import 'qimen_chart_params.dart';
 
 final class QimenChartCalculator
     implements
         ChartCalculator<QimenChartParams, QimenDivinationRecordContract> {
-  const QimenChartCalculator();
+  final QimenCalculationContext context;
+
+  const QimenChartCalculator({
+    this.context = const QimenCalculationContext(),
+  });
 
   @override
   String get module => 'qimendunjia';
