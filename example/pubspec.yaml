@@ -30,6 +30,10 @@ dependencies:
     git:
       url: http://192.168.0.165:3000/xuan/xuan-storage.git
       path: preferences
+  persistence_assets:
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-storage.git
+      path: assets
   shared_preferences: ^2.2.0
   drift: ^2.30.1
   enumeration:
@@ -94,9 +98,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  assets:
-    - assets/icons/
-    - assets/qi_men_dun_jia/
-    - assets/lotties/
-    - assets/backgrounds/
-    - assets/dataset/
+  # To add assets to your app, add an assets section, like this:
