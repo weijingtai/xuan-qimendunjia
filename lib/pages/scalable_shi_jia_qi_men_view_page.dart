@@ -2541,7 +2541,7 @@ class _ScalableShiJiaQiMenViewPageState
                 ConstResourcesMapper.jiXiongColorMapper[jixiong]!,
                 BlendMode.srcIn),
             child: Image.asset(
-              "assets/icons/ji_xiong_yin_zhang.png",
+              "packages/qimendunjia/assets/icons/ji_xiong_yin_zhang.png",
               width: 32,
               height: 32,
             )),
@@ -2638,7 +2638,7 @@ class _ScalableShiJiaQiMenViewPageState
                                       qiYiGong.geJuJiXiong]!,
                                   BlendMode.srcIn),
                               child: Image.asset(
-                                "assets/icons/long_yin_zhang.png",
+                                "packages/qimendunjia/assets/icons/long_yin_zhang.png",
                                 width: 64,
                                 height: 20,
                               )),
@@ -2702,7 +2702,7 @@ class _ScalableShiJiaQiMenViewPageState
               colorFilter:
                   ColorFilter.mode(Colors.blueGrey.shade700, BlendMode.srcIn),
               child: Image.asset(
-                "assets/icons/yin_zhang.png",
+                "packages/qimendunjia/assets/icons/yin_zhang.png",
                 width: 32,
                 height: 32,
               )),
@@ -3493,7 +3493,7 @@ class _ScalableShiJiaQiMenViewPageState
                                           Color.fromRGBO(176, 31, 36, .8),
                                           BlendMode.srcIn),
                                       child: Image.asset(
-                                        "assets/icons/wide-black-ink-radian-line2.png",
+                                        "packages/qimendunjia/assets/icons/wide-black-ink-radian-line2.png",
                                       ))),
                               Text("${bridge.displayState.zhiFuStar.name}星",
                                   style:
@@ -3542,7 +3542,7 @@ class _ScalableShiJiaQiMenViewPageState
                                         Color.fromRGBO(176, 31, 36, .8),
                                         BlendMode.srcIn),
                                     child: Image.asset(
-                                      "assets/icons/wide-black-ink-radian-line2.png",
+                                      "packages/qimendunjia/assets/icons/wide-black-ink-radian-line2.png",
                                     ))),
                             Text(bridge.displayState.zhiShiDoor.name,
                                 style:

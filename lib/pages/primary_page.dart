@@ -441,7 +441,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
         children: [
           Opacity(
               opacity: .3,
-              child: Image.asset("assets/icons/bagua-mirror-64.png")),
+              child: Image.asset("packages/qimendunjia/assets/icons/bagua-mirror-64.png")),
           AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 500),
             style: const TextStyle(
@@ -1077,7 +1077,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
           children: [
             // Icon(Icons.bolt,size: 22,color: Colors.amber,),
             Image.asset(
-              "assets/icons/flash-32.png",
+              "packages/qimendunjia/assets/icons/flash-32.png",
               width: 18,
               height: 18,
             ),
@@ -1138,7 +1138,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                           children: [
                             // Icon(Icons.star,size: 22,color: Colors.amber,),
                             Image.asset(
-                              "assets/icons/stars-64.png",
+                              "packages/qimendunjia/assets/icons/stars-64.png",
                               width: 14,
                               height: 14,
                             ),
@@ -1191,7 +1191,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                     children: [
                       // Icon(Icons.star,size: 22,color: Colors.amber,),
                       // Image.asset(
-                      //   "assets/icons/stars-64.png",
+                      //   "packages/qimendunjia/assets/icons/stars-64.png",
                       //   width: 20,
                       //   height: 20,
                       // ),
@@ -1220,7 +1220,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                     children: [
                       // Icon(Icons.star,size: 22,color: Colors.amber,),
                       Image.asset(
-                        "assets/icons/stars-64.png",
+                        "packages/qimendunjia/assets/icons/stars-64.png",
                         width: 14,
                         height: 14,
                       ),

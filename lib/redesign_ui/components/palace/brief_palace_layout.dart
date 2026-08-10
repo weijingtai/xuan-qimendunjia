@@ -216,7 +216,7 @@ class BriefPalaceLayout extends StatelessWidget {
                           width: theme.horseIconSize,
                           height: theme.horseIconSize,
                           child: Lottie.asset(
-                            'assets/lotties/horse_walking.json',
+                            'packages/qimendunjia/assets/lotties/horse_walking.json',
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -231,7 +231,7 @@ class BriefPalaceLayout extends StatelessWidget {
                                 BlendMode.srcIn,
                               ),
                               child: Image.asset(
-                                'assets/icons/thin-black-ink-circle.png',
+                                'packages/qimendunjia/assets/icons/thin-black-ink-circle.png',
                                 fit: BoxFit.contain,
                               ),
                             ),
@@ -560,7 +560,7 @@ class BriefPalaceLayout extends StatelessWidget {
         child: Stack(
           children: [
             Image.asset(
-              'assets/icons/ji_xing.png',
+              'packages/qimendunjia/assets/icons/ji_xing.png',
               width: theme.jiXingMarkerSize,
               height: theme.jiXingMarkerSize,
               color: theme.jiXingColor,
@@ -571,7 +571,7 @@ class BriefPalaceLayout extends StatelessWidget {
               left: theme.markerThickness,
               top: theme.markerThickness,
               child: Image.asset(
-                'assets/icons/ji_xing.png',
+                'packages/qimendunjia/assets/icons/ji_xing.png',
                 width: theme.jiXingMarkerSize,
                 height: theme.jiXingMarkerSize,
                 color: theme.jiXingColor,
@@ -593,7 +593,7 @@ class BriefPalaceLayout extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Image.asset(
-              'assets/icons/red-ink-circle.png',
+              'packages/qimendunjia/assets/icons/red-ink-circle.png',
               width: theme.dunjiaMarkerSize,
               height: theme.dunjiaMarkerSize,
               color: theme.dunjiaColor,
@@ -604,7 +604,7 @@ class BriefPalaceLayout extends StatelessWidget {
               left: theme.markerThickness,
               top: theme.markerThickness,
               child: Image.asset(
-                'assets/icons/red-ink-circle.png',
+                'packages/qimendunjia/assets/icons/red-ink-circle.png',
                 width: theme.dunjiaMarkerSize,
                 height: theme.dunjiaMarkerSize,
                 color: theme.dunjiaColor,

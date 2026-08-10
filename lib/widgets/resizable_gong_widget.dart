@@ -275,7 +275,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                                     .jiXiongColorMapper[qi.geJuJiXiong]!,
                                 BlendMode.srcIn),
                             child: Image.asset(
-                              "assets/icons/long_yin_zhang.png",
+                              "packages/qimendunjia/assets/icons/long_yin_zhang.png",
                               width: 64,
                               height: 20,
                             )),
@@ -371,7 +371,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
       height: 48,
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: const AssetImage("assets/icons/yin_zhang.png"),
+              image: const AssetImage("packages/qimendunjia/assets/icons/yin_zhang.png"),
               colorFilter: ColorFilter.mode(
                   ConstResourcesMapper
                       .jiXiongColorMapper[tenGanKeYingGeJu.jiXiong]!,
@@ -509,7 +509,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                       image:
-                          AssetImage("assets/icons/chinese-red-ink-seal.png"),
+                          AssetImage("packages/qimendunjia/assets/icons/chinese-red-ink-seal.png"),
                       colorFilter:
                           ColorFilter.mode(Colors.red, BlendMode.srcIn),
                       fit: BoxFit.cover),
@@ -658,7 +658,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
           //       colorFilter: ColorFilter.mode(
           //           Colors.blueGrey.withValues(alpha: .1),
           //           BlendMode.srcIn),
-          //       child: Image.asset("assets/icons/mu.png")),
+          //       child: Image.asset("packages/qimendunjia/assets/icons/mu.png")),
           // ),)
         ],
       ),
@@ -1045,7 +1045,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
             colorFilter: const ColorFilter.mode(
                 Color.fromRGBO(176, 31, 36, .8), BlendMode.srcIn),
             child: Image.asset(
-              "assets/icons/wide-black-ink-line.png",
+              "packages/qimendunjia/assets/icons/wide-black-ink-line.png",
             )));
   }
 
@@ -1060,7 +1060,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
             colorFilter: const ColorFilter.mode(
                 Color.fromRGBO(176, 31, 36, .8), BlendMode.srcIn),
             child: Image.asset(
-              "assets/icons/wide-black-ink-radian-line2.png",
+              "packages/qimendunjia/assets/icons/wide-black-ink-radian-line2.png",
             )));
   }
 
@@ -1078,7 +1078,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                     ConstantUiResourcesOfQiMen.gongDoorRelationshipColorMapper[
                         gongAndDoorRelationship]!,
                     BlendMode.srcIn),
-                image: const AssetImage("assets/icons/red-ink-background.png")),
+                image: const AssetImage("packages/qimendunjia/assets/icons/red-ink-background.png")),
             // borderRadius: BorderRadius.only(
             //   topLeft: Radius.circular(16),
             //   topRight: Radius.circular(16),
@@ -1236,9 +1236,9 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                         colorFilter: ColorFilter.mode(
                             ConstResourcesMapper.zodiacGanColors[TianGan.JIA]!,
                             BlendMode.srcIn),
-                        child: Image.asset("assets/icons/red-ink-circle.png")
-                        // child: Image.asset("assets/icons/thin-black-ink-circle.png")
-                        // child: Image.asset("assets/icons/jia_dun_jia.png")
+                        child: Image.asset("packages/qimendunjia/assets/icons/red-ink-circle.png")
+                        // child: Image.asset("packages/qimendunjia/assets/icons/thin-black-ink-circle.png")
+                        // child: Image.asset("packages/qimendunjia/assets/icons/jia_dun_jia.png")
                         ),
                   ),
                 if (isMuOrKu != null)
@@ -1253,8 +1253,8 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                                   ? Colors.red.shade800
                                   : Colors.blue.shade600,
                               BlendMode.srcIn),
-                          // child: Image.asset("assets/icons/thin-black-ink-circle.png")
-                          child: Image.asset("assets/icons/mu.png")),
+                          // child: Image.asset("packages/qimendunjia/assets/icons/thin-black-ink-circle.png")
+                          child: Image.asset("packages/qimendunjia/assets/icons/mu.png")),
                     ),
                   ),
                 // SizedBox(
@@ -1264,8 +1264,8 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                 //       colorFilter: ColorFilter.mode(
                 //           Colors.blueGrey,
                 //           BlendMode.srcIn),
-                //       // child: Image.asset("assets/icons/thin-black-ink-circle.png")
-                //       child: Image.asset("assets/icons/jia_ru_mu.png")
+                //       // child: Image.asset("packages/qimendunjia/assets/icons/thin-black-ink-circle.png")
+                //       child: Image.asset("packages/qimendunjia/assets/icons/jia_ru_mu.png")
                 //   ),
                 // ),
                 if (NineYiUtils.isLiuYiJiXing(gan, gong.gongGua))
@@ -1275,7 +1275,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                     child: ColorFiltered(
                         colorFilter: const ColorFilter.mode(
                             Colors.blueGrey, BlendMode.srcIn),
-                        child: Image.asset("assets/icons/ji_xing.png")),
+                        child: Image.asset("packages/qimendunjia/assets/icons/ji_xing.png")),
                   ),
                 Text(gan.name,
                     style: ConstantUiResourcesOfQiMen.tianGanTextStyle.copyWith(
@@ -1376,9 +1376,9 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                                       .zodiacGanColors[TianGan.JIA]!,
                                   BlendMode.srcIn),
                               child:
-                                  Image.asset("assets/icons/red-ink-circle.png")
-                              // child: Image.asset("assets/icons/thin-black-ink-circle.png")
-                              // child: Image.asset("assets/icons/jia_dun_jia.png")
+                                  Image.asset("packages/qimendunjia/assets/icons/red-ink-circle.png")
+                              // child: Image.asset("packages/qimendunjia/assets/icons/thin-black-ink-circle.png")
+                              // child: Image.asset("packages/qimendunjia/assets/icons/jia_dun_jia.png")
                               ),
                         ),
                       if (isJiGanMuOrKu != null)
@@ -1391,8 +1391,8 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                                       ? Colors.red.shade800
                                       : Colors.blue.shade600,
                                   BlendMode.srcIn),
-                              // child: Image.asset("assets/icons/thin-black-ink-circle.png")
-                              child: Image.asset("assets/icons/mu.png")),
+                              // child: Image.asset("packages/qimendunjia/assets/icons/thin-black-ink-circle.png")
+                              child: Image.asset("packages/qimendunjia/assets/icons/mu.png")),
                         ),
                       // SizedBox(
                       //   width:fontSize *.7,
@@ -1401,8 +1401,8 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                       //       colorFilter: ColorFilter.mode(
                       //           Colors.blueGrey,
                       //           BlendMode.srcIn),
-                      //       // child: Image.asset("assets/icons/thin-black-ink-circle.png")
-                      //       child: Image.asset("assets/icons/jia_ru_mu.png")
+                      //       // child: Image.asset("packages/qimendunjia/assets/icons/thin-black-ink-circle.png")
+                      //       child: Image.asset("packages/qimendunjia/assets/icons/jia_ru_mu.png")
                       //   ),
                       // ),
 
@@ -1413,7 +1413,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                           child: ColorFiltered(
                               colorFilter: const ColorFilter.mode(
                                   Colors.blueGrey, BlendMode.srcIn),
-                              child: Image.asset("assets/icons/ji_xing.png")),
+                              child: Image.asset("packages/qimendunjia/assets/icons/ji_xing.png")),
                         ),
 
                       Text(jiGan.name,
@@ -1986,7 +1986,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                           colorFilter:
                               ColorFilter.mode(backColor, BlendMode.srcIn),
                           image: const AssetImage(
-                            "assets/icons/ji_xiong_yin_zhang.png",
+                            "packages/qimendunjia/assets/icons/ji_xiong_yin_zhang.png",
                           )),
                     ),
                     child: AutoSizeText(
@@ -2009,7 +2009,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
           ),
           FutureBuilder(
             future: precacheImage(
-                const AssetImage('assets/icons/xiang_yun_wen_l.png'), context),
+                const AssetImage('packages/qimendunjia/assets/icons/xiang_yun_wen_l.png'), context),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 // 图片加载完成后执行的操作
@@ -2025,7 +2025,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                               colorFilter:
                                   ColorFilter.mode(backColor, BlendMode.srcIn),
                               child: Image.asset(
-                                "assets/icons/xiang_yun_line_1.png",
+                                "packages/qimendunjia/assets/icons/xiang_yun_line_1.png",
                               )),
                         ))
                     .animate(autoPlay: true)
@@ -2042,7 +2042,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
           ),
           FutureBuilder(
             future: precacheImage(
-                const AssetImage('assets/icons/xiang_yun_wen_l.png'), context),
+                const AssetImage('packages/qimendunjia/assets/icons/xiang_yun_wen_l.png'), context),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 // 图片加载完成后执行的操作
@@ -2055,7 +2055,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                               colorFilter:
                                   ColorFilter.mode(backColor, BlendMode.srcIn),
                               child: Image.asset(
-                                "assets/icons/xiang_yun_wen_l.png",
+                                "packages/qimendunjia/assets/icons/xiang_yun_wen_l.png",
                               )),
                         ))
                     .animate(autoPlay: true)
@@ -2072,7 +2072,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
           ),
           FutureBuilder(
             future: precacheImage(
-                const AssetImage('assets/icons/xiang_yun_wen_r.png'), context),
+                const AssetImage('packages/qimendunjia/assets/icons/xiang_yun_wen_r.png'), context),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 // 图片加载完成后执行的操作
@@ -2086,7 +2086,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                             colorFilter:
                                 ColorFilter.mode(backColor, BlendMode.srcIn),
                             child: Image.asset(
-                              "assets/icons/xiang_yun_wen_r.png",
+                              "packages/qimendunjia/assets/icons/xiang_yun_wen_r.png",
                             ))),
                   ),
                 )
@@ -2125,7 +2125,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
                       ConstResourcesMapper.zodiacZhiColors[diZhi]!,
                       BlendMode.srcIn),
                   image: const AssetImage(
-                      "assets/icons/thin-black-ink-circle.png")),
+                      "packages/qimendunjia/assets/icons/thin-black-ink-circle.png")),
             )
           : null,
       child: panMeta.horseLocation != diZhi
@@ -2135,7 +2135,7 @@ class _ResizableGongWidgetState extends State<ResizableGongWidget> {
   }
 
   Widget _buildHorseStar([Color color = Colors.black]) {
-    return Lottie.asset("assets/lotties/horse_walking.json",
+    return Lottie.asset("packages/qimendunjia/assets/lotties/horse_walking.json",
         delegates: LottieDelegates(values: [
           ValueDelegate.colorFilter(
             ["**"],
