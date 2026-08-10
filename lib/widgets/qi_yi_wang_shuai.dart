@@ -218,7 +218,7 @@ class QiYiWangShuai extends StatelessWidget {
               //   Color.fromRGBO(46,78,126,.8), // 藏青
               BlendMode.srcIn),
           child: Image.asset(
-            "packages/qimendunjia/assets/icons/ji_xing.png",
+            "packages/persistence_assets/lib/qimendunjia/assets/icons/ji_xing.png",
             width: 28,
             height: 28,
           )),
@@ -232,7 +232,7 @@ class QiYiWangShuai extends StatelessWidget {
       child: ColorFiltered(
           colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
           child: Image.asset(
-            "packages/qimendunjia/assets/icons/red-ink-circle.png",
+            "packages/persistence_assets/lib/qimendunjia/assets/icons/red-ink-circle.png",
             width: 28,
             height: 28,
           )),
@@ -252,7 +252,7 @@ class QiYiWangShuai extends StatelessWidget {
               //   Color.fromRGBO(46,78,126,.8), // 藏青
               BlendMode.srcIn),
           child: Image.asset(
-            "packages/qimendunjia/assets/icons/mu.png",
+            "packages/persistence_assets/lib/qimendunjia/assets/icons/mu.png",
             width: 28,
             height: 36,
           )),

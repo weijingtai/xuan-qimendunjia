@@ -13,19 +13,19 @@ class AssetsQimendunjiaOfficialRuleRepository
   const AssetsQimendunjiaOfficialRuleRepository();
 
   static const String _tenGanKeYingPath =
-      'packages/qimendunjia/assets/qi_men_dun_jia/ten_gan_ke_ying_v1.json';
+      'packages/persistence_assets/lib/qimendunjia/assets/qi_men_dun_jia/ten_gan_ke_ying_v1.json';
   static const String _tenGanKeYingGeJuPath =
-      'packages/qimendunjia/assets/qi_men_dun_jia/ten_gan_ke_ying_final.json';
+      'packages/persistence_assets/lib/qimendunjia/assets/qi_men_dun_jia/ten_gan_ke_ying_final.json';
   static const String _doorGanKeYingPath =
-      'packages/qimendunjia/assets/qi_men_dun_jia/door_gan_ke_ying.json';
+      'packages/persistence_assets/lib/qimendunjia/assets/qi_men_dun_jia/door_gan_ke_ying.json';
   static const String _qiYiRuGongPath =
-      'packages/qimendunjia/assets/qi_men_dun_jia/gong_qi.json';
+      'packages/persistence_assets/lib/qimendunjia/assets/qi_men_dun_jia/gong_qi.json';
   static const String _qiYiRuGongDiseasePath =
-      'packages/qimendunjia/assets/qi_men_dun_jia/gong_gan.json';
+      'packages/persistence_assets/lib/qimendunjia/assets/qi_men_dun_jia/gong_gan.json';
   static const String _starDoorKeYingPath =
-      'packages/qimendunjia/assets/qi_men_dun_jia/star_door_ke_ying.json';
+      'packages/persistence_assets/lib/qimendunjia/assets/qi_men_dun_jia/star_door_ke_ying.json';
   static const String _eightDoorKeYingPath =
-      'packages/qimendunjia/assets/qi_men_dun_jia/eight_door_ke_ying.json';
+      'packages/persistence_assets/lib/qimendunjia/assets/qi_men_dun_jia/eight_door_ke_ying.json';
 
   Future<String> _load(String assetKey) async {
     try {

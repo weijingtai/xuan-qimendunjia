@@ -40,7 +40,7 @@ class TenGanKeYingYinZhang extends StatelessWidget {
                   ConstResourcesMapper.jiXiongColorMapper[jiXiong]!,
                   // Colors.blueGrey.shade700,
                   BlendMode.srcIn),
-              child: Image.asset("packages/qimendunjia/assets/icons/yin_zhang.png")),
+              child: Image.asset("packages/persistence_assets/lib/qimendunjia/assets/icons/yin_zhang.png")),
         ),
         Container(
           height: size.height,
