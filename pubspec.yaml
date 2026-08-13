@@ -27,6 +27,10 @@ dependencies:
   ai_core:
     git:
       url: http://192.168.0.165:3000/xuan/xuan-ai.git
+  persistence_assets:
+    git:
+      url: http://192.168.0.165:3000/xuan/xuan-storage.git
+      path: assets
   metaphysics_chart_ui:
     git:
       url: http://192.168.0.165:3000/xuan/metaphysics-chart-ui.git
@@ -82,10 +86,6 @@ dependency_overrides:
     git:
       url: http://192.168.0.165:3000/xuan/xuan-storage.git
       path: drift
-  persistence_assets:
-    git:
-      url: http://192.168.0.165:3000/xuan/xuan-storage.git
-      path: assets
   repository_interface_qimendunjia:
     git:
       url: http://192.168.0.165:3000/xuan/repository-interface-qimendunjia.git
