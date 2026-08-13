@@ -44,10 +44,17 @@ void main() {
       plateType: PlateType.ZHUAN_PAN,
     );
 
+    final executor = QimenPipelineExecutor(
+      momentResolver: _FixedMomentResolver(),
+    );
+
     test('qimen_executor_produces_contract', () async {
-      final executor = QimenPipelineExecutor();
-      final result = await executor.execute(moment: fixedMoment, params: baseParams);
-      final contract = result.contract;
+      final contract = await executor.execute(
+        ChartRequest<QimenChartParams>(
+          moment: fixedMoment.source,
+          params: baseParams,
+        ),
+      );
 
       expect(contract.uuid, equals('test-uuid-001'));
       expect(contract.createdAt, equals(DateTime(2024, 8, 6, 8, 22, 0, 0, 0)));
@@ -56,21 +63,59 @@ void main() {
     });
 
     test('qimen_executor_matches_direct_calculator_call', () async {
-      final executor = QimenPipelineExecutor();
-      final result = await executor.execute(moment: fixedMoment, params: baseParams);
+      final result = await executor.execute(
+        ChartRequest<QimenChartParams>(
+          moment: fixedMoment.source,
+          params: baseParams,
+        ),
+      );
 
-      final calculator = QimenChartCalculator(context: await QimenCalculationContext.load());
+      final calculator = QimenChartCalculator(
+        context: await QimenCalculationContext.load(),
+      );
       final directContract = calculator.calculate(fixedMoment, baseParams);
 
-      expect(result.contract, equals(directContract));
+      expect(result.toJson(), directContract.toJson());
     });
 
     test('qimen_executor_is_deterministic', () async {
-      final executor = QimenPipelineExecutor();
-      final result1 = await executor.execute(moment: fixedMoment, params: baseParams);
-      final result2 = await executor.execute(moment: fixedMoment, params: baseParams);
+      final request = ChartRequest<QimenChartParams>(
+        moment: fixedMoment.source,
+        params: baseParams,
+      );
+      final result1 = await executor.execute(request);
+      final result2 = await executor.execute(request);
 
-      expect(result1.contract, equals(result2.contract));
+      expect(result1.toJson(), result2.toJson());
     });
   });
+}
+
+/// 固定 ResolvedMoment，隔离真实历法计算。
+class _FixedMomentResolver implements MomentResolver {
+  const _FixedMomentResolver();
+
+  @override
+  ResolvedMoment resolve(DivinationMoment moment) => ResolvedMoment(
+        source: moment,
+        nominalTime: DateTime(2024, 8, 6, 8, 22),
+        eightChars: EightChars(
+          year: JiaZi.getFromGanZhiValue('甲辰')!,
+          month: JiaZi.getFromGanZhiValue('辛未')!,
+          day: JiaZi.getFromGanZhiValue('壬寅')!,
+          time: JiaZi.getFromGanZhiValue('甲辰')!,
+        ),
+        lunar: const LunarDate(month: 7, day: 3, isLeapMonth: false),
+        jieQi: JieQiInfo(
+          jieQi: TwentyFourJieQi.LI_QIU,
+          startAt: DateTime(2024, 8, 7, 8, 0),
+          endAt: DateTime(2024, 8, 22, 22, 0),
+        ),
+      );
+
+  @override
+  List<ResolvedMoment> resolveCandidates(
+    DivinationMoment moment,
+    CandidateSpec spec,
+  ) => [];
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:enumeration/enums.dart' show EnumDatetimeType;
 import 'package:logging/logging.dart';
 import 'package:qimendunjia/ai/qimen_ai_service.dart';
 import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
+import 'package:qimendunjia/domain/pipeline/qimen_pipeline_executor.dart';
+import 'package:qimendunjia/domain/pipeline/qimen_chart_params.dart';
 import 'package:qimendunjia/presentation/models/qimen_state.dart';
 import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/each_gong.dart';
@@ -16,6 +19,7 @@ import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
 import 'package:qimendunjia/enums/enum_ke_scheme.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
+import 'package:repository_interface_divination_pipeline/repository_interface_divination_pipeline.dart';
 import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
 
 /// 奇门遁甲视图状态
@@ -54,6 +58,16 @@ class QiMenViewModel extends ChangeNotifier {
   // 记录仓储（A4 Phase 2 接线：排盘完成后保存记录）
   final QimenRecordRepository? _recordRepository;
 
+  /// Pipeline 统一入参排盘执行器（可选注入）。注入后 calculateAndArrangePan 走新路径，
+  /// 失败回退老路径，不打断 UI。
+  final QimenPipelineExecutor? _pipelineExecutor;
+
+  /// 最后一次走统一入参排盘的 [ChartRequest]，供测试断言 executor 被真实调用。
+  ChartRequest<QimenChartParams>? lastPipelineRequest;
+
+  /// 最后一次统一入参排盘产出的 Record（契约层 [Chart] 形态）。
+  Chart? lastPipelineRecord;
+
   // ==================== 密封状态（Q3 新增） ====================
 
   /// 核心状态：idle → calculating → success / error
@@ -79,7 +93,9 @@ class QiMenViewModel extends ChangeNotifier {
     this._arrangePanUseCase,
     this._selectGongUseCase, {
     QimenRecordRepository? recordRepository,
-  }) : _recordRepository = recordRepository;
+    QimenPipelineExecutor? pipelineExecutor,
+  })  : _recordRepository = recordRepository,
+        _pipelineExecutor = pipelineExecutor;
 
   // Getters
   QiMenViewState get state => _state;
@@ -204,13 +220,70 @@ class QiMenViewModel extends ChangeNotifier {
       _state = QiMenViewState.success;
       notifyListeners();
 
-      // 4. 保存排盘记录（A4 Phase 2 接线）
+      // 4. Pipeline 统一入参排盘 + 落库 Record（注入 executor 时）
+      await _runPipeline(
+        dateTime: dateTime,
+        jia: jia,
+        arrangeType: arrangeType,
+        plateType: plateType,
+        keScheme: keScheme ?? _panSettings.keScheme,
+        fuTouScheme: fuTouScheme ?? _panSettings.fuTouScheme,
+      );
+
+      // 5. 保存排盘记录（A4 Phase 2 接线）
       _saveRecordIfAvailable(pan: pan, ju: ju);
     } catch (e) {
       _qiMenState = QiMenError(e.toString());
       _state = QiMenViewState.error;
       _errorMessage = e.toString();
       notifyListeners();
+    }
+  }
+
+  /// Pipeline 统一入参排盘 + 落库 Record。
+  ///
+  /// 注入 [QimenPipelineExecutor] 时构建 [ChartRequest] 走统一入参排盘并落库 Record；
+  /// 失败只 debugPrint 回退，不打断 UI。
+  Future<void> _runPipeline({
+    required DateTime dateTime,
+    required QiMenJia jia,
+    required ArrangeType arrangeType,
+    required PlateType plateType,
+    required KeSchemeType keScheme,
+    required FuTouSchemeType fuTouScheme,
+  }) async {
+    final executor = _pipelineExecutor;
+    if (executor == null) return;
+
+    final params = QimenChartParams(
+      uuid: 'qimen-${dateTime.millisecondsSinceEpoch}',
+      createdAt: DateTime.now(),
+      question: null,
+      jia: jia,
+      arrangeType: arrangeType,
+      plateType: plateType,
+      panSettings: _panSettings,
+      keScheme: keScheme,
+      fuTouScheme: fuTouScheme,
+    );
+    final request = ChartRequest<QimenChartParams>(
+      moment: DivinationMoment(
+        instantUtc: dateTime.toUtc(),
+        place: const GeoPoint(
+          latitude: 0.0,
+          longitude: 0.0,
+          timeZoneId: 'Asia/Shanghai',
+        ),
+        reckoning: EnumDatetimeType.standard,
+      ),
+      params: params,
+    );
+    lastPipelineRequest = request;
+    try {
+      final record = await executor.executeAndSave(request);
+      lastPipelineRecord = record;
+    } catch (error, stack) {
+      debugPrint('奇门 Pipeline 排盘失败，已回退老路径: $error\n$stack');
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:qimendunjia/domain/pipeline/qimen_pipeline_executor.dart';
 import 'package:qimendunjia/data/datasources/cache_data_source.dart';
 import 'package:qimendunjia/data/datasources/calculator/qimen_calculator_data_source.dart';
 import 'package:qimendunjia/data/datasources/json_data_source.dart';
@@ -132,6 +133,10 @@ class ServiceLocator {
 
   /// 注册ViewModels
   void _registerViewModels() {
+    // Pipeline 统一入参排盘执行器（跨次排盘不变，单例注册；落库走注入的 Record 仓储）
+    _services[QimenPipelineExecutor] = QimenPipelineExecutor(
+      recordRepository: _tryGet<QimenRecordRepository>(),
+    );
     // 奇门遁甲 ViewModel
     // 使用工厂模式，每次获取都创建新实例
     // 因为 ViewModel 需要在每个页面有独立的状态
@@ -144,6 +149,7 @@ class ServiceLocator {
       get<ArrangePanUseCase>(),
       get<SelectGongUseCase>(),
       recordRepository: _tryGet<QimenRecordRepository>(),
+      pipelineExecutor: _tryGet<QimenPipelineExecutor>(),
     );
   }
 
