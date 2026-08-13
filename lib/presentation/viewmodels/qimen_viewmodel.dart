@@ -6,6 +6,7 @@ import 'package:qimendunjia/ai/pan_display_config.dart';
 import 'package:qimendunjia/ai/pan_serializer.dart';
 import 'package:qimendunjia/domain/pipeline/qimen_pipeline_executor.dart';
 import 'package:qimendunjia/domain/pipeline/qimen_chart_params.dart';
+import 'package:qimendunjia/domain/pipeline/pipeline_evidence.dart';
 import 'package:qimendunjia/presentation/models/qimen_state.dart';
 import 'package:qimendunjia/domain/entities/base_ju.dart';
 import 'package:qimendunjia/domain/entities/each_gong.dart';
@@ -67,6 +68,15 @@ class QiMenViewModel extends ChangeNotifier {
 
   /// 最后一次统一入参排盘产出的 Record（契约层 [Chart] 形态）。
   Chart? lastPipelineRecord;
+
+  /// 本次排盘执行证据（供壳侧 E2E 测试断言 executor 真实执行）。
+  /// 只读：不参与生产逻辑判断、不影响渲染。
+  PipelineEvidence? _lastPipelineEvidence;
+  int _pipelineCallCount = 0;
+
+  /// 最后一次走统一入参排盘的执行证据；未走 pipeline 路径时为 null。
+  @visibleForTesting
+  PipelineEvidence? get lastPipelineEvidence => _lastPipelineEvidence;
 
   // ==================== 密封状态（Q3 新增） ====================
 
@@ -280,11 +290,46 @@ class QiMenViewModel extends ChangeNotifier {
     );
     lastPipelineRequest = request;
     try {
+      _pipelineCallCount++;
       final record = await executor.executeAndSave(request);
       lastPipelineRecord = record;
+      _lastPipelineEvidence = PipelineEvidence(
+        callCount: _pipelineCallCount,
+        requestId: params.uuid,
+        resultUuid: _recordUuid(record),
+        module: 'qimendunjia',
+        keyResult: _keyResultOf(record),
+        error: null,
+      );
     } catch (error, stack) {
+      _lastPipelineEvidence = PipelineEvidence(
+        callCount: _pipelineCallCount,
+        requestId: params.uuid,
+        resultUuid: null,
+        module: 'qimendunjia',
+        keyResult: null,
+        error: error,
+      );
       debugPrint('奇门 Pipeline 排盘失败，已回退老路径: $error\n$stack');
     }
+  }
+
+  /// 提取 Record 的 uuid（契约层 [Chart] 形态没有直接 uuid 字段，从 toJson 取）。
+  String? _recordUuid(Chart record) {
+    final json = record.toJson();
+    return json['uuid'] as String?;
+  }
+
+  /// 提取页面可观察的关键结果（遁/局数），作为执行证据的 keyResult。
+  ///
+  /// 遁与局数由本次排盘决定（executor/calculator 计算产出），
+  /// 且直接显示在奇门盘面顶部，因此能代表「这次执行真的发生了」。
+  Object? _keyResultOf(Chart record) {
+    final json = record.toJson();
+    return {
+      'juType': json['juType'],
+      'juNumber': json['juNumber'],
+    };
   }
 
   /// 保存排盘记录至仓储（fire-and-forget，不影响排盘流程）

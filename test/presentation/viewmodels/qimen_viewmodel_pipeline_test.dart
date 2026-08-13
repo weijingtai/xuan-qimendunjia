@@ -250,6 +250,29 @@ void main() {
       final saved = await recordRepo.getAllRecords();
       expect(saved.any((r) => r.uuid == request.params.uuid), isTrue);
 
+      // ── 执行证据：executor 真实执行 + 落库 uuid 同源 ──
+      final evidence = viewModel.lastPipelineEvidence;
+      expect(evidence, isNotNull, reason: 'pipeline 路径必须产出执行证据');
+      expect(evidence!.callCount, 1, reason: 'executor 恰好执行一次');
+      expect(evidence.requestId, request.params.uuid,
+          reason: 'requestId 取 params uuid');
+      expect(evidence.resultUuid, request.params.uuid,
+          reason: 'resultUuid 与落库 Record uuid 同源');
+      expect(evidence.module, 'qimendunjia');
+      expect(evidence.error, isNull, reason: '成功执行无异常');
+      expect(evidence.keyResult, isNotNull, reason: '遁/局数是页面可观察结果');
+      expect(
+        (evidence.keyResult as Map)['juNumber'],
+        isNotNull,
+        reason: '局数由本次排盘决定',
+      );
+      // 落库的 pipeline Record uuid == 排盘 uuid（同源）
+      expect(
+        saved.any((r) => r.uuid == evidence.resultUuid),
+        isTrue,
+        reason: '落库 Record uuid 与排盘 uuid 同源',
+      );
+
       // 与直接调用 executor 的产出逐字段一致
       final direct = await executor.execute(
         ChartRequest<QimenChartParams>(
