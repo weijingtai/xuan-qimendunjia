@@ -16,6 +16,7 @@ import 'package:qimendunjia/utils/yue_jia_qi_men_ju_calculator.dart' show YueJia
 import 'package:qimendunjia/presentation/viewmodels/qimen_viewmodel.dart';
 import 'package:qimendunjia/redesign_ui/core/qi_men_star_theme.dart';
 import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
+import 'package:xuan_time_location/xuan_time_location.dart';
 
 /// 服务定位器
 ///
@@ -31,15 +32,21 @@ class ServiceLocator {
   // 缓存已创建的实例
   final Map<Type, dynamic> _services = {};
 
+  /// 宿主解析的当前时区（用户偏好 > 地点 > 中国默认）。null 时回退 [chinaTimeZoneId]。
+  String Function()? _timezoneProvider;
+
   /// 初始化所有依赖
   ///
   /// [officialRules] 由 host/app 装配层注入的官方规则资源仓储（assets 后端实现）。
   /// 产品包不直接依赖任何具体存储后端（见 EXECUTOR-RULES N3）。
+  /// [timezoneProvider] 宿主解析的当前时区（用户偏好 > 地点 > 中国默认）。
   void init(
     QimendunjiaOfficialRuleRepository officialRules,
-    QimenRecordRepository recordRepository,
-  ) {
+    QimenRecordRepository recordRepository, {
+    String Function()? timezoneProvider,
+  }) {
     _services[QimenRecordRepository] = recordRepository;
+    _timezoneProvider = timezoneProvider;
 
     // 1. 注册数据源
     _registerDataSources(officialRules);
@@ -150,6 +157,7 @@ class ServiceLocator {
       get<SelectGongUseCase>(),
       recordRepository: _tryGet<QimenRecordRepository>(),
       pipelineExecutor: _tryGet<QimenPipelineExecutor>(),
+      timezoneProvider: _timezoneProvider,
     );
   }
 

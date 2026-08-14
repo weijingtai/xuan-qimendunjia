@@ -152,6 +152,7 @@ void main() {
 
   QiMenViewModel _buildViewModel({
     QimenPipelineExecutor? pipelineExecutor,
+    String Function()? timezoneProvider,
   }) {
     calculatorRepository = _FakeQiMenCalculatorRepository(
       stubJu: stubJu,
@@ -163,6 +164,7 @@ void main() {
       SelectGongUseCase(_EmptyQiMenDataRepository()),
       recordRepository: recordRepo,
       pipelineExecutor: pipelineExecutor,
+      timezoneProvider: timezoneProvider,
     );
   }
 
@@ -398,6 +400,28 @@ void main() {
         () => QimenChartParams.fromJson(const {'createdAt': 'not-a-date'}),
         throwsFormatException,
       );
+    });
+
+    test('D: 时区来自注入的宿主上下文，不落回 chinaTimeZoneId', () async {
+      final executor = QimenPipelineExecutor(
+        momentResolver: const _FixedMomentResolver(),
+        recordRepository: recordRepo,
+      );
+      viewModel = _buildViewModel(
+        pipelineExecutor: executor,
+        timezoneProvider: () => 'America/New_York',
+      );
+
+      await viewModel.calculateAndArrangePan(
+        dateTime: DateTime(2026, 6, 14, 12, 0),
+        arrangeType: ArrangeType.CHAI_BU,
+        plateType: PlateType.ZHUAN_PAN,
+      );
+
+      expect(viewModel.errorMessage, isNull);
+      final request = viewModel.lastPipelineRequest;
+      expect(request, isNotNull, reason: 'executor 必须被真实调用');
+      expect(request!.moment.place.timeZoneId, equals('America/New_York'));
     });
   });
 }

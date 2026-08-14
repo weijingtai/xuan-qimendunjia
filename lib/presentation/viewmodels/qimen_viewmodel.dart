@@ -22,6 +22,7 @@ import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
 import 'package:repository_interface_divination_pipeline/repository_interface_divination_pipeline.dart';
 import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
+import 'package:xuan_time_location/xuan_time_location.dart';
 
 /// 奇门遁甲视图状态
 enum QiMenViewState {
@@ -62,6 +63,12 @@ class QiMenViewModel extends ChangeNotifier {
   /// Pipeline 统一入参排盘执行器（可选注入）。注入后 calculateAndArrangePan 走新路径，
   /// 失败回退老路径，不打断 UI。
   final QimenPipelineExecutor? _pipelineExecutor;
+
+  /// 宿主解析的当前时区（用户偏好 > 地点 > 中国默认）。null 时回退 [chinaTimeZoneId]。
+  final String Function()? _timezoneProvider;
+
+  /// 每次排盘现取，保证用户中途改偏好即时生效。
+  String get _timezone => _timezoneProvider?.call() ?? chinaTimeZoneId;
 
   /// 最后一次走统一入参排盘的 [ChartRequest]，供测试断言 executor 被真实调用。
   ChartRequest<QimenChartParams>? lastPipelineRequest;
@@ -104,8 +111,10 @@ class QiMenViewModel extends ChangeNotifier {
     this._selectGongUseCase, {
     QimenRecordRepository? recordRepository,
     QimenPipelineExecutor? pipelineExecutor,
+    String Function()? timezoneProvider,
   })  : _recordRepository = recordRepository,
-        _pipelineExecutor = pipelineExecutor;
+        _pipelineExecutor = pipelineExecutor,
+        _timezoneProvider = timezoneProvider;
 
   // Getters
   QiMenViewState get state => _state;
@@ -279,10 +288,10 @@ class QiMenViewModel extends ChangeNotifier {
     final request = ChartRequest<QimenChartParams>(
       moment: DivinationMoment(
         instantUtc: dateTime.toUtc(),
-        place: const GeoPoint(
+        place: GeoPoint(
           latitude: 0.0,
           longitude: 0.0,
-          timeZoneId: 'Asia/Shanghai',
+          timeZoneId: _timezone,
         ),
         reckoning: EnumDatetimeType.standard,
       ),
