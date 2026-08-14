@@ -21,13 +21,19 @@ final class QimendunjiaModuleManifest {
   ///
   /// [officialRules] 由 host 装配层注入的官方规则资源仓储（assets 后端实现）。
   /// [recordRepository] 由 host 注入的占卜记录仓储。
+  /// [timezoneProvider] 宿主解析的当前时区（用户偏好 > 地点 > 中国默认）。
   /// 实际装配在 [ServiceLocator.init] 内以副作用完成，此处返回空 provider 列表
   /// （奇门页面内部通过 [serviceLocator.get] 取依赖，不依赖 widget 树注入）。
   static List<SingleChildWidget> createProviders(
     QimendunjiaOfficialRuleRepository officialRules,
-    QimenRecordRepository recordRepository,
-  ) {
-    serviceLocator.init(officialRules, recordRepository);
+    QimenRecordRepository recordRepository, {
+    String Function()? timezoneProvider,
+  }) {
+    serviceLocator.init(
+      officialRules,
+      recordRepository,
+      timezoneProvider: timezoneProvider,
+    );
     return const <SingleChildWidget>[];
   }
 }
