@@ -343,6 +343,7 @@ class QiMenViewModel extends ChangeNotifier {
 
   /// 保存排盘记录至仓储（fire-and-forget，不影响排盘流程）
   void _saveRecordIfAvailable({required QiMenPan pan, required BaseJu ju}) {
+    if (lastPipelineRecord != null) return;
     final repo = _recordRepository;
     if (repo == null) return;
 
