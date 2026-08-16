@@ -211,15 +211,17 @@ class _ScalableShiJiaQiMenViewPageState
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      // 防御：本页作为隐藏路由栈底（如经 /qimendunjia/mvvm 导航时内层 Navigator
+      // 拆分 initialRoute 把本页建为未布局的栈底）时，render 对象可能缺失或无尺寸，
+      // 无条件 currentContext!/.size 会抛 hasSize 断言。布局就绪才计算 panOffset。
+      final renderPan = panelGlobalKey.currentContext?.findRenderObject();
+      final appBarRender = appBarGlobalKey.currentContext?.findRenderObject();
+      if (renderPan is! RenderBox || appBarRender is! RenderBox) return;
+      if (!renderPan.hasSize || !appBarRender.hasSize) return;
       setState(() {
-        final RenderBox renderPan =
-            panelGlobalKey.currentContext!.findRenderObject() as RenderBox;
-        final RenderBox appBarRender =
-            appBarGlobalKey.currentContext!.findRenderObject() as RenderBox;
         panOffset =
             renderPan.localToGlobal(Offset(0, -appBarRender.size.height));
-        // panOffset = renderPan.localToGlobal(Offset(0,0));
-        // start = _getCenter(panKey);
       });
     });
     _viewModelListener = context.read<ShiJiaQiMenViewModel>()
