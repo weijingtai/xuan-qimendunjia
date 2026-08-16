@@ -320,6 +320,7 @@ class _QiMenMvvmPageState extends State<QiMenMvvmPage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         ElevatedButton.icon(
+          key: const ValueKey('qimendunjia.action.calculate'),
           onPressed: viewModel.isLoading
               ? null
               : () async {
