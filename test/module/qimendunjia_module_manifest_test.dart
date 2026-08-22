@@ -58,13 +58,7 @@ void main() {
 /// 假官方规则仓储，仅供 createProviders 副作用装配测试。
 class _FakeOfficialRuleRepository implements QimendunjiaOfficialRuleRepository {
   @override
-  Future<String> loadTenGanKeYingJson() async => '{}';
-
-  @override
-  Future<String> loadTenGanKeYingGeJuJson() async => '{}';
-
-  @override
-  Future<String> loadDoorGanKeYingJson() async => '{}';
+  Future<String> get(String key) async => '{}';
 
   @override
   Future<String> loadQiYiRuGongJson() async => '{}';
@@ -82,19 +76,19 @@ class _FakeOfficialRuleRepository implements QimendunjiaOfficialRuleRepository {
 /// 假记录仓储，仅供 createProviders 副作用装配测试。
 class _FakeRecordRepository implements QimenRecordRepository {
   @override
-  Future<String> saveRecord(QimenDivinationRecordContract record) async => 'fake-uuid';
+  Future<String> put(QimenDivinationRecordContract record) async => 'fake-uuid';
 
   @override
-  Future<List<QimenDivinationRecordContract>> getAllRecords() async => [];
+  Future<List<QimenDivinationRecordContract>> query([Map<String, Object?>? criteria]) async => [];
 
   @override
-  Future<QimenDivinationRecordContract?> getRecordByUuid(String uuid) async => null;
+  Future<QimenDivinationRecordContract?> get(String uuid) async => null;
 
   @override
-  Future<bool> softDeleteRecord(String uuid) async => true;
+  Future<bool> delete(String uuid) async => true;
 
   @override
-  Stream<List<QimenDivinationRecordContract>> watchAllRecords() async* {
+  Stream<List<QimenDivinationRecordContract>> watchAll() async* {
     yield [];
   }
 }

@@ -66,18 +66,18 @@ class _InMemoryQimenRecordRepository implements QimenRecordRepository {
   final List<QimenDivinationRecordContract> _records = [];
 
   @override
-  Future<String> saveRecord(QimenDivinationRecordContract record) async {
+  Future<String> put(QimenDivinationRecordContract record) async {
     _records.add(record);
     return record.uuid;
   }
 
   @override
-  Future<List<QimenDivinationRecordContract>> getAllRecords() async {
+  Future<List<QimenDivinationRecordContract>> query([Map<String, Object?>? criteria]) async {
     return List.of(_records);
   }
 
   @override
-  Future<QimenDivinationRecordContract?> getRecordByUuid(String uuid) async {
+  Future<QimenDivinationRecordContract?> get(String uuid) async {
     for (final r in _records) {
       if (r.uuid == uuid) return r;
     }
@@ -85,13 +85,13 @@ class _InMemoryQimenRecordRepository implements QimenRecordRepository {
   }
 
   @override
-  Future<bool> softDeleteRecord(String uuid) async {
+  Future<bool> delete(String uuid) async {
     _records.removeWhere((r) => r.uuid == uuid);
     return true;
   }
 
   @override
-  Stream<List<QimenDivinationRecordContract>> watchAllRecords() async* {
+  Stream<List<QimenDivinationRecordContract>> watchAll() async* {
     yield List.of(_records);
   }
 }
@@ -249,7 +249,7 @@ void main() {
 
       // 落库走 Record（老路径 _saveRecordIfAvailable 也会落库一条 legacy contract，
       // 这里只断言 pipeline Record 确实被落库）
-      final saved = await recordRepo.getAllRecords();
+      final saved = await recordRepo.query();
       expect(saved.any((r) => r.uuid == request.params.uuid), isTrue);
 
       // ── 执行证据：executor 真实执行 + 落库 uuid 同源 ──

@@ -20,6 +20,7 @@ import 'package:qimendunjia/enums/enum_fu_tou_scheme.dart';
 import 'package:qimendunjia/enums/enum_ke_scheme.dart';
 import 'package:qimendunjia/enums/enum_qi_men_jia.dart';
 import 'package:qimendunjia/domain/repositories/qimen_calculator_repository.dart';
+import 'package:repository_contract_kernel/repository_contract_kernel.dart';
 import 'package:repository_interface_divination_pipeline/repository_interface_divination_pipeline.dart';
 import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
 import 'package:xuan_time_location/xuan_time_location.dart';
@@ -354,9 +355,9 @@ class QiMenViewModel extends ChangeNotifier {
       juType: ju.jia.name,
       juNumber: ju.juNumber,
     );
-    repo.saveRecord(contract).catchError((Object error, StackTrace stack) {
+    repo.put(contract, RequestContext(scopeUid: 'local-anonymous')).catchError((Object error, StackTrace stack) {
       _log.warning('保存排盘记录失败，已忽略', error, stack);
-      return '';
+      return const Ok(Rev(''));
     });
   }
 

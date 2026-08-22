@@ -111,19 +111,10 @@ class _StubOfficialRuleRepository
   const _StubOfficialRuleRepository();
 
   @override
-  Future<String> loadTenGanKeYingJson() async => '[]';
+  Future<String> get(String key) async => '[]';
+
   @override
-  Future<String> loadTenGanKeYingGeJuJson() async => '[]';
-  @override
-  Future<String> loadDoorGanKeYingJson() async => '[]';
-  @override
-  Future<String> loadQiYiRuGongJson() async => '[]';
-  @override
-  Future<String> loadQiYiRuGongDiseaseJson() async => '[]';
-  @override
-  Future<String> loadDoorStarKeYingJson() async => '[]';
-  @override
-  Future<String> loadEightDoorKeYingJson() async => '[]';
+  Future<List<String>> query([Map<String, Object?>? criteria]) async => const ['[]'];
 }
 
 class QiMenDunJiaApp extends StatelessWidget {

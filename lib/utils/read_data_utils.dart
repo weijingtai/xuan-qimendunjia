@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:metaphysics_core/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:repository_contract_kernel/repository_contract_kernel.dart';
 import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
 import 'package:qimendunjia/enums/enum_eight_door.dart';
 import 'package:qimendunjia/enums/enum_nine_stars.dart';
@@ -23,9 +24,16 @@ class ReadDataUtils {
 
   ReadDataUtils(this._officialRules);
 
+  RequestContext get _ctx => RequestContext(scopeUid: 'local-anonymous');
+
+  Future<String> _readRule(String id) async {
+    final res = await _officialRules.get(id, _ctx);
+    return res.orElse('') ?? '';
+  }
+
   Future<Map<TianGan, Map<TianGan, TenGanKeYing>>> readTenGanKeYing() async {
     try {
-      String jsonString = await _officialRules.loadTenGanKeYingJson();
+      String jsonString = await _readRule("ten_gan_ke_ying");
       Map<String, dynamic> jsonMapper = jsonDecode(jsonString);
       Map<TianGan, Map<TianGan, TenGanKeYing>> result = {};
       for (var key in jsonMapper.keys) {
@@ -55,7 +63,7 @@ class ReadDataUtils {
 
   Future<Map<TianGan, Map<TianGan, TenGanKeYingGeJu>>>
       readTenGanKeYingGeJu() async {
-    final content = await _officialRules.loadTenGanKeYingGeJuJson();
+    final content = await _readRule("ten_gan_ge_ju");
     Map<String, dynamic> jsonMapper2 = jsonDecode(content);
     Map<TianGan, Map<TianGan, TenGanKeYingGeJu>> finalResult = {};
     for (var key in jsonMapper2.keys) {
@@ -74,7 +82,7 @@ class ReadDataUtils {
   Future<Map<TianGan, Map<TianGan, TenGanKeYing>>>
       readTenGanKeYingJiXiong(BuildContext context) async {
     try {
-      String jsonString = await _officialRules.loadTenGanKeYingJson();
+      String jsonString = await _readRule("ten_gan_ke_ying");
       Map<String, dynamic> jsonMapper = jsonDecode(jsonString);
       Map<TianGan, Map<TianGan, TenGanKeYing>> result = {};
       for (var key in jsonMapper.keys) {
@@ -103,7 +111,7 @@ class ReadDataUtils {
   }
 
   Future<Map<EightDoorEnum, Map<TianGan, String>>> readDoorGanKeYing() async {
-    final content = await _officialRules.loadDoorGanKeYingJson();
+    final content = await _readRule("door_gan_ke_ying");
     Map<String, dynamic> jsonMapper = jsonDecode(content);
     Map<EightDoorEnum, Map<TianGan, String>> result = {};
     for (var key in jsonMapper.keys) {
@@ -118,7 +126,7 @@ class ReadDataUtils {
   }
 
   Future<Map<HouTianGua, Map<TianGan, QiYiRuGong>>> readQiYiRuGong() async {
-    final content = await _officialRules.loadQiYiRuGongJson();
+    final content = await _readRule("qi_yi_ru_gong");
     Map<String, dynamic> jsonMapper = jsonDecode(content);
     Map<HouTianGua, Map<TianGan, QiYiRuGong>> result = {};
     for (var key in jsonMapper.keys) {
@@ -142,7 +150,7 @@ class ReadDataUtils {
   }
 
   Future<Map<HouTianGua, Map<TianGan, String>>> readQiYiRuGongDisease() async {
-    final content = await _officialRules.loadQiYiRuGongDiseaseJson();
+    final content = await _readRule("qi_yi_ru_gong_disease");
     Map<String, dynamic> jsonMapper = jsonDecode(content);
     Map<HouTianGua, Map<TianGan, String>> result = {};
     for (var key in jsonMapper.keys) {
@@ -161,7 +169,7 @@ class ReadDataUtils {
 
   Future<Map<EightDoorEnum, Map<NineStarsEnum, DoorStarKeYing>>>
       readDoorStarKeYing() async {
-    final content = await _officialRules.loadDoorStarKeYingJson();
+    final content = await _readRule("door_star_ke_ying");
     Map<String, dynamic> jsonMapper = jsonDecode(content);
     Map<EightDoorEnum, Map<NineStarsEnum, DoorStarKeYing>> result = {};
     List<DoorStarKeYing> resultList = [];
@@ -185,7 +193,7 @@ class ReadDataUtils {
 
   Future<Map<EightDoorEnum, Map<EightDoorEnum, Map<YinYang, EightDoorKeYing>>>>
       readEightDoorKeYing() async {
-    final content = await _officialRules.loadEightDoorKeYingJson();
+    final content = await _readRule("eight_door_ke_ying");
     try {
       Map<String, dynamic> jsonMapper = jsonDecode(content);
       List<EightDoorKeYing> resultList = [];

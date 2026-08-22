@@ -13,7 +13,10 @@ class _FakeOfficialRules implements QimendunjiaOfficialRuleRepository {
   const _FakeOfficialRules();
 
   @override
-  Future<String> loadTenGanKeYingJson() async => '''
+  Future<String> get(String key) async {
+    switch (key) {
+      case "ten_gan_ke_ying":
+        return '''
 {
   "甲": {
     "甲": {"juName": "双木成林", "shortExplain": "伏吟"},
@@ -24,9 +27,8 @@ class _FakeOfficialRules implements QimendunjiaOfficialRuleRepository {
     "丙": {"juName": "玉兔入月", "shortExplain": "吉"}
   }
 }''';
-
-  @override
-  Future<String> loadTenGanKeYingGeJuJson() async => '''
+      case "ten_gan_ge_ju":
+        return '''
 {
   "甲": {
     "甲": {
@@ -54,9 +56,8 @@ class _FakeOfficialRules implements QimendunjiaOfficialRuleRepository {
     }
   }
 }''';
-
-  @override
-  Future<String> loadDoorGanKeYingJson() async => '''
+      case "door_gan_ke_ying":
+        return '''
 {
   "开": {
     "戊": "财名俱得。",
@@ -66,6 +67,10 @@ class _FakeOfficialRules implements QimendunjiaOfficialRuleRepository {
     "丙": "贵人印绶。"
   }
 }''';
+      default:
+        return '{}';
+    }
+  }
 
   @override
   Future<String> loadQiYiRuGongJson() async => '''

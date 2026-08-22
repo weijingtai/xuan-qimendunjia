@@ -65,19 +65,19 @@ class _CountingQimenRecordRepository implements QimenRecordRepository {
   int saveCount = 0;
 
   @override
-  Future<String> saveRecord(QimenDivinationRecordContract record) async {
+  Future<String> put(QimenDivinationRecordContract record) async {
     saveCount++;
     savedRecords.add(record);
     return record.uuid;
   }
 
   @override
-  Future<List<QimenDivinationRecordContract>> getAllRecords() async {
+  Future<List<QimenDivinationRecordContract>> query([Map<String, Object?>? criteria]) async {
     return List.of(savedRecords);
   }
 
   @override
-  Future<QimenDivinationRecordContract?> getRecordByUuid(String uuid) async {
+  Future<QimenDivinationRecordContract?> get(String uuid) async {
     for (final r in savedRecords) {
       if (r.uuid == uuid) return r;
     }
@@ -85,13 +85,13 @@ class _CountingQimenRecordRepository implements QimenRecordRepository {
   }
 
   @override
-  Future<bool> softDeleteRecord(String uuid) async {
+  Future<bool> delete(String uuid) async {
     savedRecords.removeWhere((r) => r.uuid == uuid);
     return true;
   }
 
   @override
-  Stream<List<QimenDivinationRecordContract>> watchAllRecords() async* {
+  Stream<List<QimenDivinationRecordContract>> watchAll() async* {
     yield List.of(savedRecords);
   }
 }
@@ -262,7 +262,7 @@ void main() {
       plateType: PlateType.ZHUAN_PAN,
     );
 
-    // 断言：Pipeline 成功落库后，saveRecord 应该恰好只被调用 1 次
+    // 断言：Pipeline 成功落库后，put 应该恰好只被调用 1 次
     expect(countingRepo.saveCount, 1,
         reason: 'Pipeline 成功落库后，不应再重复调用 legacy _saveRecordIfAvailable 保存第二条记录');
     expect(countingRepo.savedRecords.length, 1);

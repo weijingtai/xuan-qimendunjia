@@ -1,3 +1,4 @@
+import 'package:repository_contract_kernel/repository_contract_kernel.dart';
 import 'package:repository_interface_divination_pipeline/repository_interface_divination_pipeline.dart';
 import 'package:repository_interface_qimendunjia/repository_interface_qimendunjia.dart';
 import 'package:xuan_time_location/xuan_time_location.dart';
@@ -39,7 +40,7 @@ final class QimenPipelineExecutor {
     final contract = await execute(request);
     final repo = _recordRepository;
     if (repo != null) {
-      await repo.saveRecord(contract);
+      await repo.put(contract, RequestContext(scopeUid: 'local-anonymous'));
     }
     return contract;
   }
