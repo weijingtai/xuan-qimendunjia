@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:metaphysics_chart_ui/metaphysics_chart_ui.dart';
+import 'package:metaphysics_chart_ui/metaphysics_chart_ui.dart' hide BriefPalaceConfig;
+
 import 'package:qimendunjia/presentation/adapters/qimen_gong_adapter.dart';
 import 'package:qimendunjia/presentation/adapters/qimen_gong_recipe.dart';
 import 'package:qimendunjia/presentation/adapters/qimen_gong_ids.dart';
