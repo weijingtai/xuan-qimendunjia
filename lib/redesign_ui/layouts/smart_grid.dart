@@ -1,7 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:metaphysics_chart_ui/metaphysics_chart_ui.dart' hide TianGan, BriefPalaceTheme;
+import 'package:metaphysics_chart_ui/metaphysics_chart_ui.dart' hide TianGan, BriefPalaceTheme, BriefPalaceConfig;
+
 
 import '../core/design_system.dart';
 import '../components/palace/brief_palace_config.dart';

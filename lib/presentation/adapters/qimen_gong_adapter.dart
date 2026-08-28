@@ -1,4 +1,5 @@
-import 'package:metaphysics_chart_ui/metaphysics_chart_ui.dart';
+import 'package:metaphysics_chart_ui/metaphysics_chart_ui.dart' hide BriefPalaceConfig;
+
 import 'package:qimendunjia/redesign_ui/components/palace/brief_palace_config.dart';
 import 'package:qimendunjia/redesign_ui/layouts/smart_grid.dart';
 import 'qimen_gong_ids.dart';
